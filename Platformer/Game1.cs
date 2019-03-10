@@ -38,7 +38,7 @@ namespace Platformer
         KeyboardState currentState;
         KeyboardState previousState;
         int select = 0;
-        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
+        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain, leaderBoards,settings;
         Point buttonSize = new Point(300, 75);
       
         public Game1()
@@ -82,7 +82,8 @@ namespace Platformer
             singePlayer = Content.Load<Texture2D>("singleplayer");
             startGame = Content.Load<Texture2D>("startgame");
             tryAgain = Content.Load<Texture2D>("tryagain");
-
+            leaderBoards = Content.Load<Texture2D>("leaderboards");
+            settings = Content.Load<Texture2D>("settings");
             // m = new Menu(GraphicsDevice);
 
             currentState = Keyboard.GetState();
@@ -160,8 +161,8 @@ namespace Platformer
             spriteBatch.Draw(multiplayer, new Rectangle(new Point(graphics.PreferredBackBufferWidth /2-150, initial + 280), buttonSize), Color.White * selected[1]);
             spriteBatch.Draw(instructions, new Rectangle(new Point(graphics.PreferredBackBufferWidth / 2 - 150, initial + 370), buttonSize), Color.White * selected[2]);
             spriteBatch.Draw(exit, new Rectangle(new Point(graphics.PreferredBackBufferWidth / 2 - 150, initial + 460), buttonSize), Color.White * selected[3]);
-
-
+            spriteBatch.Draw(leaderBoards, new Rectangle(graphics.PreferredBackBufferWidth - 400, 25, 100, 100), Color.White*.5f);
+            spriteBatch.Draw(settings, new Rectangle(graphics.PreferredBackBufferWidth - 250, 35, 100, 100), Color.White*.5f);
         }
 
         protected override void Update(GameTime gameTime)
