@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Platformer
 {
 
-   
+
 
     // ??
     public class Game1 : Game
@@ -20,12 +20,12 @@ namespace Platformer
         // Title Screen 
         Texture2D titlescreen;
         Texture2D titlescreen_a;
-      
+
         float opacity = 0f;
         int opacDirection = 1;
-        Rectangle TitleScreen = new 
+        Rectangle TitleScreen = new
 
-        // fit user's screen bounds
+            // fit user's screen bounds
             Rectangle(0, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
         // Title Screen //
 
@@ -38,35 +38,39 @@ namespace Platformer
         KeyboardState currentState;
         KeyboardState previousState;
         int select = 0;
-        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain, leaderBoards,settings;
+        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain, leaderBoards, settings;
+        ///
+        Texture2D gameplay, options, multi;
+        /// 
+        SpriteFont textBig, textSmall;
         Point buttonSize = new Point(300, 75);
-      
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            
+
             // Sets the game to 1080p fullscreen by default
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.IsFullScreen = true;
-           
+
 
         }
 
 
         protected override void Initialize()
         {
-            
+
 
 
             base.Initialize();
         }
 
-      
+
         protected override void LoadContent()
         {
-            
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             titlescreen = Content.Load<Texture2D>("titlescreen");
             titlescreen_a = Content.Load<Texture2D>("titlescreen(1)");
@@ -85,18 +89,41 @@ namespace Platformer
             leaderBoards = Content.Load<Texture2D>("leaderboards");
             settings = Content.Load<Texture2D>("settings");
             // m = new Menu(GraphicsDevice);
+            textBig = Content.Load<SpriteFont>("textbig");
+            textSmall = Content.Load<SpriteFont>("textsmall");
+
+            //
+            multi = Content.Load<Texture2D>("localm");
+            gameplay = Content.Load<Texture2D>("gameplaybar1");
+            //
 
             currentState = Keyboard.GetState();
             previousState = currentState;
 
         }
 
-        
+
         protected override void UnloadContent()
         {
-            
+
         }
 
+        public bool Select()
+        {
+            if (keyboard.IsKeyDown(Keys.Enter) || controller.IsButtonDown(Buttons.A))
+                return true;
+            return false;
+        }
+
+
+        public void login()
+        {
+            GraphicsDevice.Clear(Color.AntiqueWhite);
+
+            spriteBatch.DrawString(textBig, "Login to Your Account", new Vector2(400, 100), Color.Black);
+            spriteBatch.DrawString(textSmall, "Username:  ", new Vector2(100, 200), Color.Black);
+
+        }
 
         public void menu()
         {
@@ -132,6 +159,8 @@ namespace Platformer
                     selected[1] = .5f;
                     selected[2] = .5f;
                     selected[3] = .5f;
+                    if (Select())
+                        Gameplay();
                     break;
                 case 1:
                     selected[0] = .5f;
@@ -150,6 +179,8 @@ namespace Platformer
                     selected[1] = .5f;
                     selected[2] = .5f;
                     selected[3] = 1f;
+                    if (Select())
+                        Exit();
                     break;
             }
 
@@ -164,6 +195,15 @@ namespace Platformer
             spriteBatch.Draw(leaderBoards, new Rectangle(graphics.PreferredBackBufferWidth - 400, 25, 100, 100), Color.White*.5f);
             spriteBatch.Draw(settings, new Rectangle(graphics.PreferredBackBufferWidth - 250, 35, 100, 100), Color.White*.5f);
         }
+
+
+        public void Gameplay()
+        {
+            spriteBatch.Draw(gameplay, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+        }
+
+
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -196,7 +236,7 @@ namespace Platformer
             GraphicsDevice.Clear(Color.DarkRed);
             
             spriteBatch.Begin();
-           
+            //login();
             menu();
            // opacity = drawTitle(opacity);
            // m.draw();
