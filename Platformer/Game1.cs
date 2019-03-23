@@ -32,6 +32,9 @@ namespace Platformer
 
         Menu m;
 
+        string currentScene = "mainMenu";
+
+
         // Initialize controller/keyboard
         GamePadState controller = GamePad.GetState(PlayerIndex.One);
         KeyboardState keyboard = Keyboard.GetState();
@@ -125,6 +128,12 @@ namespace Platformer
 
         }
 
+
+        public bool clicked(Keys keys)
+        {
+            return false;
+        }
+
         public void menu()
         {
             // Sets the background color    
@@ -160,7 +169,7 @@ namespace Platformer
                     selected[2] = .5f;
                     selected[3] = .5f;
                     if (Select())
-                        Gameplay();
+                        currentScene = "gameplay";
                     break;
                 case 1:
                     selected[0] = .5f;
@@ -173,6 +182,7 @@ namespace Platformer
                     selected[1] = .5f;
                     selected[2] = 1f;
                     selected[3] = .5f;
+                    
                     break;
                 case 3:
                     selected[0] = .5f;
@@ -200,6 +210,8 @@ namespace Platformer
         public void Gameplay()
         {
             spriteBatch.Draw(gameplay, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                currentScene = "pause";
         }
 
 
@@ -207,8 +219,7 @@ namespace Platformer
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+           
             controller = GamePad.GetState(PlayerIndex.One);
             keyboard = Keyboard.GetState();
 
@@ -230,6 +241,16 @@ namespace Platformer
             
         }
 
+        public void Pause()
+        {
+            GraphicsDevice.Clear(Color.BlanchedAlmond);
+
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (keyboard.IsKeyDown(Keys.L))
+                currentScene = "mainMenu";
+
+        }
+
 
         protected override void Draw(GameTime gameTime)
         {
@@ -237,7 +258,21 @@ namespace Platformer
             
             spriteBatch.Begin();
             //login();
-            menu();
+            switch (currentScene) {
+                case "mainMenu":
+                    menu();
+                    break;
+                case "gameplay":
+                    Gameplay();
+                    break;
+                case "settings":
+                    break;
+                case "pause":
+                    Pause();
+                    break;
+
+            }
+
            // opacity = drawTitle(opacity);
            // m.draw();
             //m.draw(spriteBatch);
