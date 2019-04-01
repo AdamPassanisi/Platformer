@@ -41,7 +41,7 @@ namespace Platformer
         KeyboardState currentState;
         KeyboardState previousState;
         int select = 0;
-        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain, leaderBoards, settings;
+        Texture2D continueWithoutSaving, exit, instructions, mult, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain, leaderBoards, settings;
         ///
         Texture2D gameplay, options, multi;
         /// 
@@ -91,6 +91,7 @@ namespace Platformer
             tryAgain = Content.Load<Texture2D>("tryagain");
             leaderBoards = Content.Load<Texture2D>("leaderboards");
             settings = Content.Load<Texture2D>("settings");
+            mult = Content.Load<Texture2D>("mult");
             // m = new Menu(GraphicsDevice);
             textBig = Content.Load<SpriteFont>("textbig");
             textSmall = Content.Load<SpriteFont>("textsmall");
@@ -116,6 +117,9 @@ namespace Platformer
             if (keyboard.IsKeyDown(Keys.Enter) || controller.IsButtonDown(Buttons.A))
                 return true;
             return false;
+
+
+
         }
 
 
@@ -128,27 +132,49 @@ namespace Platformer
 
         }
 
-
-        public bool clicked(Keys keys)
+        // Returns true if given key is pressed and released
+        public bool clicked(Keys key)
         {
-            return false;
+             if (previousState.IsKeyUp(key) && currentState.IsKeyDown(key))
+                return true;
+             return false;
         }
 
-        public void menu()
+
+        public void multiplay()
+        {
+            
+            spriteBatch.Draw(multi, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            if(clicked(Keys.Escape))
+                currentScene = "mainMenu";
+            if(clicked(Keys.Enter))
+                currentScene = "mult";
+        }
+
+        public void multiSelect()
+        {
+            spriteBatch.Draw(mult, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            if(clicked(Keys.Escape))
+                currentScene = "multiplayer";
+        }   
+
+        public void menu(/*Texture2D[] items*/)
         {
             // Sets the background color    
             GraphicsDevice.Clear(Color.Silver);
+
+           
 
             float[] selected = new float[4];
             //
 
 
-            if (previousState.IsKeyUp(Keys.Up) && currentState.IsKeyDown(Keys.Up))
+            if (clicked(Keys.Up))
             {
                 select -- ;
             }
 
-            if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
+            if (clicked(Keys.Down))
             {
                 select++;
             }
@@ -176,6 +202,8 @@ namespace Platformer
                     selected[1] = 1f;
                     selected[2] = .5f;
                     selected[3] = .5f;
+                    if (Select())
+                        currentScene = "multiplayer";
                     break;
                 case 2:
                     selected[0] = .5f;
@@ -196,7 +224,7 @@ namespace Platformer
 
             int initial = 200;
 
-            spriteBatch.Draw(titlescreen, new Rectangle(graphics.PreferredBackBufferWidth / 2 - 400, 150, 800, 400), Color.White);
+            //spriteBatch.Draw(titlescreen, new Rectangle(graphics.PreferredBackBufferWidth / 2 - 400, 150, 800, 400), Color.White);
 
             spriteBatch.Draw(singePlayer, new Rectangle(new Point(graphics.PreferredBackBufferWidth /2-150, initial + 190), buttonSize), Color.White*selected[0]);
             spriteBatch.Draw(multiplayer, new Rectangle(new Point(graphics.PreferredBackBufferWidth /2-150, initial + 280), buttonSize), Color.White * selected[1]);
@@ -210,7 +238,8 @@ namespace Platformer
         public void Gameplay()
         {
             spriteBatch.Draw(gameplay, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            
+            if (clicked(Keys.Escape))
                 currentScene = "pause";
         }
 
@@ -245,9 +274,57 @@ namespace Platformer
         {
             GraphicsDevice.Clear(Color.BlanchedAlmond);
 
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            if (keyboard.IsKeyDown(Keys.L))
-                currentScene = "mainMenu";
+            
+            
+            int initial = 200;
+
+            float[] selected = new float[4];
+            selected[0] = .5f;
+            selected[1] = .5f;
+            selected[2] = .5f;
+            selected[3] = .5f;
+
+             if (clicked(Keys.Up))
+            {
+                select -- ;
+            }
+
+            if (clicked(Keys.Down))
+            {
+                select++;
+            }
+
+            if(select > 2)
+                select = 0;
+            if(select < 0)
+                select = 2;
+
+            selected[select] = 1f;
+
+            switch(select)
+                {
+                    case 0:
+                        if (Select())
+                        currentScene = "gameplay";
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                    if(Select())
+                        currentScene = "mainMenu";
+                        break;
+                    
+                }
+        
+
+            
+            
+            spriteBatch.Draw(continueWithoutSaving, new Rectangle(new Point(graphics.PreferredBackBufferWidth /2-150, initial + 190), buttonSize), Color.White*selected[0]);
+            spriteBatch.Draw(instructions, new Rectangle(new Point(graphics.PreferredBackBufferWidth /2-150, initial + 280), buttonSize), Color.White * selected[1]);
+            spriteBatch.Draw(exit, new Rectangle(new Point(graphics.PreferredBackBufferWidth / 2 - 150, initial + 370), buttonSize), Color.White * selected[2]);
+            //spriteBatch.Draw(exit, new Rectangle(new Point(graphics.PreferredBackBufferWidth / 2 - 150, initial + 460), buttonSize), Color.White * selected[3]);
+            
+          
 
         }
 
@@ -257,7 +334,7 @@ namespace Platformer
             GraphicsDevice.Clear(Color.DarkRed);
             
             spriteBatch.Begin();
-            //login();
+            
             switch (currentScene) {
                 case "mainMenu":
                     menu();
@@ -270,13 +347,16 @@ namespace Platformer
                 case "pause":
                     Pause();
                     break;
+                case "multiplayer":
+                    multiplay();
+                    break;
+                case "mult":
+                    multiSelect();
+                    break;
 
             }
 
-           // opacity = drawTitle(opacity);
-           // m.draw();
-            //m.draw(spriteBatch);
-            //spriteBatch.Draw(m.texture, TitleScreen, Color.Black);
+         
             spriteBatch.End();
             base.Draw(gameTime);
         }
