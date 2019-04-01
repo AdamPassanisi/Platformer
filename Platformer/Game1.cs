@@ -44,6 +44,8 @@ namespace Platformer
         Texture2D continueWithoutSaving, exit, instructions, mult, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain, leaderBoards, settings;
         ///
         Texture2D gameplay, options, multi;
+
+        Texture2D melee;
         /// 
         SpriteFont textBig, textSmall;
         Point buttonSize = new Point(300, 75);
@@ -56,7 +58,7 @@ namespace Platformer
             // Sets the game to 1080p fullscreen by default
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
-            graphics.IsFullScreen = true;
+           // graphics.IsFullScreen = true;
 
 
         }
@@ -77,6 +79,8 @@ namespace Platformer
             spriteBatch = new SpriteBatch(GraphicsDevice);
             titlescreen = Content.Load<Texture2D>("titlescreen");
             titlescreen_a = Content.Load<Texture2D>("titlescreen(1)");
+
+            melee = Content.Load<Texture2D>("melee enemy walk");
 
             // Buttons
             continueWithoutSaving = Content.Load<Texture2D>("continuewithoutsaving");
@@ -156,6 +160,8 @@ namespace Platformer
             spriteBatch.Draw(mult, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
             if(clicked(Keys.Escape))
                 currentScene = "multiplayer";
+            if(clicked(Keys.Enter))
+                currentScene = "gameplay";
         }   
 
         public void menu(/*Texture2D[] items*/)
@@ -165,7 +171,7 @@ namespace Platformer
 
            
 
-            float[] selected = new float[4];
+            float[] selected = new float[6];
             //
 
 
