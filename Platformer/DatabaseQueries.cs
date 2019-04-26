@@ -125,7 +125,7 @@ namespace Platformer
             }
         }
 
-        public void login(string username, string password)
+        public bool login(string username, string password)
         {
             string query = "SELECT Username FROM player WHERE Username='" + username + "' AND Password='" + password + "';";
             if (OpenConnection() == true)
@@ -140,18 +140,23 @@ namespace Platformer
                     {
                         Console.WriteLine("Hello " + username);
                         CloseConnection();
-                        return;
+                        return true;
                     }
                     
                 }
                 else
                 {
                     Console.WriteLine("Incorrect login information");
+                    //myReader.Close();
+                    CloseConnection();
+                    return false;
                 }
                 // always call Close when done reading.
                 myReader.Close();
             }
             CloseConnection();
+
+            return false;
         }
 
         public void viewLeaderboards(int level)

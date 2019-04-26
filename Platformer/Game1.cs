@@ -89,7 +89,7 @@ namespace Platformer
             // Sets the game to 1080p fullscreen by default
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             
 
         }
@@ -192,7 +192,14 @@ namespace Platformer
                         }
                        
                         else if (c == Keys.Tab)
-                            db.createAccount("test", "passadfasdf");
+                        {
+                            if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
+                            {
+                                _state = GameState.Level1;
+                            }
+                        }
+                            
+
                         else
                         {
                             password.Add(c.ToString());
