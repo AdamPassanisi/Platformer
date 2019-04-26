@@ -29,6 +29,11 @@ namespace Platformer
         // if you see this, progress has been made ..
         // trying git cmds
         // Title Screen 
+
+
+            bool wasTouching = false;
+
+
         Texture2D titlescreen;
         Texture2D titlescreen_a;
         Scrolling scrolling1;
@@ -219,8 +224,10 @@ namespace Platformer
             int width = graphics.PreferredBackBufferWidth;
             int initial = height /5;
 
+            
+            // Draws the game title
             spriteBatch.Draw(titlescreen, new Rectangle(width / 2 - width/4, height/12, width/2, height/2), Color.White);
-
+            // Draws the menu options
             spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - 150, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
             spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - 150, initial + buttonSize.Y * 2+height/18), buttonSize), Color.White * selected[1]);
             spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - 150, initial + buttonSize.Y * 3+height/16), buttonSize), Color.White * selected[2]);
@@ -359,15 +366,30 @@ namespace Platformer
                     if (_sprites[0].IsTouching(tile, _sprites[0]))
                     {
 
+                        wasTouching = true;
+
                         Console.Write("Check");
                         Vector2 vec = new Vector2(1, tile.position.Y -160f);
                       //  _sprites[0].Velocity
                         //    = vec;
 
                         _sprites[0]._position.Y = tile.position.Y - 56f;
+                        
+
 
 
                     }
+                    else if (wasTouching == true)
+                        {
+                           //wasTouching = false;
+                            //_sprites[0]._position.Y = tile.position.Y + 1f;
+
+                        }
+
+
+                    if (_sprites[0].tileTouching(tile, _sprites[0]))
+                        Exit();
+                    
                     /* sprite._position.Y = tile.position.Y + sprite._texture.Height;
                      if (!sprite.IsTouching(tile))
                      {
@@ -389,6 +411,9 @@ namespace Platformer
             }
 
            
+           
+
+
             base.Update(gameTime);
         }
 
