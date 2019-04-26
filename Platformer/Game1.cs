@@ -49,10 +49,13 @@ namespace Platformer
         int opacDirection = 1;
         Rectangle titleScreen = new
         
+
+
         // fit user's screen bounds
         Rectangle(0, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
         // Title Screen //
 
+            MouseState mouse = Mouse.GetState();
 
 
         // Heealth bar
@@ -87,7 +90,7 @@ namespace Platformer
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.IsFullScreen = true;
-
+            
 
         }
 
@@ -97,7 +100,7 @@ namespace Platformer
         {
             GraphicsDevice.Clear(Color.DarkRed);
             spriteBatch.Begin(); //
-
+            
             
             Keys c;
 
@@ -136,10 +139,16 @@ namespace Platformer
                         if (username.Count != 0)
                             username.RemoveAt(username.Count - 1);
                     }
+                    else if (c == Keys.Tab)
+                            {
+                                
+                                beingTyped = "password";
+                            }
                     else
                     {
                         username.Add(c.ToString());
                     }
+                    
                 }
 
 
@@ -148,7 +157,7 @@ namespace Platformer
 
 
             
-            if (beingTyped == "user"){
+            if (beingTyped == "password"){
             if(currentState.GetPressedKeys().Length > 0)
                 {
                 c = currentState.GetPressedKeys()[0];
@@ -161,15 +170,15 @@ namespace Platformer
                        
                         if (c == Keys.Back)
                         {
-                            if (username.Count != 0)
-                                username.RemoveAt(username.Count - 1);
+                            if (password.Count != 0)
+                                password.RemoveAt(password.Count - 1);
                         }
 
 
                         else
                         {
                             
-                            username.Add(c.ToString());
+                            password.Add(c.ToString());
                         }
                     }
 
@@ -178,12 +187,14 @@ namespace Platformer
                 {
                     if (c == Keys.Back)
                     {
-                        if (username.Count != 0)
-                            username.RemoveAt(username.Count - 1);
+                        if (password.Count != 0)
+                            password.RemoveAt(password.Count - 1);
                     }
+                    else if(c == Keys.Tab)
+                            ;
                     else
                     {
-                        username.Add(c.ToString());
+                        password.Add(c.ToString());
                     }
                 }
 
@@ -192,24 +203,12 @@ namespace Platformer
             }
 
 
-            
-
-
-
-
-
-
-
-
-
-
-
             int height = graphics.PreferredBackBufferHeight;
             int width = graphics.PreferredBackBufferWidth;
 
 
             spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width/2, height/16+buttonSize.Y*3), Color.White);
-            spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width/2, height/16+buttonSize.Y*5), Color.White);
+            spriteBatch.DrawString(font, String.Join(String.Empty, password.ToArray()), new Vector2(width/2, height/16+buttonSize.Y*5), Color.White);
 
             // spriteBatch.Draw(logintitle, new Rectangle())
                        spriteBatch.Draw(logintitle, new Rectangle(new Point(width/ 2 - buttonSize.X, height/16), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
@@ -403,6 +402,9 @@ namespace Platformer
 
 
             base.Update(gameTime);
+
+            mouse = Mouse.GetState();
+
             switch (_state)
             {
                 case GameState.MainMenu:
