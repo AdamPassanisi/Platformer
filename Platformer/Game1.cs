@@ -185,17 +185,18 @@ namespace Platformer
                 }
                                 else
                 {
-                    if (c == Keys.Back)
-                    {
-                        if (password.Count != 0)
-                            password.RemoveAt(password.Count - 1);
-                    }
-                    else if(c == Keys.Tab)
-                            ;
-                    else
-                    {
-                        password.Add(c.ToString());
-                    }
+                        if (c == Keys.Back)
+                        {
+                            if (password.Count != 0)
+                                password.RemoveAt(password.Count - 1);
+                        }
+                       
+                        else if (c == Keys.Tab)
+                            db.createAccount("test", "passadfasdf");
+                        else
+                        {
+                            password.Add(c.ToString());
+                        }
                 }
 
 
@@ -203,6 +204,9 @@ namespace Platformer
             }
 
 
+
+
+            
             int height = graphics.PreferredBackBufferHeight;
             int width = graphics.PreferredBackBufferWidth;
 
@@ -236,8 +240,8 @@ namespace Platformer
             db.completeLevelForFirstTime(1, "abf", 1000);
             db.completeLevelForFirstTime(1, "abg", 600);
             db.completeLevelForFirstTime(1, "abh", 700);*/
-            db.updateHighScore("abg", 1 , 676);
-            db.viewLeaderboards(1);
+            //db.updateHighScore("abg", 1 , 676);
+            //db.viewLeaderboards(1);
         }
 
 
