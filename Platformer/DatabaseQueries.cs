@@ -16,10 +16,7 @@ namespace Platformer
         private static string uid;
         private static string password;
 
-        public ConnectDB()
-        {
 
-        }
         //Initialize values
         public void Initialize()
         {
