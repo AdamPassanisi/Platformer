@@ -19,6 +19,8 @@ namespace Platformer
 
         public Vector2 _position;// { get; set; }
 
+        
+
         protected Vector2 _prevPos;
 
         public Texture2D _texture;
@@ -49,6 +51,8 @@ namespace Platformer
 
         public Vector2 Velocity;
 
+        public Vector2 Acceleration = new Vector2(9.8f,0);
+
 
         Boolean hasJumped = false;
 
@@ -65,6 +69,12 @@ namespace Platformer
         #endregion
 
         #region Methods
+
+        public void Gravity()
+            {
+                ;
+            }
+
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {

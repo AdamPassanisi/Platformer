@@ -33,6 +33,10 @@ namespace Platformer
 
             bool wasTouching = false;
 
+        SpriteFont font;
+
+
+        List<string> letters = new List<string>();
 
         Texture2D titlescreen;
         Texture2D titlescreen_a;
@@ -84,6 +88,52 @@ namespace Platformer
         }
 
 
+        // Logs the user in to the server
+        public void Login()
+        {
+            Keys c;
+            if(currentState.GetPressedKeys().Length > 0)
+                {
+                c = currentState.GetPressedKeys()[0];
+
+                if (previousState.GetPressedKeys().Length > 0)
+                {
+                    if (previousState.GetPressedKeys()[0] != c)
+
+                    {
+                       
+                        if (c == Keys.Back)
+                        {
+                            if (letters.Count != 0)
+                                letters.RemoveAt(letters.Count - 1);
+                        }
+
+
+                        else
+                        {
+                            
+                            letters.Add(c.ToString());
+                        }
+                    }
+
+                }
+                                else
+                {
+                    if (c == Keys.Back)
+                    {
+                        if (letters.Count != 0)
+                            letters.RemoveAt(letters.Count - 1);
+                    }
+                    else
+                    {
+                        letters.Add(c.ToString());
+                    }
+                }
+
+
+                }
+        }
+
         protected override void Initialize()
         {
             
@@ -97,6 +147,8 @@ namespace Platformer
         protected override void LoadContent()
         {
             buttonSize = new Point(graphics.PreferredBackBufferWidth * 5 / 32, graphics.PreferredBackBufferHeight * 5/72);
+
+            font = Content.Load<SpriteFont>("font");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             titlescreen = Content.Load<Texture2D>("titlescreen");
@@ -164,6 +216,9 @@ namespace Platformer
         {
 
         }
+
+       
+
 
 
         public void menu()
@@ -319,7 +374,7 @@ namespace Platformer
             // menu control
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && select == 0)
                 _state = GameState.Level1;
 
