@@ -387,8 +387,14 @@ namespace Platformer
                         }
 
 
-                    if (_sprites[0].tileTouching(tile, _sprites[0]))
-                        Exit();
+                    if (_sprites[0].tileTouching(tiles[0], _sprites[0]))
+                        wasTouching = true;
+                    if (!(_sprites[0].tileTouching(tiles[0], _sprites[0])))
+                        if(wasTouching)
+                        {
+                        wasTouching = false;
+                        _sprites[0]._position.Y = graphics.PreferredBackBufferHeight - 200f;
+                        }
                     
                     /* sprite._position.Y = tile.position.Y + sprite._texture.Height;
                      if (!sprite.IsTouching(tile))

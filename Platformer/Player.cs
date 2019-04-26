@@ -224,7 +224,7 @@ namespace Platformer
              
         }
 
-       
+       // Returns true if player is on top the tile, false otherwise
         public bool tileTouching(Tile tile, Player player)
             {
                 // Checks if the player is in bounds horizontally 
