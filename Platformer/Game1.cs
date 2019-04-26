@@ -20,6 +20,7 @@ namespace Platformer
         enum GameState
         {
             MainMenu,
+            Login,
             Level1,
             Finish
         }
@@ -49,7 +50,7 @@ namespace Platformer
         int opacDirection = 1;
         Rectangle titleScreen = new
         
-
+           
 
         // fit user's screen bounds
         Rectangle(0, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
@@ -75,6 +76,9 @@ namespace Platformer
         KeyboardState keyboard = Keyboard.GetState();
         KeyboardState currentState;
         KeyboardState previousState;
+
+        KeyboardState typeCurr, typePrev;
+
         int select = 0;
         Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
@@ -98,10 +102,15 @@ namespace Platformer
         // Logs the user in to the server
         public void Login(GameTime gameTime)
         {
+            if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+           
             GraphicsDevice.Clear(Color.DarkRed);
             spriteBatch.Begin(); //
             
             
+            /*currentState = Keyboard.GetState();
+            previousState = currentState;*/
             Keys c;
 
             if (beingTyped == "user")
@@ -144,7 +153,12 @@ namespace Platformer
                                 
                                 beingTyped = "password";
                             }
-                    else
+                        else if (c == Keys.Enter)
+                        {
+
+                            ;
+                        }
+                        else
                     {
                         username.Add(c.ToString());
                     }
@@ -193,7 +207,7 @@ namespace Platformer
                        
                         else if (c == Keys.Tab)
                         {
-                            if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
+                            //if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
                             {
                                 _state = GameState.Level1;
                             }
@@ -226,8 +240,13 @@ namespace Platformer
                        spriteBatch.Draw(usernametitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
                        spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
 
-                        spriteBatch.End(); 
+                        spriteBatch.End();
 
+
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
+            base.Update(gameTime);
         }
 
         protected override void Initialize()
@@ -271,7 +290,7 @@ namespace Platformer
             continueWithoutSaving = Content.Load<Texture2D>("continuewithoutsaving");
             exit = Content.Load<Texture2D>("exit");
             instructions = Content.Load<Texture2D>("instructions");
-            multiplayer = Content.Load<Texture2D>("multiplayer");
+            multiplayer = Content.Load<Texture2D>("log");
             newGame = Content.Load<Texture2D>("newgame");
             returnToMainMenu = Content.Load<Texture2D>("returntomainmenu");
             saveContinue = Content.Load<Texture2D>("savecontinue");
@@ -338,7 +357,8 @@ namespace Platformer
         {
             // Sets the background color    
             GraphicsDevice.Clear(Color.Silver);
-           
+
+
             float[] selected = new float[4];
 
             if (previousState.IsKeyUp(Keys.Up) && currentState.IsKeyDown(Keys.Up))
@@ -387,8 +407,14 @@ namespace Platformer
                     break;
             }
 
-            
-            int height = graphics.PreferredBackBufferHeight;
+
+            if (previousState.IsKeyUp(Keys.Enter) && currentState.IsKeyDown(Keys.Enter))
+            {
+                if (select == 1)
+                    _state = GameState.Login;
+            }
+
+                int height = graphics.PreferredBackBufferHeight;
             int width = graphics.PreferredBackBufferWidth;
             int initial = height /5;
 
@@ -435,6 +461,9 @@ namespace Platformer
                     break;
                 case GameState.Level1:
                     UpdateLevel1(gameTime);
+                    break;
+                case GameState.Login:
+                    Login(gameTime);
                     break;
             }
 
@@ -504,12 +533,14 @@ namespace Platformer
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && select == 0)
                 _state = GameState.Level1;
 
-
+            
+            
             controller = GamePad.GetState(PlayerIndex.One);
             keyboard = Keyboard.GetState();
 
             previousState = currentState;
             currentState = Keyboard.GetState();
+            
             base.Update(gameTime);
             
 
@@ -611,7 +642,10 @@ namespace Platformer
             switch (_state)
             {
                 case GameState.MainMenu:
-                   Login(gameTime);
+                   DrawMainMenu(gameTime);
+                    break;
+                case GameState.Login:
+                    Login(gameTime);
                     break;
                 case GameState.Level1:
                     DrawLevel1(gameTime);
