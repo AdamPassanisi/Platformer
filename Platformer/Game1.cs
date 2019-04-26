@@ -65,7 +65,8 @@ namespace Platformer
 
 
         private List<Player> _sprites;
-
+        ConnectDB db = new ConnectDB();
+        
 
         Menu m;
 
@@ -85,7 +86,6 @@ namespace Platformer
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
             // Sets the game to 1080p fullscreen by default
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
@@ -226,6 +226,18 @@ namespace Platformer
 
             CreateTiles();
             base.Initialize();
+            db.Initialize();
+            //db.createAccount("abcdefg", "12345678");
+            //db.login("abc", "1234");
+            //db.saveGame("abcdefg", 3);
+            /*db.completeLevelForFirstTime(1, "abc", 300);
+            db.completeLevelForFirstTime(1, "abd", 200);
+            db.completeLevelForFirstTime(1, "abe", 500);
+            db.completeLevelForFirstTime(1, "abf", 1000);
+            db.completeLevelForFirstTime(1, "abg", 600);
+            db.completeLevelForFirstTime(1, "abh", 700);*/
+            db.updateHighScore("abg", 1 , 676);
+            db.viewLeaderboards(1);
         }
 
 
@@ -488,6 +500,7 @@ namespace Platformer
             previousState = currentState;
             currentState = Keyboard.GetState();
             base.Update(gameTime);
+            
 
         }
 
@@ -527,7 +540,7 @@ namespace Platformer
                         wasTouching = true;
 
                         Console.Write("Check");
-                        Vector2 vec = new Vector2(1, tile.position.Y -160f);
+                        Vector2 vec = new Vector2(1, tile.position.Y - 160f); 
                       //  _sprites[0].Velocity
                         //    = vec;
 
