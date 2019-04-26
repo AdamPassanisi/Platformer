@@ -136,6 +136,10 @@ namespace Platformer
                         if (username.Count != 0)
                             username.RemoveAt(username.Count - 1);
                     }
+                    else if (c == Keys.Tab)
+                        {
+                            db.createAccount("test", "12345678");
+                        }
                     else
                     {
                         username.Add(c.ToString());
@@ -236,9 +240,9 @@ namespace Platformer
             db.completeLevelForFirstTime(1, "abe", 500);
             db.completeLevelForFirstTime(1, "abf", 1000);
             db.completeLevelForFirstTime(1, "abg", 600);
-            db.completeLevelForFirstTime(1, "abh", 700);*/
-            db.updateHighScore("abg", 1 , 676);
-            db.viewLeaderboards(1);
+            db.completeLevelForFirstTime(1, "abh", 700);
+            db.updateHighScore("abg", 1 , 677);
+            db.viewLeaderboards(1);*/
         }
 
 

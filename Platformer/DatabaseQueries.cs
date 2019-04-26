@@ -16,7 +16,10 @@ namespace Platformer
         private static string uid;
         private static string password;
 
+        public ConnectDB()
+        {
 
+        }
         //Initialize values
         public void Initialize()
         {
@@ -102,12 +105,12 @@ namespace Platformer
                 myReader.Close();
                 if ((username.Length < 3 || username.Length > 40) && (password.Length < 8 || password.Length > 20))
                 {
-                    Console.WriteLine("Username must be 3-20 characters long. Password must be 8-20 characters long");
+                    Console.WriteLine("Username must be 3-40 characters long. Password must be 8-20 characters long");
 
                 }
                 else if (username.Length < 3 || username.Length > 40)
                 {
-                    Console.WriteLine("Username must be 3-20 characters long.");
+                    Console.WriteLine("Username must be 3-40 characters long.");
                 }
                 else if (password.Length < 8 || password.Length > 20)
                 {
