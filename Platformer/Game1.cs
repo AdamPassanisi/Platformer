@@ -36,7 +36,10 @@ namespace Platformer
         SpriteFont font;
 
 
-        List<string> letters = new List<string>();
+        List<string> username = new List<string>();
+        List<string> password = new List<string>();
+
+        String beingTyped = "user";
 
         Texture2D titlescreen;
         Texture2D titlescreen_a;
@@ -72,6 +75,7 @@ namespace Platformer
         Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
+        Texture2D logintitle, usernametitle, passwordtitle;
 
 
         public Game1()
@@ -89,9 +93,17 @@ namespace Platformer
 
 
         // Logs the user in to the server
-        public void Login()
+        public void Login(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.DarkRed);
+            spriteBatch.Begin(); //
+
+            
             Keys c;
+
+            if (beingTyped == "user")
+                {
+            
             if(currentState.GetPressedKeys().Length > 0)
                 {
                 c = currentState.GetPressedKeys()[0];
@@ -104,15 +116,15 @@ namespace Platformer
                        
                         if (c == Keys.Back)
                         {
-                            if (letters.Count != 0)
-                                letters.RemoveAt(letters.Count - 1);
+                            if (username.Count != 0)
+                                username.RemoveAt(username.Count - 1);
                         }
 
 
                         else
                         {
                             
-                            letters.Add(c.ToString());
+                            username.Add(c.ToString());
                         }
                     }
 
@@ -121,17 +133,91 @@ namespace Platformer
                 {
                     if (c == Keys.Back)
                     {
-                        if (letters.Count != 0)
-                            letters.RemoveAt(letters.Count - 1);
+                        if (username.Count != 0)
+                            username.RemoveAt(username.Count - 1);
                     }
                     else
                     {
-                        letters.Add(c.ToString());
+                        username.Add(c.ToString());
                     }
                 }
 
 
                 }
+            }
+
+
+            
+            if (beingTyped == "user"){
+            if(currentState.GetPressedKeys().Length > 0)
+                {
+                c = currentState.GetPressedKeys()[0];
+
+                if (previousState.GetPressedKeys().Length > 0)
+                {
+                    if (previousState.GetPressedKeys()[0] != c)
+
+                    {
+                       
+                        if (c == Keys.Back)
+                        {
+                            if (username.Count != 0)
+                                username.RemoveAt(username.Count - 1);
+                        }
+
+
+                        else
+                        {
+                            
+                            username.Add(c.ToString());
+                        }
+                    }
+
+                }
+                                else
+                {
+                    if (c == Keys.Back)
+                    {
+                        if (username.Count != 0)
+                            username.RemoveAt(username.Count - 1);
+                    }
+                    else
+                    {
+                        username.Add(c.ToString());
+                    }
+                }
+
+
+                }
+            }
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+            int height = graphics.PreferredBackBufferHeight;
+            int width = graphics.PreferredBackBufferWidth;
+
+
+            spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width/2, height/16+buttonSize.Y*3), Color.White);
+            spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width/2, height/16+buttonSize.Y*5), Color.White);
+
+            // spriteBatch.Draw(logintitle, new Rectangle())
+                       spriteBatch.Draw(logintitle, new Rectangle(new Point(width/ 2 - buttonSize.X, height/16), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
+                       spriteBatch.Draw(usernametitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
+                       spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
+
+                        spriteBatch.End(); 
+
         }
 
         protected override void Initialize()
@@ -149,6 +235,11 @@ namespace Platformer
             buttonSize = new Point(graphics.PreferredBackBufferWidth * 5 / 32, graphics.PreferredBackBufferHeight * 5/72);
 
             font = Content.Load<SpriteFont>("font");
+
+            // Login Page
+            usernametitle = Content.Load<Texture2D>("usernametitle");
+            passwordtitle = Content.Load<Texture2D>("passwordtitle");
+            logintitle = Content.Load<Texture2D>("logintitle");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             titlescreen = Content.Load<Texture2D>("titlescreen");
@@ -337,6 +428,16 @@ namespace Platformer
 
         }
 
+        protected void DrawLogin(GameTime gameTime)
+            {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin(); //
+
+            menu();
+            spriteBatch.End(); 
+                
+            }           
+
         protected void DrawMainMenu(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -484,7 +585,7 @@ namespace Platformer
             switch (_state)
             {
                 case GameState.MainMenu:
-                    DrawMainMenu(gameTime);
+                   Login(gameTime);
                     break;
                 case GameState.Level1:
                     DrawLevel1(gameTime);
@@ -492,6 +593,7 @@ namespace Platformer
                 case GameState.Finish:
                     // DrawFinish(gameTime);
                     break;
+                    
 
 
             }
