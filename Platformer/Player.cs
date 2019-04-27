@@ -50,7 +50,7 @@ namespace Platformer
             }
         }
 
-        public float Speed = 3f;
+        public float Speed = 1f;
 
         public Vector2 Velocity;
 
@@ -108,7 +108,7 @@ namespace Platformer
                 //_position.Y -= 170f;
                 // Velocity.Y = 3f*10;
                 if (jumpCount == 0)
-                    jumpCount = 50;
+                    jumpCount = 75;
                 jumping = true;
                 grounded = false;
                 hasJumped = true;
@@ -120,8 +120,8 @@ namespace Platformer
             {
                
                     jumpCount--;
-                
-                _position.Y -= 8;
+                // jump speed
+                _position.Y -= 3.5f;
 
                 if (jumpCount == 0)
                 {
