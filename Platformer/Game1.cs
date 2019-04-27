@@ -130,13 +130,14 @@ namespace Platformer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
-
+            // Updates keyboard states for typing recognition
             previousState = currentState;
             currentState = Keyboard.GetState();
 
             GraphicsDevice.Clear(Color.DarkRed);
             spriteBatch.Begin(); //
 
+            // Checks if its the first time running this function, sets the selection to username input if so
             if(firstLog)
             {
                 if (currentState.GetPressedKeys().Length == 0)
@@ -146,10 +147,10 @@ namespace Platformer
                 }
             }
 
-            /*currentState = Keyboard.GetState();
-            previousState = currentState;*/
+         
             Keys c;
 
+            // User is entering username
             if (beingTyped == "user")
             {
 
@@ -227,7 +228,7 @@ namespace Platformer
             }
 
 
-
+            // User is entering password
             if (beingTyped == "password") {
                 if (currentState.GetPressedKeys().Length > 0)
                 {
@@ -327,7 +328,7 @@ namespace Platformer
             spriteBatch.DrawString(font, String.Join(String.Empty, password.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
 
             // spriteBatch.Draw(logintitle, new Rectangle())
-            spriteBatch.Draw(logintitle, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White);
+            spriteBatch.Draw(logintitle, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 3)), Color.White);
             spriteBatch.Draw(usernametitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[0]));
            spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[1]));
 
@@ -655,7 +656,7 @@ namespace Platformer
             // level 1 action
             // enemies & objects
 
-
+            int touchCount = 0;
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
@@ -669,21 +670,23 @@ namespace Platformer
                 scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
             }
            {
-
+                touchCount = 0;
 
 
                 foreach (var tile in tiles)
                 {
+                    
                     _sprites[0].Update(gameTime, _sprites);
                     scrolling1.Update((int)_sprites[0].Xtrans);
                     scrolling2.Update((int)_sprites[0].Xtrans);
-
+                    
                     tile.Update(_sprites[0].Xtrans);
                     if (_sprites[0].IsTouching(tile, _sprites[0]))
                     {
+                        touchCount++;
 
                         wasTouching = true;
-
+                        
                         Console.Write("Check");
                         Vector2 vec = new Vector2(1, tile.position.Y - 160f); 
                       //  _sprites[0].Velocity
@@ -691,8 +694,6 @@ namespace Platformer
 
                         _sprites[0]._position.Y = tile.position.Y - 56f;
                         
-
-
 
                     }
                     else if (wasTouching == true)
@@ -702,7 +703,7 @@ namespace Platformer
 
                         }
 
-
+                    /*
                     if (_sprites[0].tileTouching(tiles[0], _sprites[0]))
                         wasTouching = true;
                     if (!(_sprites[0].tileTouching(tiles[0], _sprites[0])))
@@ -710,8 +711,8 @@ namespace Platformer
                         {
                         wasTouching = false;
                         _sprites[0]._position.Y = graphics.PreferredBackBufferHeight - 200f;
-                        }
-                    
+                        }*/
+
                     /* sprite._position.Y = tile.position.Y + sprite._texture.Height;
                      if (!sprite.IsTouching(tile))
                      {
@@ -725,7 +726,23 @@ namespace Platformer
                      }*/
 
 
+                    //  Checks if player is hitting anything
+                    // If not, he fails 
+                    if (_sprites[0].jumping == false)
+                    {
+                        if (_sprites[0].Contact == false)
+                            _sprites[0]._position.Y += 10;
+                    }
+
+
+                    // Player must stop falling when he reaches the ground
+                    if (_sprites[0].Position.Y > graphics.PreferredBackBufferHeight * .87f)
+                            _sprites[0]._position.Y = graphics.PreferredBackBufferHeight * .87f;
+                    
                 }
+
+               
+
 
                 healthRectangle = new Rectangle(150,50,healthBar.health,60);
 

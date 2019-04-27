@@ -22,7 +22,7 @@ namespace Platformer
 
         public Vector2 _position;// { get; set; }
 
-        
+        public bool Contact = false;
 
         protected Vector2 _prevPos;
 
@@ -59,7 +59,7 @@ namespace Platformer
 
         Boolean hasJumped = false;
 
-        Boolean jumping = false;
+        public Boolean jumping = false;
 
         int jumpCount = 0;
 
@@ -114,19 +114,19 @@ namespace Platformer
 
             if (jumpCount > 0)
             {
-                
+                jumping = true;
                     jumpCount--;
                 
                 _position.Y -= 8;
 
-                if(jumpCount == 0)
-                    jumpCount = -25;
+                if (jumpCount == 0)
+                    jumping = false;// jumpCount = -25;
             }                   
 
             if (jumpCount < 0)
             {
-                jumpCount++;
-                _position.Y += 8;
+                //jumpCount++;
+                ;//_position.Y += 8;
             }
             if (jumping)
             {
@@ -211,6 +211,8 @@ namespace Platformer
       Position += Velocity;
 
             Xtrans = (int)Velocity.X;
+            // Testing movement
+            //Xtrans = (int)_position.X;
             _prevPos = Position;
 
 
