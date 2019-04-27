@@ -69,6 +69,7 @@ namespace Platformer
 
 
         private List<Player> _sprites;
+        private List<Enemy> _sprites2;
         ConnectDB db = new ConnectDB();
         Texture2D instructs;
 
@@ -425,12 +426,25 @@ namespace Platformer
                 { "Death", new Animation(Content.Load<Texture2D>("death"),8)}
              };
 
+            var enemyAnimations = new Dictionary<string, Animation>()
+            {
+                {"WalkRight",new Animation(Content.Load<Texture2D>("right"),8)},
+                { "WalkLeft", new Animation(Content.Load<Texture2D>("left"),8)}
+            };
 
             _sprites = new List<Player>();
-            Player main_player = new Player(animations, graphics) { Position = new Vector2((int)(.0732 *graphics.PreferredBackBufferWidth)
-                , (int)((0.858) * graphics.PreferredBackBufferHeight)), };
+            _sprites2 = new List<Enemy>();
+            Player main_player = new Player(animations) { Position = new Vector2((int)(.0732 * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
+                , (int)((0.858) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)), };
 
+            // places enemy, but needs to be changed a little
+            Enemy test_enemy = new Enemy(animations)
+            {
+                Position = new Vector2((int)(.8032 * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
+                , (int)((0.858) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)),
+            };
             _sprites.Add(main_player);
+            _sprites2.Add(test_enemy);
                 
       
        
@@ -618,6 +632,8 @@ namespace Platformer
 
 
             foreach (var sprite in _sprites)
+                sprite.Draw(spriteBatch);
+            foreach (var sprite in _sprites2)
                 sprite.Draw(spriteBatch);
             foreach (var tl in tiles)
             {
