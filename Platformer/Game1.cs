@@ -22,7 +22,8 @@ namespace Platformer
             MainMenu,
             Login,
             Level1,
-            Finish
+            Finish,
+            Instructions
         }
         GameState _state = GameState.MainMenu;
         GraphicsDeviceManager graphics;
@@ -69,7 +70,7 @@ namespace Platformer
 
         private List<Player> _sprites;
         ConnectDB db = new ConnectDB();
-        
+        Texture2D instructs;
 
         Menu m;
 
@@ -101,11 +102,32 @@ namespace Platformer
         }
 
 
+        public void Instructions(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                _state = GameState.MainMenu;
+
+
+            GraphicsDevice.Clear(Color.DarkRed);
+            spriteBatch.Begin(); //
+
+
+            spriteBatch.Draw(instructs, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+
+            spriteBatch.End();
+
+
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
+            base.Update(gameTime);
+        }
+
         // Logs the user in to the server
         public void Login(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                _state = GameState.MainMenu;
             
 
             GraphicsDevice.Clear(Color.DarkRed);
@@ -311,6 +333,7 @@ namespace Platformer
             titlescreen = Content.Load<Texture2D>("titlescreen");
             titlescreen_a = Content.Load<Texture2D>("titlescreen(1)");
 
+            instructs = Content.Load<Texture2D>("instructs");
             // Buttons
             continueWithoutSaving = Content.Load<Texture2D>("continuewithoutsaving");
             exit = Content.Load<Texture2D>("exit");
@@ -375,7 +398,7 @@ namespace Platformer
         }
 
        
-
+        
 
 
         public void menu()
@@ -437,6 +460,10 @@ namespace Platformer
             {
                 if (select == 1)
                     _state = GameState.Login;
+                if (select == 2)
+                    _state = GameState.Instructions;
+                if (select == 3)
+                    Exit();
             }
 
                 int height = graphics.PreferredBackBufferHeight;
@@ -552,8 +579,7 @@ namespace Platformer
         void UpdateMainMenu(GameTime gameTime)
         {
             // menu control
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            
             
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && select == 0)
                 _state = GameState.Level1;
@@ -674,6 +700,9 @@ namespace Platformer
                     break;
                 case GameState.Level1:
                     DrawLevel1(gameTime);
+                    break;
+                case GameState.Instructions:
+                    Instructions(gameTime);
                     break;
                 case GameState.Finish:
                     // DrawFinish(gameTime);
