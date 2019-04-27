@@ -84,7 +84,7 @@ namespace Platformer
         KeyboardState typeCurr, typePrev;
 
         int select = 0;
-        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
+        Texture2D continueWithoutSaving, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
         Texture2D logintitle, usernametitle, passwordtitle, enter;
@@ -392,6 +392,7 @@ namespace Platformer
             returnToMainMenu = Content.Load<Texture2D>("returntomainmenu");
             saveContinue = Content.Load<Texture2D>("savecontinue");
             singePlayer = Content.Load<Texture2D>("singleplayer");
+            viewLeaderboards = Content.Load<Texture2D>("viewleaderboards");
             startGame = Content.Load<Texture2D>("startgame");
             tryAgain = Content.Load<Texture2D>("tryagain");
             healthBar = new HealthBar(Content.Load<Texture2D>("Health"),new Vector2(400,400),100);
@@ -434,8 +435,8 @@ namespace Platformer
 
             _sprites = new List<Player>();
             _sprites2 = new List<Enemy>();
-            Player main_player = new Player(animations) { Position = new Vector2((int)(.0732 * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
-                , (int)((0.858) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)), };
+            Player main_player = new Player(animations,graphics) { Position = new Vector2((int)(.0732 * graphics.PreferredBackBufferWidth)
+                , (int)((0.858) * graphics.PreferredBackBufferHeight)), };
 
             // places enemy, but needs to be changed a little
             Enemy test_enemy = new Enemy(animations)
@@ -444,7 +445,7 @@ namespace Platformer
                 , (int)((0.858) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)),
             };
             _sprites.Add(main_player);
-            _sprites2.Add(test_enemy);
+            //_sprites2.Add(test_enemy);
                 
       
        
@@ -472,7 +473,7 @@ namespace Platformer
             GraphicsDevice.Clear(Color.Silver);
 
 
-            float[] selected = new float[4];
+            float[] selected = new float[5];
 
             if (previousState.IsKeyUp(Keys.Up) && currentState.IsKeyDown(Keys.Up))
             {
@@ -487,10 +488,10 @@ namespace Platformer
 
 
 
-            if (select > 3)
+            if (select > 4)
                 select = 0;
             if (select < 0)
-                select = 3;
+                select = 4;
 
             switch (select)
             {
@@ -499,24 +500,35 @@ namespace Platformer
                     selected[1] = .5f;
                     selected[2] = .5f;
                     selected[3] = .5f;
+                    selected[4] = .5f;
                     break;
                 case 1:
                     selected[0] = .5f;
                     selected[1] = 1f;
                     selected[2] = .5f;
                     selected[3] = .5f;
+                    selected[4] = .5f;
                     break;
                 case 2:
                     selected[0] = .5f;
                     selected[1] = .5f;
                     selected[2] = 1f;
                     selected[3] = .5f;
+                    selected[4] = .5f;
                     break;
                 case 3:
                     selected[0] = .5f;
                     selected[1] = .5f;
                     selected[2] = .5f;
                     selected[3] = 1f;
+                    selected[4] = .5f;
+                    break;
+                case 4:
+                    selected[0] = .5f;
+                    selected[1] = .5f;
+                    selected[2] = .5f;
+                    selected[3] = .5f;
+                    selected[4] = 1f;
                     break;
             }
 
@@ -526,8 +538,10 @@ namespace Platformer
                 if (select == 1)
                     _state = GameState.Login;
                 if (select == 2)
-                    _state = GameState.Instructions;
+                    ;
                 if (select == 3)
+                    _state = GameState.Instructions;
+                if (select == 4)
                     Exit();
             }
 
@@ -537,12 +551,13 @@ namespace Platformer
 
             
             // Draws the game title
-            spriteBatch.Draw(titlescreen, new Rectangle(width / 2 - width/4, height/12, width/2, height/2), Color.White);
+            spriteBatch.Draw(titlescreen, new Rectangle(width / 4, height/12, width/2, height/2), Color.White);
             // Draws the menu options
-            spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - 150, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
-            spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - 150, initial + buttonSize.Y * 2+height/18), buttonSize), Color.White * selected[1]);
-            spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - 150, initial + buttonSize.Y * 3+height/16), buttonSize), Color.White * selected[2]);
-            spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - 150, initial + buttonSize.Y *4+ height/15), buttonSize), Color.White * selected[3]);
+            spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
+            spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White * selected[1]);
+            spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[2]);
+            spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 4+height/17), buttonSize), Color.White * selected[3]);
+            spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *5+ height/16), buttonSize), Color.White * selected[4]);
 
             
         }
