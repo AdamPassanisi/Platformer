@@ -92,7 +92,7 @@ namespace Platformer
         KeyboardState typeCurr, typePrev;
 
         int select = 0;
-        Texture2D continueWithoutSaving, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
+        Texture2D continueWithoutSaving, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
         Texture2D logintitle, usernametitle, passwordtitle, enter;
@@ -100,6 +100,7 @@ namespace Platformer
         bool firstLog = true;
         bool enterable = false;
         bool incorrectLogin = false;
+        Texture2D incorrect;
 
 
         public Game1()
@@ -570,6 +571,7 @@ namespace Platformer
 
             instructs = Content.Load<Texture2D>("instructs");
             // Buttons
+            createaccountbutton = Content.Load<Texture2D>("createaccountbutton");
             continueWithoutSaving = Content.Load<Texture2D>("continuewithoutsaving");
             exit = Content.Load<Texture2D>("exit");
             instructions = Content.Load<Texture2D>("instructions");
@@ -660,7 +662,7 @@ namespace Platformer
             GraphicsDevice.Clear(Color.Silver);
 
 
-            float[] selected = new float[5];
+            float[] selected = new float[6];
 
             if (previousState.IsKeyUp(Keys.Up) && currentState.IsKeyDown(Keys.Up))
             {
@@ -675,10 +677,10 @@ namespace Platformer
 
 
 
-            if (select > 4)
+            if (select > 5)
                 select = 0;
             if (select < 0)
-                select = 4;
+                select = 5;
 
             switch (select)
             {
@@ -688,6 +690,7 @@ namespace Platformer
                     selected[2] = .5f;
                     selected[3] = .5f;
                     selected[4] = .5f;
+                    selected[5] = .5f;
                     break;
                 case 1:
                     selected[0] = .5f;
@@ -695,6 +698,7 @@ namespace Platformer
                     selected[2] = .5f;
                     selected[3] = .5f;
                     selected[4] = .5f;
+                    selected[5] = .5f;
                     break;
                 case 2:
                     selected[0] = .5f;
@@ -702,6 +706,7 @@ namespace Platformer
                     selected[2] = 1f;
                     selected[3] = .5f;
                     selected[4] = .5f;
+                    selected[5] = .5f;
                     break;
                 case 3:
                     selected[0] = .5f;
@@ -709,6 +714,7 @@ namespace Platformer
                     selected[2] = .5f;
                     selected[3] = 1f;
                     selected[4] = .5f;
+                    selected[5] = .5f;
                     break;
                 case 4:
                     selected[0] = .5f;
@@ -716,6 +722,15 @@ namespace Platformer
                     selected[2] = .5f;
                     selected[3] = .5f;
                     selected[4] = 1f;
+                    selected[5] = .5f;
+                    break;
+                case 5:
+                    selected[0] = .5f;
+                    selected[1] = .5f;
+                    selected[2] = .5f;
+                    selected[3] = .5f;
+                    selected[4] = .5f;
+                    selected[5] = 1f;
                     break;
             }
 
@@ -725,10 +740,12 @@ namespace Platformer
                 if (select == 1)
                     _state = GameState.Login;
                 if (select == 2)
-                    ;
+                    _state = GameState.CreateAccount;
                 if (select == 3)
-                    _state = GameState.Instructions;
+                    ;
                 if (select == 4)
+                    _state = GameState.Instructions;
+                if (select == 5)
                     Exit();
             }
 
@@ -742,9 +759,10 @@ namespace Platformer
             // Draws the menu options
             spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
             spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White * selected[1]);
-            spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[2]);
-            spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 4+height/17), buttonSize), Color.White * selected[3]);
-            spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *5+ height/16), buttonSize), Color.White * selected[4]);
+            spriteBatch.Draw(createaccountbutton, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[2]);
+            spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 4 + height / 17), buttonSize), Color.White * selected[3]);
+            spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 5+height/16), buttonSize), Color.White * selected[4]);
+            spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *6+ height/15), buttonSize), Color.White * selected[5]);
 
             
         }
@@ -1000,6 +1018,9 @@ namespace Platformer
                     break;
                 case GameState.Login:
                     Login(gameTime);
+                    break;
+                case GameState.CreateAccount:
+                    CreateAccount(gameTime);
                     break;
                 case GameState.Level1:
                     DrawLevel1(gameTime);
