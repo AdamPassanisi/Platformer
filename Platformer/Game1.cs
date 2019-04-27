@@ -399,7 +399,10 @@ namespace Platformer
             // background
             // so once we scroll through one background we go onto the next
             scrolling1 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(0, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height));
+            scrolling1 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(0, 0, graphics.PreferredBackBufferWidth,graphics.PreferredBackBufferHeight));
+
             scrolling2 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height));
+            scrolling2 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(graphics.PreferredBackBufferWidth, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));
 
 
             // loading tile textures here
@@ -423,8 +426,8 @@ namespace Platformer
 
 
             _sprites = new List<Player>();
-            Player main_player = new Player(animations) { Position = new Vector2((int)(.0732 * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
-                , (int)((0.858) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)), };
+            Player main_player = new Player(animations, graphics) { Position = new Vector2((int)(.0732 *graphics.PreferredBackBufferWidth)
+                , (int)((0.858) * graphics.PreferredBackBufferHeight)), };
 
             _sprites.Add(main_player);
                 
