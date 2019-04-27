@@ -104,8 +104,9 @@ namespace Platformer
         }
 
 
-        public Enemy(Dictionary<string, Animation> animations)
+        public Enemy(Dictionary<string, Animation> animations, GraphicsDeviceManager g)
         {
+            graphics = g;
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value);
         }
