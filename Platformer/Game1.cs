@@ -23,7 +23,8 @@ namespace Platformer
             Login,
             Level1,
             Finish,
-            Instructions
+            Instructions, 
+            CreateAccount
         }
         GameState _state = GameState.MainMenu;
         GraphicsDeviceManager graphics;
@@ -44,6 +45,13 @@ namespace Platformer
         String beingTyped = "user";
 
         float[] colors = { 0.5f, 0.0f, 0.0f };
+
+        // Create Account
+        float[] Createcolors = { .5f, 0f, 0f, 0f };
+        List<string> Createusername = new List<string>();
+        List<string> Createpassword = new List<string>();
+        String CreatebeingTyped = "user";
+        bool Createfirst = false;
 
         Texture2D titlescreen;
         Texture2D titlescreen_a;
@@ -88,6 +96,7 @@ namespace Platformer
         Point buttonSize;
 
         Texture2D logintitle, usernametitle, passwordtitle, enter;
+        Texture2D createaccount, confirmpassword;
         bool firstLog = true;
         bool enterable = false;
 
@@ -97,13 +106,15 @@ namespace Platformer
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             // Sets the game to 1080p fullscreen by default
-            graphics.PreferredBackBufferHeight = 720;
-            graphics.PreferredBackBufferWidth = 1080;
+            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = 1920;
             //graphics.IsFullScreen = true;
             
 
         }
 
+
+       
 
         public void Instructions(GameTime gameTime)
         {
@@ -126,7 +137,146 @@ namespace Platformer
             base.Update(gameTime);
         }
 
+        // Creates a new account on the server
+        #region Create Account
+        public void CreateAccount(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                _state = GameState.MainMenu;
+
+            // Updates keyboard states for typing recognition
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
+
+            if (Createfirst)
+            {
+                if (currentState.GetPressedKeys().Length == 0)
+                {
+                    CreatebeingTyped = "user";
+                    Createfirst = false;
+                }
+            }
+
+            int height = graphics.PreferredBackBufferHeight;
+            int width = graphics.PreferredBackBufferWidth;
+
+
+            GraphicsDevice.Clear(Color.DarkRed);
+            spriteBatch.Begin(); //
+
+
+
+
+
+         
+            Keys c;
+
+            // User is entering username
+            if (CreatebeingTyped == "user")
+            {
+               
+                if (currentState.GetPressedKeys().Length > 0)
+                {
+                    c = currentState.GetPressedKeys()[0];
+
+                    if (previousState.GetPressedKeys().Length > 0)
+                    {
+                        if (previousState.GetPressedKeys()[0] != c)
+
+                        {
+
+                            if (c == Keys.Back)
+                            {
+                                if (Createusername.Count != 0)
+                                    Createusername.RemoveAt(Createusername.Count - 1);
+                            }
+
+
+                            else
+                            {
+
+                                Createusername.Add(c.ToString());
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (c == Keys.Back)
+                        {
+                            if (Createusername.Count != 0)
+                                Createusername.RemoveAt(Createusername.Count - 1);
+                        }
+                        else if (c == Keys.Tab)
+                        {
+                            Createcolors[0] = 0f;
+                            Createcolors[1] = .5f;
+                            Createcolors[2] = 0f;
+                            Createcolors[3] = 0f;
+
+                            CreatebeingTyped = "password";
+                        }
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up)
+                        {
+
+                            ;
+                        }
+                        else if (c == Keys.Enter)
+                        {
+                            beingTyped = "enter";
+                            Createcolors[0] = 0f;
+                            Createcolors[1] = 0f;
+                            Createcolors[2] = 0.5f;
+                            Createcolors[3] = 0f;
+                            //  enterable = true;
+                        }
+
+
+                        else if (c == Keys.Down)
+                        {
+                            beingTyped = "enter";
+                            Createcolors[0] = 0f;
+                            Createcolors[1] = 0.5f;
+                            Createcolors[2] = 0;
+                            Createcolors[3] = 0f;
+
+                            CreatebeingTyped = "password";
+                        }
+                        else
+                        {
+                            Createusername.Add(c.ToString());
+                        }
+
+                    }
+
+
+                }
+            }
+
+
+
+            spriteBatch.DrawString(font, String.Join(String.Empty, Createusername.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
+            spriteBatch.DrawString(font, String.Join(String.Empty, Createpassword.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
+
+            // spriteBatch.Draw(logintitle, new Rectangle())
+            spriteBatch.Draw(createaccount, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 3)), Color.White);
+            spriteBatch.Draw(usernametitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[0]));
+            spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[1]));
+            spriteBatch.Draw(confirmpassword, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[2]));
+
+            spriteBatch.Draw(enter, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 8), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[3]));
+
+
+
+
+
+            spriteBatch.End();
+        }
+        #endregion
+
         // Logs the user in to the server
+        #region Login
         public void Login(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -368,6 +518,7 @@ namespace Platformer
 
             base.Update(gameTime);
         }
+        #endregion
 
         protected override void Initialize()
         {
@@ -402,6 +553,9 @@ namespace Platformer
             passwordtitle = Content.Load<Texture2D>("passwordtitle");
             logintitle = Content.Load<Texture2D>("logintitle");
             enter = Content.Load<Texture2D>("enter");
+
+            createaccount = Content.Load<Texture2D>("createaccount");
+            confirmpassword = Content.Load<Texture2D>("confirmpassword");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             titlescreen = Content.Load<Texture2D>("titlescreen");
@@ -792,7 +946,8 @@ namespace Platformer
                     if (_sprites[0].jumping == false)
                     {
                         if (_sprites[0].Contact == false)
-                            _sprites[0]._position.Y += 10;
+                            // fall speed
+                            _sprites[0]._position.Y += 3.5f;
                     }
 
 
