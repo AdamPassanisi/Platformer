@@ -439,10 +439,10 @@ namespace Platformer
                 , (int)((0.858) * graphics.PreferredBackBufferHeight)), };
 
             // places enemy, but needs to be changed a little
-            Enemy test_enemy = new Enemy(animations)
+            Enemy test_enemy = new Enemy(animations,graphics)
             {
-                Position = new Vector2((int)(.8032 * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
-                , (int)((0.858) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)),
+                Position = new Vector2((int)(.8032 * graphics.PreferredBackBufferWidth)
+                , (int)((0.858) * graphics.PreferredBackBufferHeight)),
             };
             _sprites.Add(main_player);
             //_sprites2.Add(test_enemy);
