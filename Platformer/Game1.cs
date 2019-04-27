@@ -42,6 +42,8 @@ namespace Platformer
 
         String beingTyped = "user";
 
+        float[] colors = { 0.5f, 0.0f };
+
         Texture2D titlescreen;
         Texture2D titlescreen_a;
         Scrolling scrolling1;
@@ -102,123 +104,146 @@ namespace Platformer
         // Logs the user in to the server
         public void Login(GameTime gameTime)
         {
-            if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-           
+            
+
             GraphicsDevice.Clear(Color.DarkRed);
             spriteBatch.Begin(); //
-            
-            
+
+
             /*currentState = Keyboard.GetState();
             previousState = currentState;*/
             Keys c;
 
             if (beingTyped == "user")
-                {
-            
-            if(currentState.GetPressedKeys().Length > 0)
-                {
-                c = currentState.GetPressedKeys()[0];
+            {
 
-                if (previousState.GetPressedKeys().Length > 0)
+                if (currentState.GetPressedKeys().Length > 0)
                 {
-                    if (previousState.GetPressedKeys()[0] != c)
+                    c = currentState.GetPressedKeys()[0];
 
+                    if (previousState.GetPressedKeys().Length > 0)
                     {
-                       
+                        if (previousState.GetPressedKeys()[0] != c)
+
+                        {
+
+                            if (c == Keys.Back)
+                            {
+                                if (username.Count != 0)
+                                    username.RemoveAt(username.Count - 1);
+                            }
+
+
+                            else
+                            {
+
+                                username.Add(c.ToString());
+                            }
+                        }
+
+                    }
+                    else
+                    {
                         if (c == Keys.Back)
                         {
                             if (username.Count != 0)
                                 username.RemoveAt(username.Count - 1);
                         }
-
-
-                        else
+                        else if (c == Keys.Tab)
                         {
-                            
-                            username.Add(c.ToString());
-                        }
-                    }
+                            colors[0] = 0f;
+                            colors[1] = .5f;
 
-                }
-                                else
-                {
-                    if (c == Keys.Back)
-                    {
-                        if (username.Count != 0)
-                            username.RemoveAt(username.Count - 1);
-                    }
-                    else if (c == Keys.Tab)
-                            {
-                                
-                                beingTyped = "password";
-                            }
+                            beingTyped = "password";
+                        }
                         else if (c == Keys.Enter)
                         {
 
                             ;
                         }
+
+                        else if (c == Keys.Down)
+                        {
+                            colors[0] = 0f;
+                            colors[1] = .5f;
+
+                            beingTyped = "password";
+                        }
                         else
-                    {
-                        username.Add(c.ToString());
+                        {
+                            username.Add(c.ToString());
+                        }
+
                     }
-                    
-                }
 
 
                 }
             }
 
 
-            
-            if (beingTyped == "password"){
-            if(currentState.GetPressedKeys().Length > 0)
-                {
-                c = currentState.GetPressedKeys()[0];
 
-                if (previousState.GetPressedKeys().Length > 0)
+            if (beingTyped == "password") {
+                if (currentState.GetPressedKeys().Length > 0)
                 {
-                    if (previousState.GetPressedKeys()[0] != c)
+                    c = currentState.GetPressedKeys()[0];
 
+                    if (previousState.GetPressedKeys().Length > 0)
                     {
-                       
-                        if (c == Keys.Back)
+                        if (previousState.GetPressedKeys()[0] != c)
+
                         {
-                            if (password.Count != 0)
-                                password.RemoveAt(password.Count - 1);
+
+                            if (c == Keys.Back)
+                            {
+                                if (password.Count != 0)
+                                    password.RemoveAt(password.Count - 1);
+                            }
+
+                           
+                            else
+                            {
+
+                                password.Add(c.ToString());
+                            }
                         }
 
-
-                        else
-                        {
-                            
-                            password.Add(c.ToString());
-                        }
                     }
-
-                }
-                                else
-                {
+                    else
+                    {
                         if (c == Keys.Back)
                         {
                             if (password.Count != 0)
                                 password.RemoveAt(password.Count - 1);
                         }
-                       
+
                         else if (c == Keys.Tab)
                         {
                             //if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
                             {
-                                _state = GameState.Level1;
+                                //_state = GameState.Level1;
                             }
                         }
-                            
 
+                       
+
+
+                        else if (c == Keys.Up)
+                        {
+
+                            colors[0] = 0.5f;
+                            colors[1] = 0f;
+
+                            beingTyped = "user";
+                        }
+                        else if (c == Keys.Down)
+                            ;
                         else
                         {
                             password.Add(c.ToString());
                         }
-                }
+                    }
 
 
                 }
@@ -227,18 +252,18 @@ namespace Platformer
 
 
 
-            
+
             int height = graphics.PreferredBackBufferHeight;
             int width = graphics.PreferredBackBufferWidth;
 
 
-            spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width/2, height/16+buttonSize.Y*3), Color.White);
-            spriteBatch.DrawString(font, String.Join(String.Empty, password.ToArray()), new Vector2(width/2, height/16+buttonSize.Y*5), Color.White);
+            spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
+            spriteBatch.DrawString(font, String.Join(String.Empty, password.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
 
             // spriteBatch.Draw(logintitle, new Rectangle())
-                       spriteBatch.Draw(logintitle, new Rectangle(new Point(width/ 2 - buttonSize.X, height/16), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
-                       spriteBatch.Draw(usernametitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
-                       spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
+            spriteBatch.Draw(logintitle, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White);
+            spriteBatch.Draw(usernametitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[0]));
+                       spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[1]));
 
                         spriteBatch.End();
 
