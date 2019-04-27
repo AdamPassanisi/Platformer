@@ -13,13 +13,16 @@ namespace Platformer
     {
         #region Fields
 
+
+        GraphicsDeviceManager graphics;
+
         protected AnimationManager _animationManager;
 
         protected Dictionary<string, Animation> _animations;
 
         public Vector2 _position;// { get; set; }
 
-        
+        public bool Contact = false;
 
         protected Vector2 _prevPos;
 
@@ -56,7 +59,7 @@ namespace Platformer
 
         Boolean hasJumped = false;
 
-        Boolean jumping = false;
+        public Boolean jumping = false;
 
         int jumpCount = 0;
 
@@ -111,19 +114,19 @@ namespace Platformer
 
             if (jumpCount > 0)
             {
-                
+                jumping = true;
                     jumpCount--;
                 
                 _position.Y -= 8;
 
-                if(jumpCount == 0)
-                    jumpCount = -25;
+                if (jumpCount == 0)
+                    jumping = false;// jumpCount = -25;
             }                   
 
             if (jumpCount < 0)
             {
-                jumpCount++;
-                _position.Y += 8;
+                //jumpCount++;
+                ;//_position.Y += 8;
             }
             if (jumping)
             {
@@ -140,7 +143,7 @@ namespace Platformer
 
 
             }
-            if (_position.Y > (0.858) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
+            if (_position.Y > (0.858) * graphics.PreferredBackBufferHeight)
             {
                 //hasJumped = false;
                 
@@ -183,8 +186,9 @@ namespace Platformer
         }
         
 
-    public Player(Dictionary<string, Animation> animations)
+    public Player(Dictionary<string, Animation> animations, GraphicsDeviceManager g)
     {
+      graphics = g;
       _animations = animations;
       _animationManager = new AnimationManager(_animations.First().Value);
     }
@@ -207,12 +211,14 @@ namespace Platformer
       Position += Velocity;
 
             Xtrans = (int)Velocity.X;
+            // Testing movement
+            //Xtrans = (int)_position.X;
             _prevPos = Position;
 
 
-            if (_position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2)
+            if (_position.X > graphics.PreferredBackBufferWidth/2)
             {
-                _position.X= (float)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2);
+                _position.X= (float)(graphics.PreferredBackBufferWidth / 2);
             }
 
             Velocity = Vector2.Zero;
