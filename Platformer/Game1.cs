@@ -43,7 +43,7 @@ namespace Platformer
 
         String beingTyped = "user";
 
-        float[] colors = { 0.5f, 0.0f };
+        float[] colors = { 0.5f, 0.0f, 0.0f };
 
         Texture2D titlescreen;
         Texture2D titlescreen_a;
@@ -86,7 +86,8 @@ namespace Platformer
         Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
-        Texture2D logintitle, usernametitle, passwordtitle;
+        Texture2D logintitle, usernametitle, passwordtitle, enter;
+        bool firstLog = true;
 
 
         public Game1()
@@ -128,11 +129,22 @@ namespace Platformer
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
-            
+
+
+            previousState = currentState;
+            currentState = Keyboard.GetState();
 
             GraphicsDevice.Clear(Color.DarkRed);
             spriteBatch.Begin(); //
 
+            if(firstLog)
+            {
+                if (currentState.GetPressedKeys().Length == 0)
+                {
+                    beingTyped = "user";
+                    firstLog = false;
+                }
+            }
 
             /*currentState = Keyboard.GetState();
             previousState = currentState;*/
@@ -177,19 +189,29 @@ namespace Platformer
                         {
                             colors[0] = 0f;
                             colors[1] = .5f;
+                            colors[2] = 0f;
 
                             beingTyped = "password";
                         }
-                        else if (c == Keys.Enter)
+                        else if ( c == Keys.Right || c == Keys.Left || c == Keys.Up)
                         {
 
                             ;
                         }
+                        else if (c == Keys.Enter)
+                        {
+                            beingTyped = "enter";
+                            colors[0] = 0f;
+                            colors[1] = 0f;
+                            colors[2] = 0.5f;
+                        }
+
 
                         else if (c == Keys.Down)
                         {
                             colors[0] = 0f;
                             colors[1] = .5f;
+                            colors[2] = 0f;
 
                             beingTyped = "password";
                         }
@@ -248,19 +270,26 @@ namespace Platformer
                             }
                         }
 
-                       
 
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Down)
+                            ;
 
                         else if (c == Keys.Up)
                         {
 
                             colors[0] = 0.5f;
                             colors[1] = 0f;
+                            colors[2] = 0f;
 
                             beingTyped = "user";
                         }
-                        else if (c == Keys.Down)
-                            ;
+                        else if (c == Keys.Enter)
+                        {
+                            beingTyped = "enter";
+                            colors[0] = 0f;
+                            colors[1] = 0f;
+                            colors[2] = 0.5f;
+                        }
                         else
                         {
                             password.Add(c.ToString());
@@ -271,6 +300,21 @@ namespace Platformer
                 }
             }
 
+            if (beingTyped == "enter")
+            {
+                c = Keys.None;
+                if (currentState.GetPressedKeys().Length > 0)
+                {
+                    c = currentState.GetPressedKeys()[0];
+                }
+                if (c == Keys.Up)
+                {
+                    beingTyped = "user";
+                    colors[0] = 0.5f;
+                    colors[1] = 0f;
+                    colors[2] = 0f;
+                }
+            }
 
 
 
@@ -285,13 +329,15 @@ namespace Platformer
             // spriteBatch.Draw(logintitle, new Rectangle())
             spriteBatch.Draw(logintitle, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White);
             spriteBatch.Draw(usernametitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[0]));
-                       spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[1]));
+           spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[1]));
 
-                        spriteBatch.End();
+            spriteBatch.Draw(enter, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[2]));
 
 
-            previousState = currentState;
-            currentState = Keyboard.GetState();
+            spriteBatch.End();
+
+
+          
 
             base.Update(gameTime);
         }
@@ -328,6 +374,7 @@ namespace Platformer
             usernametitle = Content.Load<Texture2D>("usernametitle");
             passwordtitle = Content.Load<Texture2D>("passwordtitle");
             logintitle = Content.Load<Texture2D>("logintitle");
+            enter = Content.Load<Texture2D>("enter");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             titlescreen = Content.Load<Texture2D>("titlescreen");
@@ -483,6 +530,8 @@ namespace Platformer
         }
 
 
+        
+
         private void CreateTiles()
         {
             // This is the same code as I used in Initialize().
@@ -603,10 +652,10 @@ namespace Platformer
             // level 1 action
             // enemies & objects
 
-            
+
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                _state = GameState.MainMenu;
 
             if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
             {
