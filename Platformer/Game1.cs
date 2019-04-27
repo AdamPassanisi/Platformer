@@ -89,6 +89,7 @@ namespace Platformer
 
         Texture2D logintitle, usernametitle, passwordtitle, enter;
         bool firstLog = true;
+        bool enterable = false;
 
 
         public Game1()
@@ -96,8 +97,8 @@ namespace Platformer
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             // Sets the game to 1080p fullscreen by default
-            graphics.PreferredBackBufferHeight = 1080;
-            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1080;
             //graphics.IsFullScreen = true;
             
 
@@ -137,6 +138,8 @@ namespace Platformer
 
             GraphicsDevice.Clear(Color.DarkRed);
             spriteBatch.Begin(); //
+
+            
 
             // Checks if its the first time running this function, sets the selection to username input if so
             if(firstLog)
@@ -206,6 +209,7 @@ namespace Platformer
                             colors[0] = 0f;
                             colors[1] = 0f;
                             colors[2] = 0.5f;
+                          //  enterable = true;
                         }
 
 
@@ -284,8 +288,9 @@ namespace Platformer
                             colors[2] = 0f;
 
                             beingTyped = "user";
+                           // enterable = true;
                         }
-                        else if (c == Keys.Enter)
+                        else if (c == Keys.Enter )
                         {
                             beingTyped = "enter";
                             colors[0] = 0f;
@@ -315,6 +320,26 @@ namespace Platformer
                     colors[0] = 0.5f;
                     colors[1] = 0f;
                     colors[2] = 0f;
+                    enterable = false;
+                }
+
+                if (currentState.GetPressedKeys().Length == 0)
+                    enterable = true;
+                if(enterable)
+                {
+                    if (currentState.IsKeyDown(Keys.Enter))
+                    {
+                        // Code to Log in
+                        if (/* Success */true)
+                        {
+                            ;
+                        }
+                        else
+                        {
+                            ;
+                        }
+
+                    }
                 }
             }
 
@@ -571,13 +596,16 @@ namespace Platformer
             // Duplicate code is extremely bad practice. So you should now modify 
             // Initialize() so that it calls this method instead.
 
-            int screenWidth = GraphicsDevice.Viewport.Width;
-            int screenHeight = GraphicsDevice.Viewport.Height;
+            int screenWidth = graphics.PreferredBackBufferWidth;
+            int screenHeight = graphics.PreferredBackBufferHeight;
            // float xPosition = Shared.random.Next(200, screenWidth/2+200);
-            tiles.Add(new Tile(new Vector2(200, (float)(screenHeight*0.75))));
+            tiles.Add(new Tile(new Vector2(screenWidth*.2f, (float)(screenHeight*0.75))));
 
-            tiles.Add(new Tile(new Vector2(500, (float)(screenHeight*0.75))));
-            tiles.Add(new Tile(new Vector2(900, (float)(screenHeight*0.75))));
+            tiles.Add(new Tile(new Vector2(screenWidth*.4f, (float)(screenHeight*0.75))));
+            tiles.Add(new Tile(new Vector2(screenWidth*.6f, (float)(screenHeight*0.75))));
+
+            //
+            tiles.Add(new Tile(new Vector2(screenWidth * 1f, (float)(screenHeight * 0.75))));
 
         }
         protected override void Update(GameTime gameTime)
