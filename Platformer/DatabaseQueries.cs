@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* Template from Code Project
+ * URL: https://www.codeproject.com/Articles/43438/Connect-C-to-MySQL
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,7 +82,7 @@ namespace Platformer
             }
         }
 
-        public void createAccount(string username, string password)
+        public bool createAccount(string username, string password)
         {
             string query = "INSERT INTO player VALUES('" + username + "','" + password + "',0);";
             string query2 = "SELECT username FROM player WHERE username='" + username + "';"; // checks to see if the username already exists
@@ -99,7 +103,7 @@ namespace Platformer
                         Console.WriteLine("Username already exists");
                         CloseConnection();
                         myReader.Close();
-                        return;
+                        return false;
                     }
                 }
                 myReader.Close();
@@ -119,10 +123,13 @@ namespace Platformer
                 else
                 {
                     cmd.ExecuteNonQuery();
+                    
                 }
                 //close connection
                 CloseConnection();
+                return true;
             }
+            return true;
         }
 
         public bool login(string username, string password)
@@ -159,9 +166,14 @@ namespace Platformer
             return false;
         }
 
-        public void viewLeaderboards(int level)
+        public List<string>[] viewLeaderboards(int level)
         {
             string query = "SELECT user, ranking, score FROM leaderboard WHERE level=" + level + " ORDER BY score DESC;";
+            List<string>[] list = new List<string>[3];
+            list[0] = new List<string>();
+            list[1] = new List<string>();
+            list[2] = new List<string>();
+
             if (OpenConnection() == true)
             {
                 MySqlCommand myCommand = new MySqlCommand(query, connection);
@@ -170,12 +182,32 @@ namespace Platformer
                 // Always call Read before accessing data.
                 while (myReader.Read())
                 {
-                    Console.WriteLine(myReader[1] + ", "  + myReader[0] + ", " + myReader[2]);
+                    list[0].Add(myReader[0] + "");
+                    list[1].Add(myReader[1] + "");
+                    list[2].Add(myReader[2] + "");
+                    //Console.WriteLine(list[1].ToString() + ", "  + list[0].ToString() + ", " + list[2].ToString());
+                    
                 }
                 // always call Close when done reading.
+
+                
                 myReader.Close();
+                CloseConnection();
+                /* for (int i = 0; i < list.Length; i++)
+                 {
+                     for (int j = 0; j < list[i].; j++)
+                     {
+                         Console.WriteLine(list[i][j].ToString());
+                     }
+                 }*/
+                Console.WriteLine(list[0][0]);
+                //Console.WriteLine(list[0][0].ToString());
+                return list;
             }
-            CloseConnection();
+            else
+            {
+                return list;
+            }
         }
 
         public void continueGame(string user)

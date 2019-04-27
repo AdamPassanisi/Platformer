@@ -87,9 +87,10 @@ namespace Platformer
         Texture2D continueWithoutSaving, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
-        Texture2D logintitle, usernametitle, passwordtitle, enter;
+        Texture2D logintitle, usernametitle, passwordtitle, enter, incorrect;
         bool firstLog = true;
         bool enterable = false;
+        bool incorrectLogin = false;
 
 
         public Game1()
@@ -129,6 +130,8 @@ namespace Platformer
         // Logs the user in to the server
         public void Login(GameTime gameTime)
         {
+            int height = graphics.PreferredBackBufferHeight;
+            int width = graphics.PreferredBackBufferWidth;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
@@ -198,7 +201,7 @@ namespace Platformer
 
                             beingTyped = "password";
                         }
-                        else if ( c == Keys.Right || c == Keys.Left || c == Keys.Up)
+                        else if ( c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift)
                         {
 
                             ;
@@ -270,14 +273,14 @@ namespace Platformer
 
                         else if (c == Keys.Tab)
                         {
-                            //if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
+                           //if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
                             {
                                 //_state = GameState.Level1;
                             }
                         }
 
 
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Down)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Down || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift)
                             ;
 
                         else if (c == Keys.Up)
@@ -330,24 +333,28 @@ namespace Platformer
                     if (currentState.IsKeyDown(Keys.Enter))
                     {
                         // Code to Log in
-                        if (/* Success */true)
+                        if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
                         {
-                            ;
+                            _state = GameState.Level1;
+                            
                         }
                         else
                         {
-                            ;
+                            incorrectLogin = true;
                         }
 
                     }
                 }
             }
 
+            if (incorrectLogin)
+            {
+                spriteBatch.Draw(incorrect, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 8), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White);
+
+            }
 
 
 
-            int height = graphics.PreferredBackBufferHeight;
-            int width = graphics.PreferredBackBufferWidth;
 
 
             spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
@@ -386,8 +393,8 @@ namespace Platformer
             db.completeLevelForFirstTime(1, "abf", 1000);
             db.completeLevelForFirstTime(1, "abg", 600);
             db.completeLevelForFirstTime(1, "abh", 700);
-            db.updateHighScore("abg", 1 , 677);
-            db.viewLeaderboards(1);*/
+            db.updateHighScore("abg", 1 , 677);*/
+            db.viewLeaderboards(1);
         }
 
 
@@ -422,6 +429,7 @@ namespace Platformer
             tryAgain = Content.Load<Texture2D>("tryagain");
             healthBar = new HealthBar(Content.Load<Texture2D>("Health"),new Vector2(400,400),100);
             healthTexture = Content.Load<Texture2D>("Health");
+            incorrect = Content.Load<Texture2D>("incorrect");
 
 
             // background
