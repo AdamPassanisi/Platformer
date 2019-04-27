@@ -692,7 +692,9 @@ namespace Platformer
                       //  _sprites[0].Velocity
                         //    = vec;
 
-                        _sprites[0]._position.Y = tile.position.Y - 56f;
+
+                       // Removed for testing
+                       // _sprites[0]._position.Y = tile.position.Y - 56f;
                         
 
                     }
@@ -735,9 +737,19 @@ namespace Platformer
                     }
 
 
+                    if (touchCount > 0)
+                        if (_sprites[0]._position.Y > graphics.PreferredBackBufferHeight * .7f)
+                        {
+                            _sprites[0]._position.Y = graphics.PreferredBackBufferHeight * .7f;
+                            _sprites[0].grounded = true;
+                        }
+
                     // Player must stop falling when he reaches the ground
                     if (_sprites[0].Position.Y > graphics.PreferredBackBufferHeight * .87f)
-                            _sprites[0]._position.Y = graphics.PreferredBackBufferHeight * .87f;
+                    {
+                        _sprites[0]._position.Y = graphics.PreferredBackBufferHeight * .87f;
+                        _sprites[0].grounded = true;
+                    }
                     
                 }
 

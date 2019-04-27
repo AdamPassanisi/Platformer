@@ -65,6 +65,8 @@ namespace Platformer
 
         Boolean falling = false;
 
+        public bool grounded = false;
+
         // x co-ordinate movement
         // using this var for moving background along with the character
         public int Xtrans = 0;
@@ -100,55 +102,37 @@ namespace Platformer
             }
 
             // Jump
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && hasJumped == false)
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && grounded)
             {
                 //Velocity.X = 15f;
                 //_position.Y -= 170f;
-               // Velocity.Y = 3f*10;
+                // Velocity.Y = 3f*10;
+                if (jumpCount == 0)
+                    jumpCount = 50;
                 jumping = true;
-                if(jumpCount==0)
-                jumpCount = 25;
+                grounded = false;
+                hasJumped = true;
                 //hasJumped = true;
 
             }
 
             if (jumpCount > 0)
             {
-                jumping = true;
+               
                     jumpCount--;
                 
                 _position.Y -= 8;
 
                 if (jumpCount == 0)
-                    jumping = false;// jumpCount = -25;
+                {
+                    
+                    hasJumped = false;
+                    jumping = false;
+                }
             }                   
 
-            if (jumpCount < 0)
-            {
-                //jumpCount++;
-                ;//_position.Y += 8;
-            }
-            if (jumping)
-            {
-                //float i = 10;
-                //Velocity.Y -= .25f * i;
-            }
-
-            if (hasJumped == true)
-            {
-               // float i = 10;
-                //Velocity.Y += 0.25f * i;
-
-
-
-
-            }
-            if (_position.Y > (0.858) * graphics.PreferredBackBufferHeight)
-            {
-                //hasJumped = false;
-                
-              }
-
+          
+          
             /*if (_position.Y < (.7) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
                 _position.Y ++;*/
             if (hasJumped == false)
@@ -208,6 +192,7 @@ namespace Platformer
 
       _animationManager.Update(gameTime);
       
+            // Removed for testing
       Position += Velocity;
 
             Xtrans = (int)Velocity.X;
