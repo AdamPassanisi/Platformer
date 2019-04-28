@@ -106,14 +106,14 @@ namespace Platformer
         bool incorrectLogin = false;
         Texture2D incorrect;
 
-        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
-        Point buttonSize;
+      /// Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
+       // Point buttonSize;
 
         //calculates and stores elapsed time since the game has started
         Rectangle time= new Rectangle(700,100,200,100);
        
         float  elapsed_time;
-         private SpriteFont font;
+         //private SpriteFont font;
 
 
 

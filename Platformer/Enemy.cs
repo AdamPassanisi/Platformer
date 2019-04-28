@@ -54,7 +54,7 @@ namespace Platformer
 
         public float Speed = 3f;
 
-        public Vector2 Velocity;
+       // public Vector2 Velocity;
 
         public Vector2 Acceleration = new Vector2(9.8f, 0);
 
@@ -144,10 +144,10 @@ namespace Platformer
             _animationManager = new AnimationManager(_animations.First().Value);
         }
 
-        public Enemy(Texture2D texture)
+       /* public Enemy(Texture2D texture)
         {
             _texture = texture;
-        }
+        } */
 
 
 

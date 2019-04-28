@@ -203,19 +203,19 @@ namespace Platformer
     }
 
 
-    
-    public virtual void Update(GameTime gameTime, List<Player> sprites)
-    {
 
-        
-      Move();
+        public virtual void Update(GameTime gameTime, List<Player> sprites)
+        {
 
-      SetAnimations();
 
-      _animationManager.Update(gameTime);
-      
+            Move();
+
+            SetAnimations();
+
+            _animationManager.Update(gameTime);
+
             // Removed for testing
-      Position += Velocity;
+            Position += Velocity;
 
             Xtrans = (int)Velocity.X;
             // Testing movement
@@ -224,16 +224,17 @@ namespace Platformer
 
 
 
-            if (_position.X > graphics.PreferredBackBufferWidth/2)
+            if (_position.X > graphics.PreferredBackBufferWidth / 2)
             {
-                _position.X= (float)(graphics.PreferredBackBufferWidth / 2);
+                _position.X = (float)(graphics.PreferredBackBufferWidth / 2);
 
 
 
-            Velocity = Vector2.Zero;
+                Velocity = Vector2.Zero;
 
-       
-    }
+
+            }
+        }
 
         public bool IsTouching(Tile tile,Player sprite
             )
