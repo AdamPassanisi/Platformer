@@ -37,6 +37,12 @@ namespace Platformer
             
         }
 
+        public static String GenerateHash(byte[] p, byte[] s)
+        {
+            return Encoding.Default.GetString(GenerateSaltedHash(p, s));
+        }
+
+
         // genereate hash
         // salts to be randomised
         public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)

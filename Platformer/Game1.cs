@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 using System;
 
 
@@ -158,6 +160,11 @@ namespace Platformer
         #region Create Account
         public void CreateAccount(GameTime gameTime)
         {
+            String USERNAME;
+            String PASSWORD;
+
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
@@ -291,6 +298,15 @@ namespace Platformer
                                     Createpassword.RemoveAt(Createpassword.Count - 1);
                             }
 
+                            else if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
+                            {
+                                Createcolors[0] = 0f;
+                                Createcolors[1] = 0f;
+                                Createcolors[2] = .5f;
+                                Createcolors[3] = 0f;
+
+                                CreatebeingTyped = "confirm";
+                            }
 
                             else
                             {
@@ -316,7 +332,7 @@ namespace Platformer
 
                             CreatebeingTyped = "user";
                         }
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Tab)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Tab || c == Keys.Down)
                         {
 
                             ;
@@ -331,8 +347,8 @@ namespace Platformer
                             //  enterable = true;
                         }
 
-                        else if (c == Keys.Down)
-                            ;
+                        //else if (c == Keys.Down)
+                            
                         // Take to the confirm password, not working 
                         /*else if ((c == Keys.Down && previousState.GetPressedKeys().Length == 0)||(c == Keys.Down && previousState.GetPressedKeys()[0] != 0) )
                         {
@@ -343,6 +359,17 @@ namespace Platformer
 
                             CreatebeingTyped = "confirm";
                         }*/
+                        /*
+                         else if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
+                        {
+                            Createcolors[0] = 0f;
+                            Createcolors[1] = 0f;
+                            Createcolors[2] = .5f;
+                            Createcolors[3] = 0f;
+
+                            CreatebeingTyped = "confirm";
+                        }*/
+
                         else
                         {
                             Createpassword.Add(c.ToString());
@@ -399,7 +426,7 @@ namespace Platformer
 
                             CreatebeingTyped = "user";
                         }
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Down)
                         {
 
                             ;
@@ -451,16 +478,30 @@ namespace Platformer
                 {
                     if (currentState.IsKeyDown(Keys.Enter))
                     {
-                        // Code to create account
-                        if (db.createAccount(String.Join(String.Empty, Createusername.ToArray()), String.Join(String.Empty, Createpassword.ToArray())))
-                        {
-                            _state = GameState.MainMenu;
 
+                        USERNAME = String.Join(String.Empty, Createusername.ToArray());
+                        PASSWORD = String.Join(String.Empty, Createpassword.ToArray());
+                        // Checks that a valid username and password are given
+                        if ((USERNAME.Length >= 3 && USERNAME.Length <= 40) && (PASSWORD.Length >= 8 && PASSWORD.Length <= 20))
+                        {
+
+
+                            // Code to create account
+                            if (db.createAccount(USERNAME, PASSWORD))
+                            {
+
+                                _state = GameState.MainMenu;
+                                Console.Write("\n\n\n\n\n");
+                                Console.WriteLine(Account.GenerateHash(Encoding.ASCII.GetBytes("Hello"), Encoding.ASCII.GetBytes("Salt")));
+                                Console.Write("\n\n\n\n\n");
+                            }
+                            else
+                            {
+                                usertaken = true;
+                            }
                         }
                         else
-                        {
-                            usertaken = true;
-                        }
+                            Exit();
 
                     }
                 }
