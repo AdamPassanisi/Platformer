@@ -21,6 +21,8 @@ namespace Platformer
         public Dictionary<string, Animation> _animations;
 
         public Vector2 _position;
+        private Boolean isAttacking;
+        public Boolean IsAttacking { get { return isAttacking; } set { isAttacking = value; } }
 
         public bool Contact = false;
 
@@ -39,7 +41,7 @@ namespace Platformer
         private bool isAlive;
         public bool IsAlive { get { return isAlive; } set { isAlive = value; } }
 
-        public bool IsAttacking { get; set; }
+        
 
 
 
@@ -76,7 +78,7 @@ namespace Platformer
 
         // x co-ordinate movement
         // using this var for moving background along with the character
-        public int Xtrans = 0;
+        public float Xtrans = 0;
 
         #endregion
 
@@ -104,7 +106,8 @@ namespace Platformer
             {
 
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Left) && _position.X > 50)
+            //  && _position.X > 50
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 Velocity.X = -Speed;
             if (Keyboard.GetState().IsKeyDown(Keys.Right) )
 
@@ -220,18 +223,20 @@ namespace Platformer
 
             //Xtrans = (int)(Position.X-_prevPos.X);
             // Testing movement
-            Xtrans =(int) Velocity.X;
+            Xtrans = Velocity.X;
             _prevPos = Position;
 
 
 
-            if (_position.X > graphics.PreferredBackBufferWidth / 2)
+            if (_position.X > graphics.PreferredBackBufferWidth/2 )
             {
-                _position.X = (float)(graphics.PreferredBackBufferWidth / 2);
+                
+                //Xtrans += graphics.PreferredBackBufferWidth/2;
+                _position.X = (float)(graphics.PreferredBackBufferWidth * 0.5);
+              //  _position.X = (float)(graphics.PreferredBackBufferWidth * .01);
 
 
-
-                Velocity = Vector2.Zero;
+                // Velocity = Vector2.Zero;
 
             }
 
@@ -275,7 +280,29 @@ namespace Platformer
             }
         }
 
+        private void Attack
+            (Enemy enemy)
+        {
+            if ((this._position.X - enemy._position.X) <= enemy._texture.Width
+                & (this._position.X - enemy._position.X) > 0 )
+            {
+                // this.Velocity = Vector2.Zero;
+                this.isAttacking = true;
+                enemy.Health -= 34;
+               
+            }
+            else if ((this._position.X - enemy._position.X) < 5 && (this._position.X - enemy._position.X) < 0 )
+            {
+                this.isAttacking = true;
+                enemy.Health-= 34;
+                
+            }
+            else
+            {
+                isAttacking = false;
+            }
 
+        }
         #endregion
 
     }

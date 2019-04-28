@@ -1011,15 +1011,11 @@ namespace Platformer
 
             int screenWidth = graphics.PreferredBackBufferWidth;
             int screenHeight = graphics.PreferredBackBufferHeight;
-           // float xPosition = Shared.random.Next(200, screenWidth/2+200);
-            tiles.Add(new Tile(new Vector2(screenWidth*.2f, (float)(screenHeight*0.75))));
-
-            tiles.Add(new Tile(new Vector2(screenWidth*.4f, (float)(screenHeight*0.75))));
-            tiles.Add(new Tile(new Vector2(screenWidth*.6f, (float)(screenHeight*0.75))));
-
-            //
-            tiles.Add(new Tile(new Vector2(screenWidth * 1f, (float)(screenHeight * 0.75))));
-
+            // float xPosition = Shared.random.Next(200, screenWidth/2+200);
+            for (int i = 0; i < 10; i++)
+            {
+                tiles.Add(new Tile(new Vector2(screenWidth *0.2f*i, (float)(screenHeight * 0.75))));
+            }
         }
         protected override void Update(GameTime gameTime)
         {
@@ -1167,6 +1163,7 @@ namespace Platformer
                     {
                         scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
                     }
+                    
                     if (_sprites[0].IsTouching(tile, _sprites[0]))
                     {
                         touchCount++;

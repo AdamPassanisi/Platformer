@@ -34,6 +34,9 @@ namespace Platformer
         
         public Texture2D _texture;
 
+        private int health;
+        public int Health { get { return health; } set { health = value; } }
+
         public bool facingRight;
 
         public int screenWidth =GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -77,6 +80,7 @@ namespace Platformer
         {
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value);
+            health = 100;
         }
 
         public Enemy(Texture2D texture)
@@ -116,13 +120,16 @@ namespace Platformer
             {
                 if (facingRight)
                 {
-                    _animationManager.Play(_animations["enemyattackR"],50);
-                    
+                    _animationManager.Play(_animations["enemyattackR"]);
+                    isAttacking = false;
+
 
                 }
                 else if(!facingRight)
                 {
-                    _animationManager.Play(_animations["enemyattackL"],50);
+                    _animationManager.Play(_animations["enemyattackL"]);
+                    _animationManager.Play(_animations["enemyattackL"]);
+                    isAttacking = false;
                 }
                
                
@@ -233,7 +240,7 @@ namespace Platformer
 
             }
 
-            if (!IsAttacking && attack_counter<1)
+            if (!IsAttacking)
             {
                 this.Attack(player);
             }
@@ -245,11 +252,11 @@ namespace Platformer
             
             if (IsAttacking)
             {
-                if (_animationManager.AttackUpdate(gameTime, 5))
+                if (_animationManager.AttackUpdate(gameTime,80))
                 {
                     // attack animation has completed
                     this.IsAttacking = false;
-                    // Velocity.X = Velocity.X + 3;
+                    
                     this.Velocity.X += 3;
                     _animationManager.Update(gameTime);
                     
@@ -282,14 +289,12 @@ namespace Platformer
             {
                // this.Velocity = Vector2.Zero;
                 this.isAttacking=true;
-                attack_counter++;
                 player.Health = player.Health-34;
             player.CheckHealth();
             }
-            else if ((this._position.X - player._position.X)< 5 && (this._position.X - player._position.X) < 0 && player.IsAlive)
+            else if ((this._position.X - player._position.X)> 5 && (this._position.X - player._position.X) < 0 && player.IsAlive)
             {
                 this.isAttacking = true;
-                attack_counter++;
                 player.Health = player.Health - 34;
                 player.CheckHealth();
             }
