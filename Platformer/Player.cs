@@ -157,6 +157,7 @@ namespace Platformer
 
             //else if (Keyboard.GetState().IsKeyDown(Keys.Down))
             // Velocity.Y = Speed
+           // this.Velocity = Vector2.Zero;
 
 
         }
@@ -232,8 +233,9 @@ namespace Platformer
 
                 Velocity = Vector2.Zero;
 
-
             }
+
+            Velocity = Vector2.Zero;
         }
 
         public bool IsTouching(Tile tile,Player sprite
