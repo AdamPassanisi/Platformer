@@ -16,9 +16,9 @@ namespace Platformer
 
         GraphicsDeviceManager graphics;
 
-        protected AnimationManager _animationManager;
+        public AnimationManager _animationManager;
 
-        protected Dictionary<string, Animation> _animations;
+        public Dictionary<string, Animation> _animations;
 
         public Vector2 _position;
 
@@ -218,9 +218,9 @@ namespace Platformer
             // Removed for testing
             Position += Velocity;
 
-            Xtrans = (int)Velocity.X;
+            //Xtrans = (int)(Position.X-_prevPos.X);
             // Testing movement
-            //Xtrans = (int)_position.X;
+            Xtrans =(int) Velocity.X;
             _prevPos = Position;
 
 
