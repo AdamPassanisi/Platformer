@@ -219,18 +219,6 @@
 /processorParam:TextureFormat=Color
 /build:incorrect.png
 
-#begin incorrect.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:incorrect.png
-
 #begin instructions.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -242,18 +230,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:instructions.png
-
-#begin instructs.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:instructs.png
 
 #begin instructs.png
 /importer:TextureImporter
@@ -471,7 +447,7 @@
 /processorParam:TextureFormat=Color
 /build:viewleaderboards.png
 
-#begin viewleaderboards.png
+#begin usernametaken.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -481,5 +457,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:viewleaderboards.png
+/build:usernametaken.png
 
