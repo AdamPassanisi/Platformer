@@ -37,11 +37,33 @@ namespace Platformer
             
         }
 
+        // Takes in a string and a 'salt'
+        // Concatenates them to one string and returns its SHA256 hash
+        public static String GenerateHash(String p, String s)
+        {
+            HashAlgorithm algorithm = new SHA256Managed();
+
+            byte[] b = algorithm.ComputeHash(Encoding.UTF8.GetBytes(p+s));
+
+            StringBuilder hashed = new System.Text.StringBuilder();
+
+
+            foreach (byte Byte in b)
+            {
+                hashed.Append(Byte.ToString("x2"));
+            }
+
+            return hashed.ToString();
+
+        }
+
+
         // genereate hash
         // salts to be randomised
         public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)
         {
             HashAlgorithm algorithm = new SHA256Managed();
+          
 
             byte[] plainTextWithSaltBytes =
               new byte[plainText.Length + salt.Length];
@@ -55,6 +77,9 @@ namespace Platformer
                 plainTextWithSaltBytes[plainText.Length + i] = salt[i];
             }
 
+
+
+          
             return algorithm.ComputeHash(plainTextWithSaltBytes);
         }
 

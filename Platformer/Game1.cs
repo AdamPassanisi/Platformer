@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 using System;
 
 
@@ -105,6 +107,8 @@ namespace Platformer
         bool Createenterable = false;
 
         Texture2D incorrect;
+        Texture2D usernametaken;
+        bool usertaken = false;
 
         SpriteFont font;
 
@@ -156,6 +160,11 @@ namespace Platformer
         #region Create Account
         public void CreateAccount(GameTime gameTime)
         {
+            String USERNAME;
+            String PASSWORD;
+
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
@@ -289,6 +298,15 @@ namespace Platformer
                                     Createpassword.RemoveAt(Createpassword.Count - 1);
                             }
 
+                            else if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
+                            {
+                                Createcolors[0] = 0f;
+                                Createcolors[1] = 0f;
+                                Createcolors[2] = .5f;
+                                Createcolors[3] = 0f;
+
+                                CreatebeingTyped = "confirm";
+                            }
 
                             else
                             {
@@ -314,7 +332,7 @@ namespace Platformer
 
                             CreatebeingTyped = "user";
                         }
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Tab)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Tab || c == Keys.Down)
                         {
 
                             ;
@@ -329,17 +347,29 @@ namespace Platformer
                             //  enterable = true;
                         }
 
-
-                        else if (c == Keys.Down)
+                        //else if (c == Keys.Down)
+                            
+                        // Take to the confirm password, not working 
+                        /*else if ((c == Keys.Down && previousState.GetPressedKeys().Length == 0)||(c == Keys.Down && previousState.GetPressedKeys()[0] != 0) )
                         {
-                            beingTyped = "enter";
                             Createcolors[0] = 0f;
-                            Createcolors[1] = 0.5f;
-                            Createcolors[2] = 0;
+                            Createcolors[1] = 0f;
+                            Createcolors[2] = .5f;
                             Createcolors[3] = 0f;
 
-                            CreatebeingTyped = "password";
-                        }
+                            CreatebeingTyped = "confirm";
+                        }*/
+                        /*
+                         else if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
+                        {
+                            Createcolors[0] = 0f;
+                            Createcolors[1] = 0f;
+                            Createcolors[2] = .5f;
+                            Createcolors[3] = 0f;
+
+                            CreatebeingTyped = "confirm";
+                        }*/
+
                         else
                         {
                             Createpassword.Add(c.ToString());
@@ -396,7 +426,7 @@ namespace Platformer
 
                             CreatebeingTyped = "user";
                         }
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Down)
                         {
 
                             ;
@@ -412,16 +442,7 @@ namespace Platformer
                         }
 
 
-                        else if (c == Keys.Down)
-                        {
-                            beingTyped = "enter";
-                            Createcolors[0] = 0f;
-                            Createcolors[1] = 0.5f;
-                            Createcolors[2] = 0;
-                            Createcolors[3] = 0f;
-
-                            CreatebeingTyped = "password";
-                        }
+                       
                         else
                         {
                             Createpassword.Add(c.ToString());
@@ -457,16 +478,30 @@ namespace Platformer
                 {
                     if (currentState.IsKeyDown(Keys.Enter))
                     {
-                        // Code to Log in
-                        if (db.createAccount(String.Join(String.Empty, Createusername.ToArray()), String.Join(String.Empty, Createpassword.ToArray())))
-                        {
-                            _state = GameState.MainMenu;
 
+                        USERNAME = String.Join(String.Empty, Createusername.ToArray());
+                        PASSWORD = String.Join(String.Empty, Createpassword.ToArray());
+                        // Checks that a valid username and password are given
+                        if ((USERNAME.Length >= 3 && USERNAME.Length <= 40) && (PASSWORD.Length >= 8 && PASSWORD.Length <= 20))
+                        {
+
+                            // Account.GenerateHash(PASSWORD, USERNAME)
+
+                            // Code to create account
+                            // Front end hashes the password with the username as a salt and stores it in database
+                            if (db.createAccount(USERNAME, Account.GenerateHash(PASSWORD, USERNAME)))
+                            {
+
+                                _state = GameState.MainMenu;
+                               
+                            }
+                            else
+                            {
+                                usertaken = true;
+                            }
                         }
                         else
-                        {
                             Exit();
-                        }
 
                     }
                 }
@@ -486,7 +521,8 @@ namespace Platformer
             spriteBatch.Draw(confirmpassword, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[2]));
 
             spriteBatch.Draw(enter, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 8), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[3]));
-
+            if(usertaken)
+                spriteBatch.Draw(usernametaken, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 10), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
 
 
 
@@ -768,7 +804,7 @@ namespace Platformer
             db.viewLeaderboards(1);
         }
 
-
+        #region LoadContent
         protected override void LoadContent()
         {
             buttonSize = new Point(graphics.PreferredBackBufferWidth * 5 / 32, graphics.PreferredBackBufferHeight * 5/72);
@@ -810,6 +846,7 @@ namespace Platformer
             healthTexture = Content.Load<Texture2D>("Health");
 
             incorrect = Content.Load<Texture2D>("incorrect");
+            usernametaken = Content.Load<Texture2D>("usernametaken");
 
             font = Content.Load<SpriteFont>("demo");
 
@@ -879,7 +916,7 @@ namespace Platformer
             previousState = currentState;
 
         }
-
+        #endregion
 
         protected override void UnloadContent()
         {
@@ -889,7 +926,7 @@ namespace Platformer
        
         
 
-
+        // Displays the main menu
         public void menu()
         {
             // Sets the background color    
@@ -977,7 +1014,7 @@ namespace Platformer
                 if (select == 2)
                     _state = GameState.CreateAccount;
                 if (select == 3)
-                    
+                    ;
                 if (select == 4)
                     _state = GameState.Instructions;
                 if (select == 5)
@@ -1176,10 +1213,10 @@ namespace Platformer
                         //    = vec;
 
 
-                       // Removed for testing
+                       // Removed
                        // _sprites[0]._position.Y = tile.position.Y - 56f;
 
-                        _sprites[0]._position.Y = tile.position.Y - 56f;
+                       // _sprites[0]._position.Y = tile.position.Y - 56f;
 
                         
 
