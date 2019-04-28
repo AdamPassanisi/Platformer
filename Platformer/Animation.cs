@@ -18,14 +18,14 @@ namespace Platformer
         public int FrameWidth { get { return Texture.Width / FrameCount; } } 
         public bool isLooping { get; set; }
 
+        
         public Texture2D Texture { get; private set; }
         public Animation( Texture2D texture, int frameCount)
         {
             Texture = texture;
             FrameCount = frameCount;
             isLooping = true;
-
-            FrameSpeed = (int) 1.5f;
+            FrameSpeed = (int) 1f;
 
         }
 

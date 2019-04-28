@@ -862,7 +862,7 @@ namespace Platformer
 
             enemy = new Enemy(_enemy_animations)
             {
-                Position = new Vector2(1000,(int)((0.818) * screenHeight))
+                Position = new Vector2(700,(int)((0.838) * screenHeight))
               
           };
 
@@ -1074,8 +1074,9 @@ namespace Platformer
         protected void DrawLevel1(GameTime gameTime)
         {
 
-
+            
             spriteBatch.Begin();
+            
             scrolling1.Draw(spriteBatch);
             scrolling2.Draw(spriteBatch);
 
@@ -1092,7 +1093,8 @@ namespace Platformer
                 tl.Draw(spriteBatch);
             }
             enemy.Draw(spriteBatch);
-
+            spriteBatch.DrawString(font, "time: " + elapsed_time + "", 
+                new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
             spriteBatch.End();
 
            
@@ -1128,9 +1130,9 @@ namespace Platformer
 
 
             int touchCount = 0;
-
-            elapsed_time = gameTime.TotalGameTime.Seconds;
-            Console.WriteLine(elapsed_time);
+            
+            elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
+         //   Console.WriteLine(elapsed_time);
 
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -1150,7 +1152,7 @@ namespace Platformer
                     enemy.Update(gameTime,_sprites[0]);
                     scrolling1.Update((int)_sprites[0].Xtrans);
                     scrolling2.Update((int)_sprites[0].Xtrans);
-
+                    healthBar.health = _sprites[0].Health;
 
                     tile.Update(_sprites[0].Xtrans);
                     if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
@@ -1239,7 +1241,7 @@ namespace Platformer
 
                
 
-
+                
                 healthRectangle = new Rectangle(150,50,healthBar.health,60);
                
 

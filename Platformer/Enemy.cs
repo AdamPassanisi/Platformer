@@ -27,6 +27,8 @@ namespace Platformer
 
         public Vector2 _position;
 
+        public int attack_counter; // how many times enemy has attacked the player
+
         private Boolean isAttacking;
         public Boolean IsAttacking { get { return isAttacking; }set { isAttacking = value; } }
         
@@ -112,21 +114,23 @@ namespace Platformer
 
             if (isAttacking)
             {
-                if (!facingRight)
+                if (facingRight)
                 {
-                    _animationManager.Play(_animations["enemyattackR"]);
+                    _animationManager.Play(_animations["enemyattackR"],50);
+                    
+
                 }
-                else
+                else if(!facingRight)
                 {
-                    _animationManager.Play(_animations["enemyattackL"]);
+                    _animationManager.Play(_animations["enemyattackL"],50);
                 }
                
                
             }
             
-           else  if (Velocity.X > 0 &&!isAttacking)
+           else  if (Velocity.X > 0)
                 _animationManager.Play(_animations["enemywalkR"]);
-            else if (Velocity.X < 0 &&!isAttacking)
+            else if (Velocity.X < 0)
 
             {
                 _animationManager.Play(_animations["enemywalkL"]);
@@ -150,7 +154,7 @@ namespace Platformer
 
         public virtual void Update(GameTime gameTime, List<Player> sprites)
         {
-            Move();
+            //Move();
 
             SetAnimations();
 
@@ -162,10 +166,7 @@ namespace Platformer
           //  _prevPos = Position;
 
 
-            if (_position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2)
-            {
-                _position.X = (float)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2);
-            }
+            
 
             Velocity = Vector2.Zero;
 
@@ -207,25 +208,32 @@ namespace Platformer
         {
             Random r = new Random();
             //&& this.Position.X > screenWidth / 2 && this.Position.X > screenWidth / 3
-            if (r.Next(0, 50) > 15 && !isAttacking)
+            int cap = 35;
+
+            /*
+             * reduce cap when moving further away so that 
+             * he can escape
+             */
+            if (r.Next(0, 50) > cap && !isAttacking)
             {
                 if (player._position.X - this.Position.X > this._animations.ElementAt(0).Value.FrameWidth
                     ) { 
 
                 this.Velocity.X = 1f;
-                facingRight = true; }
+                    facingRight = true; 
+                }
             
-            else if (player._position.X - this.Position.X < 0)
+            else if (player._position.X - this.Position.X < this._animations.ElementAt(0).Value.FrameWidth)
                 {
                     this.Velocity.X = -1f;
-                    facingRight = true;
+                    facingRight = false;
                 }
                 
 
 
             }
 
-            if (!IsAttacking)
+            if (!IsAttacking && attack_counter<1)
             {
                 this.Attack(player);
             }
@@ -233,38 +241,61 @@ namespace Platformer
 
         public virtual void Update(GameTime gameTime, Player player)
         {
-
             
-            if (!IsAttacking)
+            
+            if (IsAttacking)
+            {
+                if (_animationManager.AttackUpdate(gameTime, 5))
+                {
+                    // attack animation has completed
+                    this.IsAttacking = false;
+                    // Velocity.X = Velocity.X + 3;
+                    this.Velocity.X += 3;
+                    _animationManager.Update(gameTime);
+                    
+                };
+
+            }
+            else 
             {
                 RandomMove(player);
                 Position += Velocity;
+                _animationManager.Update(gameTime);
             }
-            
-            
+
 
             SetAnimations();
 
-            _animationManager.Update(gameTime);
-            
-       
-            Velocity = Vector2.Zero;
 
+
+
+
+            Velocity = Vector2.Zero;
+           // this.IsAttacking = false;
 
         }
         private void Attack
             (Player player)
         {
-            if ((this._position.X-player._position.X)<100 && (this._position.X - player._position.X) >0&& player.IsAlive)
+            if ((this._position.X-player._position.X)<=player._animations.ElementAt(0).Value.FrameWidth / 4
+                & (this._position.X - player._position.X) >0&& player.IsAlive)
             {
                // this.Velocity = Vector2.Zero;
                 this.isAttacking=true;
+                attack_counter++;
                 player.Health = player.Health-34;
             player.CheckHealth();
             }
-            else if ((this._position.X - player._position.X)< 100 && (this._position.X - player._position.X) > 0 && player.IsAlive)
+            else if ((this._position.X - player._position.X)< 5 && (this._position.X - player._position.X) < 0 && player.IsAlive)
             {
-
+                this.isAttacking = true;
+                attack_counter++;
+                player.Health = player.Health - 34;
+                player.CheckHealth();
+            }
+            else
+            {
+                isAttacking = false;
             }
             
         }

@@ -14,7 +14,9 @@ namespace Platformer
 
     private float _timer;
 
-    public Vector2 Position { get; set; }
+        public int duration;
+
+        public Vector2 Position { get; set; }
 
     public AnimationManager(Animation animation)
     {
@@ -45,7 +47,7 @@ namespace Platformer
       _timer = 0;
     }
 
-        public void Play(Animation animation, int time)
+        public void Play(Animation animation, int duration)
         {
             if (_animation == animation)
                 return;
@@ -54,8 +56,21 @@ namespace Platformer
 
             _animation.CurrFrame = 0;
 
-            _timer = time;
+            _timer = duration;
         }
+
+        public void PlayReverse(Animation animation, int duration)
+        {
+            if (_animation == animation)
+                return;
+
+            _animation = animation;
+
+            _animation.CurrFrame = 4;
+
+            _timer = duration;
+        }
+
 
 
 
@@ -80,5 +95,47 @@ namespace Platformer
           _animation.CurrFrame = 0;
       }
     }
-  }
+
+
+        public void LeftUpdate(GameTime gameTime)
+        {
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_timer > _animation.FrameSpeed)
+            {
+                _timer = 0f;
+
+                _animation.CurrFrame--;
+
+                if (_animation.CurrFrame >= _animation.FrameCount)
+                    _animation.CurrFrame = 4;
+            }
+        }
+
+
+        public bool AttackUpdate(GameTime gameTime,int duration)
+        {
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+           
+
+
+            if (_timer > _animation.FrameSpeed&&_timer<=duration)
+            {
+                _timer = 0f;
+                _animation.CurrFrame++;
+                if (_animation.CurrFrame >= _animation.FrameCount)
+                    _animation.CurrFrame = 0;
+
+            }
+            if (_timer > duration)
+            {
+                _animation.CurrFrame = 0;
+                _timer = 0;
+                return true;
+            }
+            return false;
+
+         
+        }
+    }
 }
