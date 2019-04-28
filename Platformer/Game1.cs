@@ -102,6 +102,8 @@ namespace Platformer
         bool firstLog = true;
         bool enterable = false;
         bool incorrectLogin = false;
+        bool Createenterable = false;
+
         Texture2D incorrect;
 
         SpriteFont font;
@@ -237,7 +239,7 @@ namespace Platformer
                         }
                         else if (c == Keys.Enter)
                         {
-                            beingTyped = "enter";
+                            CreatebeingTyped = "enter";
                             Createcolors[0] = 0f;
                             Createcolors[1] = 0f;
                             Createcolors[2] = 0f;
@@ -319,6 +321,88 @@ namespace Platformer
                         }
                         else if (c == Keys.Enter)
                         {
+                            CreatebeingTyped = "enter";
+                            Createcolors[0] = 0f;
+                            Createcolors[1] = 0f;
+                            Createcolors[2] = 0f;
+                            Createcolors[3] = 0.5f;
+                            //  enterable = true;
+                        }
+
+
+                        else if (c == Keys.Down)
+                        {
+                            beingTyped = "enter";
+                            Createcolors[0] = 0f;
+                            Createcolors[1] = 0.5f;
+                            Createcolors[2] = 0;
+                            Createcolors[3] = 0f;
+
+                            CreatebeingTyped = "password";
+                        }
+                        else
+                        {
+                            Createpassword.Add(c.ToString());
+                        }
+
+                    }
+
+
+                }
+            }
+
+
+            if (CreatebeingTyped == "confirm")
+            {
+
+                if (currentState.GetPressedKeys().Length > 0)
+                {
+                    c = currentState.GetPressedKeys()[0];
+
+                    if (previousState.GetPressedKeys().Length > 0)
+                    {
+                        if (previousState.GetPressedKeys()[0] != c)
+
+                        {
+
+                            if (c == Keys.Back)
+                            {
+                                if (Createpassword.Count != 0)
+                                    Createpassword.RemoveAt(Createpassword.Count - 1);
+                            }
+
+
+                            else
+                            {
+
+                                Createpassword.Add(c.ToString());
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (c == Keys.Back)
+                        {
+                            if (Createpassword.Count != 0)
+                                Createpassword.RemoveAt(Createpassword.Count - 1);
+                        }
+                        else if (c == Keys.Up)
+                        {
+                            Createcolors[0] = 0.5f;
+                            Createcolors[1] = 0f;
+                            Createcolors[2] = 0f;
+                            Createcolors[3] = 0f;
+
+                            CreatebeingTyped = "user";
+                        }
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up)
+                        {
+
+                            ;
+                        }
+                        else if (c == Keys.Enter)
+                        {
                             beingTyped = "enter";
                             Createcolors[0] = 0f;
                             Createcolors[1] = 0f;
@@ -349,6 +433,47 @@ namespace Platformer
                 }
             }
 
+
+            if (CreatebeingTyped == "enter")
+            {
+                c = Keys.None;
+                if (currentState.GetPressedKeys().Length > 0)
+                {
+                    c = currentState.GetPressedKeys()[0];
+                }
+                if (c == Keys.Up)
+                {
+                    CreatebeingTyped = "user";
+                    Createcolors[0] = 0.5f;
+                    Createcolors[1] = 0f;
+                    Createcolors[2] = 0f;
+                    Createcolors[3] = 0f;
+                    Createenterable = false;
+                }
+
+                if (currentState.GetPressedKeys().Length == 0)
+                    Createenterable = true;
+                if (Createenterable)
+                {
+                    if (currentState.IsKeyDown(Keys.Enter))
+                    {
+                        // Code to Log in
+                        if (db.createAccount(String.Join(String.Empty, Createusername.ToArray()), String.Join(String.Empty, Createpassword.ToArray())))
+                        {
+                            _state = GameState.MainMenu;
+
+                        }
+                        else
+                        {
+                            Exit();
+                        }
+
+                    }
+                }
+            }
+
+
+            
 
 
             spriteBatch.DrawString(font, String.Join(String.Empty, Createusername.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
