@@ -34,8 +34,6 @@ namespace Platformer
 
             bool wasTouching = false;
 
-        SpriteFont font;
-
 
         List<string> username = new List<string>();
         List<string> password = new List<string>();
@@ -106,8 +104,7 @@ namespace Platformer
         bool incorrectLogin = false;
         Texture2D incorrect;
 
-        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
-        Point buttonSize;
+        
 
         //calculates and stores elapsed time since the game has started
         Rectangle time= new Rectangle(700,100,200,100);
@@ -647,24 +644,16 @@ namespace Platformer
                 { "enemyattackL", new Animation(Content.Load<Texture2D>("enemyattackL"),5) }
             };
 
-            var enemyAnimations = new Dictionary<string, Animation>()
-            {
-                {"WalkRight",new Animation(Content.Load<Texture2D>("right"),8)},
-                { "WalkLeft", new Animation(Content.Load<Texture2D>("left"),8)}
-            };
+           
 
             _sprites = new List<Player>();
 
-            Player main_player = new Player(animations) { Position = new Vector2((int)(.0732 * screenWidth)
+            Player main_player = new Player(animations,graphics) { Position = new Vector2((int)(.0732 * screenWidth)
                 , (int)((0.858) * screenHeight)), };
 
 
             // places enemy, but needs to be changed a little
-            Enemy test_enemy = new Enemy(animations,graphics)
-            {
-                Position = new Vector2((int)(.8032 * graphics.PreferredBackBufferWidth)
-                , (int)((0.858) * graphics.PreferredBackBufferHeight)),
-            };
+            
             _sprites.Add(main_player);
 
 
@@ -781,7 +770,7 @@ namespace Platformer
                 if (select == 2)
                     _state = GameState.CreateAccount;
                 if (select == 3)
-                    ;
+                    
                 if (select == 4)
                     _state = GameState.Instructions;
                 if (select == 5)
@@ -893,8 +882,8 @@ namespace Platformer
 
             foreach (var sprite in _sprites)
                 sprite.Draw(spriteBatch);
-            foreach (var sprite in _sprites2)
-                sprite.Draw(spriteBatch);
+          //  foreach (var sprite in _sprites2)
+            //    sprite.Draw(spriteBatch);
             foreach (var tl in tiles)
             {
                 tl.Draw(spriteBatch);

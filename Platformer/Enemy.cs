@@ -144,10 +144,7 @@ namespace Platformer
             _animationManager = new AnimationManager(_animations.First().Value);
         }
 
-        public Enemy(Texture2D texture)
-        {
-            _texture = texture;
-        }
+        
 
 
 
@@ -162,7 +159,7 @@ namespace Platformer
             Position += Velocity;
 
             Xtrans = (int)Velocity.X;
-            _prevPos = Position;
+          //  _prevPos = Position;
 
 
             if (_position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2)
