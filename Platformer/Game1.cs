@@ -314,7 +314,7 @@ namespace Platformer
 
                             CreatebeingTyped = "user";
                         }
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Tab)
                         {
 
                             ;
