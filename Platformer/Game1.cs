@@ -485,15 +485,15 @@ namespace Platformer
                         if ((USERNAME.Length >= 3 && USERNAME.Length <= 40) && (PASSWORD.Length >= 8 && PASSWORD.Length <= 20))
                         {
 
+                            // Account.GenerateHash(PASSWORD, USERNAME)
 
                             // Code to create account
-                            if (db.createAccount(USERNAME, PASSWORD))
+                            // Front end hashes the password with the username as a salt and stores it in database
+                            if (db.createAccount(USERNAME, Account.GenerateHash(PASSWORD, USERNAME)))
                             {
 
                                 _state = GameState.MainMenu;
-                                Console.Write("\n\n\n\n\n");
-                                Console.WriteLine(Account.GenerateHash(Encoding.ASCII.GetBytes("Hello"), Encoding.ASCII.GetBytes("Salt")));
-                                Console.Write("\n\n\n\n\n");
+                               
                             }
                             else
                             {
