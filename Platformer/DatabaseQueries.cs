@@ -24,6 +24,9 @@ namespace Platformer
         {
 
         }
+
+
+
         //Initialize values
         public void Initialize()
         {

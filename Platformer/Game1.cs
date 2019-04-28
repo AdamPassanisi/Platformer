@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 
-using System;
 
 
 namespace Platformer
@@ -29,8 +28,7 @@ namespace Platformer
         GameState _state = GameState.MainMenu;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        // if you see this, progress has been made ..
-        // trying git cmds
+        
         // Title Screen 
 
 
@@ -57,6 +55,8 @@ namespace Platformer
         Texture2D titlescreen_a;
         Scrolling scrolling1;
         Scrolling scrolling2;
+
+        // List of tiles to display on platform
         List<Tile> tiles = new List<Tile>();
         int opacDirection = 1;
         Rectangle titleScreen = new
@@ -75,11 +75,14 @@ namespace Platformer
         Texture2D healthTexture;
         Rectangle healthRectangle;
 
-
+        // sprite list
         private List<Player> _sprites;
+
         private List<Enemy> _sprites2;
         ConnectDB db = new ConnectDB();
         Texture2D instructs;
+
+        private Enemy enemy;
 
         Menu m;
 
@@ -92,6 +95,7 @@ namespace Platformer
         KeyboardState typeCurr, typePrev;
 
         int select = 0;
+
         Texture2D continueWithoutSaving, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
@@ -102,6 +106,16 @@ namespace Platformer
         bool incorrectLogin = false;
         Texture2D incorrect;
 
+        Texture2D continueWithoutSaving, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
+        Point buttonSize;
+
+        //calculates and stores elapsed time since the game has started
+        Rectangle time= new Rectangle(700,100,200,100);
+       
+        float  elapsed_time;
+         private SpriteFont font;
+
+
 
         public Game1()
         {
@@ -110,7 +124,7 @@ namespace Platformer
             // Sets the game to 1080p fullscreen by default
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
-            //graphics.IsFullScreen = true;
+
             
 
         }
@@ -268,6 +282,7 @@ namespace Platformer
             spriteBatch.Draw(confirmpassword, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[2]));
 
             spriteBatch.Draw(enter, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 8), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[3]));
+
 
 
 
@@ -565,6 +580,10 @@ namespace Platformer
             createaccount = Content.Load<Texture2D>("createaccount");
             confirmpassword = Content.Load<Texture2D>("confirmpassword");
 
+            int screenWidth = graphics.PreferredBackBufferWidth;
+            int screenHeight = graphics.PreferredBackBufferHeight;
+            buttonSize = new Point(graphics.PreferredBackBufferWidth * 5 / 32, graphics.PreferredBackBufferHeight * 5/72);
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             titlescreen = Content.Load<Texture2D>("titlescreen");
             titlescreen_a = Content.Load<Texture2D>("titlescreen(1)");
@@ -585,16 +604,15 @@ namespace Platformer
             tryAgain = Content.Load<Texture2D>("tryagain");
             healthBar = new HealthBar(Content.Load<Texture2D>("Health"),new Vector2(400,400),100);
             healthTexture = Content.Load<Texture2D>("Health");
+
             incorrect = Content.Load<Texture2D>("incorrect");
 
+            font = Content.Load<SpriteFont>("demo");
 
             // background
             // so once we scroll through one background we go onto the next
-            scrolling1 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(0, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height));
-            scrolling1 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(0, 0, graphics.PreferredBackBufferWidth,graphics.PreferredBackBufferHeight));
-
-            scrolling2 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height));
-            scrolling2 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(graphics.PreferredBackBufferWidth, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));
+            scrolling1 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(0, 0, screenWidth, screenHeight));
+            scrolling2 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(screenWidth, 0, screenWidth, screenHeight));
 
 
             // loading tile textures here
@@ -606,15 +624,28 @@ namespace Platformer
 
 
 
-
+            // initiating menu
             m = new Menu(GraphicsDevice);
+
+            // adding animation set
+            // will not be using idle
+            
             var animations = new Dictionary<string, Animation>(){
 
                 {"WalkRight",new Animation(Content.Load<Texture2D>("right"),8)},
                 { "WalkLeft", new Animation(Content.Load<Texture2D>("left"),8)},
                 { "Idle", new Animation(Content.Load<Texture2D>("idle"),5)},
-                { "Death", new Animation(Content.Load<Texture2D>("death"),8)}
-             };
+                { "Death", new Animation(Content.Load<Texture2D>("death"),8)},
+                { "attack",new Animation(Content.Load<Texture2D>("attack"),6)}
+            };
+            var _enemy_animations = new Dictionary<string, Animation>()
+            {       // enemy melee attacks
+                
+                 {"enemywalkR",new Animation(Content.Load<Texture2D>("enemywalkR"),5)},
+                { "enemywalkL", new Animation(Content.Load<Texture2D>("enemywalkL"),5)},
+                {"enemyattackR",new Animation(Content.Load<Texture2D>("enemyattackR"),5)},
+                { "enemyattackL", new Animation(Content.Load<Texture2D>("enemyattackL"),5) }
+            };
 
             var enemyAnimations = new Dictionary<string, Animation>()
             {
@@ -623,9 +654,10 @@ namespace Platformer
             };
 
             _sprites = new List<Player>();
-            _sprites2 = new List<Enemy>();
-            Player main_player = new Player(animations,graphics) { Position = new Vector2((int)(.0732 * graphics.PreferredBackBufferWidth)
-                , (int)((0.858) * graphics.PreferredBackBufferHeight)), };
+
+            Player main_player = new Player(animations) { Position = new Vector2((int)(.0732 * screenWidth)
+                , (int)((0.858) * screenHeight)), };
+
 
             // places enemy, but needs to be changed a little
             Enemy test_enemy = new Enemy(animations,graphics)
@@ -634,9 +666,15 @@ namespace Platformer
                 , (int)((0.858) * graphics.PreferredBackBufferHeight)),
             };
             _sprites.Add(main_player);
-            //_sprites2.Add(test_enemy);
-                
-      
+
+
+            enemy = new Enemy(_enemy_animations)
+            {
+                Position = new Vector2(1000,(int)((0.818) * screenHeight))
+              
+          };
+
+
        
 
             //
@@ -735,6 +773,7 @@ namespace Platformer
             }
 
 
+
             if (previousState.IsKeyUp(Keys.Enter) && currentState.IsKeyDown(Keys.Enter))
             {
                 if (select == 1)
@@ -764,6 +803,7 @@ namespace Platformer
             spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 5+height/16), buttonSize), Color.White * selected[4]);
             spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *6+ height/15), buttonSize), Color.White * selected[5]);
 
+
             
         }
 
@@ -772,9 +812,6 @@ namespace Platformer
 
         private void CreateTiles()
         {
-            // This is the same code as I used in Initialize().
-            // Duplicate code is extremely bad practice. So you should now modify 
-            // Initialize() so that it calls this method instead.
 
             int screenWidth = graphics.PreferredBackBufferWidth;
             int screenHeight = graphics.PreferredBackBufferHeight;
@@ -851,8 +888,8 @@ namespace Platformer
             scrolling2.Draw(spriteBatch);
 
             spriteBatch.Draw(healthTexture, healthRectangle, Color.DarkSlateBlue);
-
-
+            
+          //  spriteBatch.DrawString(font, elapsed_time.ToString,time,Color.White);
 
             foreach (var sprite in _sprites)
                 sprite.Draw(spriteBatch);
@@ -862,6 +899,8 @@ namespace Platformer
             {
                 tl.Draw(spriteBatch);
             }
+            enemy.Draw(spriteBatch);
+
             spriteBatch.End();
 
            
@@ -895,31 +934,41 @@ namespace Platformer
             // level 1 action
             // enemies & objects
 
+
             int touchCount = 0;
+
+            elapsed_time = gameTime.TotalGameTime.Seconds;
+            Console.WriteLine(elapsed_time);
+
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
-            if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
-            {
-                scrolling1.rectangle.X = scrolling2.rectangle.X + scrolling2.rectangle.Width;
-            }
-            if (scrolling2.rectangle.X + scrolling2.rectangle.Width <= 0)
-            {
-                scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
-            }
+           
            {
+
                 touchCount = 0;
 
 
                 foreach (var tile in tiles)
                 {
                     
+
                     _sprites[0].Update(gameTime, _sprites);
+                    enemy.Update(gameTime,_sprites[0]);
                     scrolling1.Update((int)_sprites[0].Xtrans);
                     scrolling2.Update((int)_sprites[0].Xtrans);
-                    
+
+
                     tile.Update(_sprites[0].Xtrans);
+                    if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
+                    {
+                        scrolling1.rectangle.X = scrolling2.rectangle.X + scrolling2.rectangle.Width;
+                    }
+                    if (scrolling2.rectangle.X + scrolling2.rectangle.Width <= 0)
+                    {
+                        scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
+                    }
                     if (_sprites[0].IsTouching(tile, _sprites[0]))
                     {
                         touchCount++;
@@ -934,6 +983,9 @@ namespace Platformer
 
                        // Removed for testing
                        // _sprites[0]._position.Y = tile.position.Y - 56f;
+
+                        _sprites[0]._position.Y = tile.position.Y - 56f;
+
                         
 
                     }
@@ -997,7 +1049,7 @@ namespace Platformer
 
 
                 healthRectangle = new Rectangle(150,50,healthBar.health,60);
-
+               
 
             }
 
