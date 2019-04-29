@@ -80,6 +80,8 @@ namespace Platformer
         // using this var for moving background along with the character
         public float Xtrans = 0;
 
+        public bool isHalfway = false;
+
         #endregion
 
         #region Methods
@@ -120,7 +122,7 @@ namespace Platformer
                 //_position.Y -= 170f;
                 // Velocity.Y = 3f*10;
                 if (jumpCount == 0)
-                    jumpCount = 100;
+                    jumpCount = 150;
                 jumping = true;
                 grounded = false;
                 hasJumped = true;
@@ -133,7 +135,7 @@ namespace Platformer
                
                     jumpCount--;
                 // jump speed
-                _position.Y -= graphics.PreferredBackBufferHeight/500f;
+                _position.Y -= graphics.PreferredBackBufferHeight/600f;
 
                 if (jumpCount == 0)
                 {
@@ -232,11 +234,23 @@ namespace Platformer
                 
                 Xtrans = _position.X- graphics.PreferredBackBufferWidth / 2;
                 _position.X = (float)(graphics.PreferredBackBufferWidth * 0.5);
+                isHalfway = true;
+
               //  _position.X = (float)(graphics.PreferredBackBufferWidth * .01);
 
 
                 // Velocity = Vector2.Zero;
 
+            }
+            else if (_position.X < 0)
+            {
+                Xtrans = 0;
+                _position.X = 0;
+
+            }
+            else
+            {
+                isHalfway = false;
             }
 
             Velocity = Vector2.Zero;
