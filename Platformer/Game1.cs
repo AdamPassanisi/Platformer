@@ -1316,7 +1316,7 @@ namespace Platformer
                     {
                         if (_sprites[0].Contact == false)
                             // fall speed
-                            _sprites[0]._position.Y += 3.5f;
+                            _sprites[0]._position.Y += graphics.PreferredBackBufferHeight/750f;
                     }
 
 
