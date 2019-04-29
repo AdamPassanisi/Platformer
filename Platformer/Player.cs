@@ -164,7 +164,15 @@ namespace Platformer
 
         protected virtual void SetAnimations()
         {
-            if (Velocity.X > 0)
+            
+
+             if (IsAttacking)
+            {
+                _animationManager.Play(_animations["attack"]);
+                IsAttacking = false;
+
+            }
+           else if (Velocity.X > 0)
                 _animationManager.Play(_animations["WalkRight"]);
             /* else if (Velocity.X < 0)
                _animationManager.Play(_animations["WalkLeft"]);
@@ -178,13 +186,6 @@ namespace Platformer
 
             {
                 _animationManager.Play(_animations["WalkLeft"]);
-            }
-
-            else if (IsAttacking)
-            {
-                _animationManager.Play(_animations["attack"]);
-                IsAttacking = false;
-
             }
             else _animationManager.Stop();
         }
@@ -229,7 +230,7 @@ namespace Platformer
             if (_position.X > graphics.PreferredBackBufferWidth/2 )
             {
                 
-                //Xtrans += graphics.PreferredBackBufferWidth/2;
+                Xtrans = _position.X- graphics.PreferredBackBufferWidth / 2;
                 _position.X = (float)(graphics.PreferredBackBufferWidth * 0.5);
               //  _position.X = (float)(graphics.PreferredBackBufferWidth * .01);
 
@@ -281,20 +282,15 @@ namespace Platformer
         public void Attack
             (Enemy enemy)
         {
-            if ((this._position.X - enemy._position.X) <= 40
-                & (this._position.X - enemy._position.X) > 0 )
+            if ((this._position.X - enemy._position.X) <= 170
+                & (this._position.X - enemy._position.X) > -70 )
             {
                 // this.Velocity = Vector2.Zero;
                 this.isAttacking = true;
                 enemy.Health -= 34;
                
             }
-            else if ((this._position.X - enemy._position.X) > -20 && (this._position.X - enemy._position.X) < 0 )
-            {
-                this.isAttacking = true;
-                enemy.Health-= 34;
-                
-            }
+          
             else
             {
                 isAttacking = false;

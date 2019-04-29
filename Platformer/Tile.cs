@@ -33,7 +33,7 @@ namespace Platformer
 
         public void Update(float Xtrans)
         {
-            position.X -= Xtrans;
+            position.X -= Xtrans*3;
         }
 
       
