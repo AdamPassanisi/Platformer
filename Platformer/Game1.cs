@@ -649,6 +649,9 @@ namespace Platformer
         #region Login
         public void Login(GameTime gameTime)
         {
+            String USERNAME;
+            String PASSWORD;
+
             int height = graphics.PreferredBackBufferHeight;
             int width = graphics.PreferredBackBufferWidth;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -851,8 +854,10 @@ namespace Platformer
                 {
                     if (currentState.IsKeyDown(Keys.Enter))
                     {
+                        USERNAME = String.Join(String.Empty, username.ToArray());
+                        PASSWORD = String.Join(String.Empty, password.ToArray());
                         // Code to Log in
-                        if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
+                        if (db.login(USERNAME, Account.GenerateHash(PASSWORD,USERNAME)))
                         {
                             _state = GameState.Level1;
                             
