@@ -70,6 +70,8 @@ namespace Platformer
 
             MouseState mouse = Mouse.GetState();
 
+        bool firstboard = true;
+        List<string>[] board;
 
         // Heealth bar
         HealthBar healthBar;
@@ -111,6 +113,12 @@ namespace Platformer
         Texture2D usernametaken;
         bool usertaken = false;
 
+        Texture2D leaderboards;
+        List<String> ranks = new List<String>();
+        List<String> users = new List<String>();
+        List<String> scores = new List<String>();
+
+
         SpriteFont font;
 
         //calculates and stores elapsed time since the game has started
@@ -139,34 +147,85 @@ namespace Platformer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
+            //List<string> board = new List<string>();
+
+            //if (firstboard)
+            //{
+              //  var board = db.viewLeaderboards(1);
+                //firstboard = false;
+            //}
+
             previousState = currentState;
             currentState = Keyboard.GetState();
             int z = 0;
+            String[] titles = { "Username", "Rank", "Score" };
+            
+
 
             GraphicsDevice.Clear(Color.DarkRed);
-            List<string> board = new List<string>();
-            if (previousState.IsKeyUp(Keys.Space) && currentState.IsKeyDown(Keys.Space))
+            //List<string> board = new List<string>();
+            //if (previousState.IsKeyUp(Keys.Space) && currentState.IsKeyDown(Keys.Space))
+            if (firstboard)
             {
+                //var board = db.viewLeaderboards(1);
+                firstboard = false;
+
                 Console.WriteLine("\n\n\n *********");
+
+                /*for (int i = 0; i < board.Length; i++)
+                   Console.WriteLine(i);*/
+                users.Clear();
+                ranks.Clear();
+                scores.Clear();
+                
                 foreach (var i in db.viewLeaderboards(1))
                 {
+                    
                     int y = 0;
+                    Console.WriteLine(titles[z]);
                     foreach (var j in i)
                     {
-                        
-                        Console.WriteLine(j + "\t");
+                        switch(z)
+                        {
+                            case 0:
+                                users.Add(i[y]);
+                                break;
+                            case 1:
+                                ranks.Add(i[y]);
+                                break;
+                            case 2:
+                                scores.Add(i[y]);
+                                break;
+                            default:
+                                break;
+                        }
+                        //Console.WriteLine(i[y] + "\tThis is an entry");
+                        //list[y].Add(i[y]);
                         y++;
                     }
+                    Console.WriteLine();
                     z++;
                 }
                 //Console.WriteLine(z);
-                
-                GraphicsDevice.Clear(Color.Blue);
+               // GraphicsDevice.Clear(Color.Blue);
+
+
             }
 
 
-           
+
             spriteBatch.Begin(); //
+
+            spriteBatch.Draw(leaderboards, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            // Rank
+            for (int i = 0; i < ranks.Count; i++)
+                spriteBatch.DrawString(font, (i+1).ToString(), new Vector2(graphics.PreferredBackBufferWidth / 10, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i/20f)), Color.White);
+            // Username
+            for (int i = 0; i < users.Count; i++)
+                spriteBatch.DrawString(font, users[i], new Vector2(graphics.PreferredBackBufferWidth / 2.5f, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i / 20f)), Color.White);
+            // Score
+            for (int i = 0; i < scores.Count; i++)
+                spriteBatch.DrawString(font, scores[i], new Vector2(graphics.PreferredBackBufferWidth / 1.2f, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i / 20f)), Color.White);
 
 
 
@@ -590,6 +649,9 @@ namespace Platformer
         #region Login
         public void Login(GameTime gameTime)
         {
+            String USERNAME;
+            String PASSWORD;
+
             int height = graphics.PreferredBackBufferHeight;
             int width = graphics.PreferredBackBufferWidth;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -792,8 +854,10 @@ namespace Platformer
                 {
                     if (currentState.IsKeyDown(Keys.Enter))
                     {
+                        USERNAME = String.Join(String.Empty, username.ToArray());
+                        PASSWORD = String.Join(String.Empty, password.ToArray());
                         // Code to Log in
-                        if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
+                        if (db.login(USERNAME, Account.GenerateHash(PASSWORD,USERNAME)))
                         {
                             _state = GameState.Level1;
                             
@@ -845,6 +909,7 @@ namespace Platformer
             CreateTiles();
             base.Initialize();
             db.Initialize();
+            //board = db.viewLeaderboards(1);
             //db.createAccount("abcdefg", "12345678");
             //db.login("abc", "1234");
             //db.saveGame("abcdefg", 3);
@@ -870,6 +935,8 @@ namespace Platformer
             passwordtitle = Content.Load<Texture2D>("passwordtitle");
             logintitle = Content.Load<Texture2D>("logintitle");
             enter = Content.Load<Texture2D>("enter");
+
+            leaderboards = Content.Load<Texture2D>("leaderboards");
 
             createaccount = Content.Load<Texture2D>("createaccount");
             confirmpassword = Content.Load<Texture2D>("confirmpassword");
