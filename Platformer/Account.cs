@@ -39,11 +39,11 @@ namespace Platformer
 
         // Takes in a string and a 'salt'
         // Concatenates them to one string and returns its SHA256 hash
-        public static String GenerateHash(String p, String s)
+        public static String GenerateHash(String password, String salt)
         {
             HashAlgorithm algorithm = new SHA256Managed();
 
-            byte[] b = algorithm.ComputeHash(Encoding.UTF8.GetBytes(p+s));
+            byte[] b = algorithm.ComputeHash(Encoding.UTF8.GetBytes(password+salt));
 
             StringBuilder hashed = new System.Text.StringBuilder();
 

@@ -328,8 +328,10 @@ namespace Platformer
                                 if (Createusername.Count != 0)
                                     Createusername.RemoveAt(Createusername.Count - 1);
                             }
-
-
+                            else if (c == Keys.OemSemicolon)
+                            {
+                                ;
+                            }
                             else
                             {
 
@@ -614,6 +616,7 @@ namespace Platformer
                             }
                         }
                         else
+                            // need to show error message saying that username must be 3-40 characters and password must be 8-20 characters
                             Exit();
 
                     }
@@ -699,7 +702,10 @@ namespace Platformer
                                     username.RemoveAt(username.Count - 1);
                             }
 
-
+                            else if (c == Keys.OemSemicolon)
+                            {
+                                ;
+                            }
                             else
                             {
 
@@ -723,7 +729,7 @@ namespace Platformer
 
                             beingTyped = "password";
                         }
-                        else if ( c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift || c == Keys.OemSemicolon)
                         {
 
                             ;
@@ -802,7 +808,7 @@ namespace Platformer
                         }
 
 
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Down || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Down || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift || c == Keys.OemSemicolon)
                             ;
 
                         else if (c == Keys.Up)
@@ -909,6 +915,7 @@ namespace Platformer
             CreateTiles();
             base.Initialize();
             db.Initialize();
+            //db.completeLevelForFirstTime(1, "ADAM", 500);
             //board = db.viewLeaderboards(1);
             //db.createAccount("abcdefg", "12345678");
             //db.login("abc", "1234");
