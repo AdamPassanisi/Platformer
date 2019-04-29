@@ -126,8 +126,9 @@ namespace Platformer
         Rectangle time= new Rectangle(700,100,200,100);
        
         float  elapsed_time;
-         //private SpriteFont font;
+        //private SpriteFont font;
 
+        Texture2D finishline;
 
 
         public Game1()
@@ -984,6 +985,9 @@ namespace Platformer
             // so once we scroll through one background we go onto the next
             scrolling1 = new Scrolling(Content.Load<Texture2D>("bigbackground"), new Rectangle(0, 0, screenWidth, screenHeight));
             scrolling2 = new Scrolling(Content.Load<Texture2D>("bigbackground"), new Rectangle(screenWidth, 0, screenWidth, screenHeight));
+
+
+            finishline = Content.Load<Texture2D>("finishline");
 
 
             // loading tile textures here
