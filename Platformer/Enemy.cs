@@ -57,9 +57,10 @@ namespace Platformer
         }
 
 
-        public float Speed = 3f;
+         public float Speed = 3f;
 
-       
+
+
 
         public Vector2 Acceleration = new Vector2(9.8f, 0);
 
@@ -229,13 +230,13 @@ namespace Platformer
                 if (player._position.X  > this._position.X+3*this._animations.ElementAt(0).Value.FrameWidth
                     ) { 
 
-                this.Velocity.X =1f;
+                this.Velocity.X =1.5f;
                     facingRight = true; 
                 }
             
             else if (this.Position.X >player._position.X )
                 {
-                    this.Velocity.X = -1f;
+                    this.Velocity.X = -1.5f;
                     facingRight = false;
                 }
                 
@@ -261,7 +262,9 @@ namespace Platformer
                 RandomMove(player);
                 Position += Velocity;
                 _animationManager.Update(gameTime);
-            
+
+            if (collision(player, this))
+                ;
 
 
             SetAnimations();
@@ -274,6 +277,19 @@ namespace Platformer
            // this.IsAttacking = false;
 
         }
+
+        // Tell if enemy is touching the player
+        public bool collision(Player user, Enemy enemy)
+        {
+            // Checks horizontal
+           /* if ((enemy._position.X >= user._position.X) && (enemy._position.X <= user._position.X + user._texture.Width))
+                return true;
+
+            else*/
+                return false;
+        }
+
+
         private void Attack
             (Player player)
         {
