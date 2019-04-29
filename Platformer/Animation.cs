@@ -25,7 +25,7 @@ namespace Platformer
             Texture = texture;
             FrameCount = frameCount;
             isLooping = true;
-            FrameSpeed = (int)0.2f;
+            FrameSpeed = (int)0.5f;
 
         }
         public Animation(Texture2D texture, int frameCount, float fs)
