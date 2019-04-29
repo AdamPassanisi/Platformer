@@ -918,6 +918,10 @@ namespace Platformer
             CreateTiles();
             base.Initialize();
             db.Initialize();
+            //db.createAccount("BILL", "PASSWORD");
+           //db.completeLevelForFirstTime(1, "ADAM", 700);
+          // db.updateHighScore("")
+            //db.updateHighScore("ADAM", 1, 1000);
             //board = db.viewLeaderboards(1);
             //db.createAccount("abcdefg", "12345678");
             //db.login("abc", "1234");
@@ -1188,6 +1192,7 @@ namespace Platformer
             {
                 tiles.Add(new Tile(new Vector2(screenWidth *0.2f*i, (float)(screenHeight * 0.75))));
             }
+
         }
         protected override void Update(GameTime gameTime)
         {
@@ -1317,6 +1322,12 @@ namespace Platformer
 
                 touchCount = 0;
 
+               // Background scroll
+               for (int i = 0; i < 10; i++)
+                {
+                    scrolling1.Update((int)_sprites[0].Xtrans);
+                    scrolling2.Update((int)_sprites[0].Xtrans);
+                }
 
                 foreach (var tile in tiles)
                 {
@@ -1324,8 +1335,8 @@ namespace Platformer
 
                     _sprites[0].Update(gameTime, _sprites);
                     enemy.Update(gameTime,_sprites[0]);
-                    scrolling1.Update((int)_sprites[0].Xtrans);
-                    scrolling2.Update((int)_sprites[0].Xtrans);
+                    //scrolling1.Update((int)_sprites[0].Xtrans);
+                    //scrolling2.Update((int)_sprites[0].Xtrans);
                     
                     healthBar.health = _sprites[0].Health;
 
@@ -1354,6 +1365,8 @@ namespace Platformer
                         touchCount++;
 
                         wasTouching = true;
+
+                        
                         
                         Console.Write("Check");
                         Vector2 vec = new Vector2(1, tile.position.Y - 160f); 
@@ -1422,6 +1435,7 @@ namespace Platformer
                         _sprites[0]._position.Y = graphics.PreferredBackBufferHeight * .87f;
                         _sprites[0].grounded = true;
                     }
+
                     
                 }
 

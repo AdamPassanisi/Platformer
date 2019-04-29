@@ -57,7 +57,8 @@ namespace Platformer
         }
 
 
-         public float Speed = 3f;
+        public float Speed = 10f;
+       // public float Speed = 3f;
 
 
 
@@ -230,13 +231,13 @@ namespace Platformer
                 if (player._position.X  > this._position.X+3*this._animations.ElementAt(0).Value.FrameWidth
                     ) { 
 
-                this.Velocity.X =1.5f;
+                this.Velocity.X =1f;
                     facingRight = true; 
                 }
             
             else if (this.Position.X >player._position.X )
                 {
-                    this.Velocity.X = -1.5f;
+                    this.Velocity.X = -1f;
                     facingRight = false;
                 }
                 
