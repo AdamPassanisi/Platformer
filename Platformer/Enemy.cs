@@ -120,16 +120,19 @@ namespace Platformer
             {
                 if (facingRight)
                 {
+                   
                     _animationManager.Play(_animations["enemyattackR"]);
-                    isAttacking = false;
-
+                   isAttacking = false;
+                    attack_counter++;
 
                 }
                 else if(!facingRight)
+
                 {
+                  
                     _animationManager.Play(_animations["enemyattackL"]);
-                    _animationManager.Play(_animations["enemyattackL"]);
-                    isAttacking = false;
+                    attack_counter++;
+                   isAttacking = false;
                 }
                
                
@@ -143,7 +146,7 @@ namespace Platformer
                 _animationManager.Play(_animations["enemywalkL"]);
 
             }
-            else _animationManager.Stop();
+            //else _animationManager.Stop();
         }
 
 
@@ -215,7 +218,7 @@ namespace Platformer
         {
             Random r = new Random();
             //&& this.Position.X > screenWidth / 2 && this.Position.X > screenWidth / 3
-            int cap = 35;
+            int cap = 32;
 
             /*
              * reduce cap when moving further away so that 
@@ -223,14 +226,14 @@ namespace Platformer
              */
             if (r.Next(0, 50) > cap && !isAttacking)
             {
-                if (player._position.X - this.Position.X > this._animations.ElementAt(0).Value.FrameWidth
+                if (player._position.X  > this._position.X+3*this._animations.ElementAt(0).Value.FrameWidth
                     ) { 
 
-                this.Velocity.X = 1f;
+                this.Velocity.X =1f;
                     facingRight = true; 
                 }
             
-            else if (player._position.X - this.Position.X < this._animations.ElementAt(0).Value.FrameWidth)
+            else if (this.Position.X >player._position.X )
                 {
                     this.Velocity.X = -1f;
                     facingRight = false;
@@ -240,7 +243,7 @@ namespace Platformer
 
             }
 
-            if (!IsAttacking)
+            if (!IsAttacking&&attack_counter<1)
             {
                 this.Attack(player);
             }
@@ -252,12 +255,12 @@ namespace Platformer
             
             if (IsAttacking)
             {
-                if (_animationManager.AttackUpdate(gameTime,80))
+                if (_animationManager.AttackUpdate(gameTime,6))
                 {
                     // attack animation has completed
                     this.IsAttacking = false;
-                    
-                    this.Velocity.X += 3;
+                   // attack_counter++;
+                   // this.Velocity.X += 3;
                     _animationManager.Update(gameTime);
                     
                 };
@@ -284,15 +287,15 @@ namespace Platformer
         private void Attack
             (Player player)
         {
-            if ((this._position.X-player._position.X)<=player._animations.ElementAt(0).Value.FrameWidth / 4
-                & (this._position.X - player._position.X) >0&& player.IsAlive)
+            if ((this._position.X-player._position.X)<=player._animations.ElementAt(0).Value.FrameWidth / 6
+                & (this._position.X > player._position.X)&& player.IsAlive)
             {
                // this.Velocity = Vector2.Zero;
                 this.isAttacking=true;
                 player.Health = player.Health-34;
-            player.CheckHealth();
+                player.CheckHealth();
             }
-            else if ((this._position.X - player._position.X)> 5 && (this._position.X - player._position.X) < 0 && player.IsAlive)
+            else if ((this._position.X - player._position.X)>= 50 && (this._position.X - player._position.X) < 0 && player.IsAlive)
             {
                 this.isAttacking = true;
                 player.Health = player.Health - 34;

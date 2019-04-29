@@ -931,7 +931,7 @@ namespace Platformer
                 { "WalkLeft", new Animation(Content.Load<Texture2D>("left"),8)},
                 { "Idle", new Animation(Content.Load<Texture2D>("idle"),5)},
                 { "Death", new Animation(Content.Load<Texture2D>("death"),8)},
-                { "attack",new Animation(Content.Load<Texture2D>("attack"),6)}
+                { "attack",new Animation(Content.Load<Texture2D>("attack"),7)}
             };
             var _enemy_animations = new Dictionary<string, Animation>()
             {       // enemy melee attacks
@@ -1254,7 +1254,12 @@ namespace Platformer
                     {
                         scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
                     }
-                    
+                    if (Keyboard.GetState().IsKeyDown(Keys.E))
+                    {
+                        _sprites[0].Attack(enemy);
+                    }
+
+
                     if (_sprites[0].IsTouching(tile, _sprites[0]))
                     {
                         touchCount++;

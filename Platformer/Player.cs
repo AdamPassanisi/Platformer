@@ -102,10 +102,7 @@ namespace Platformer
         public virtual void Move()
         {
 
-            if(Keyboard.GetState().IsKeyDown(Keys.E))
-            {
-
-            }
+            
             //  && _position.X > 50
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 Velocity.X = -Speed;
@@ -186,6 +183,7 @@ namespace Platformer
             else if (IsAttacking)
             {
                 _animationManager.Play(_animations["attack"]);
+                IsAttacking = false;
 
             }
             else _animationManager.Stop();
@@ -280,10 +278,10 @@ namespace Platformer
             }
         }
 
-        private void Attack
+        public void Attack
             (Enemy enemy)
         {
-            if ((this._position.X - enemy._position.X) <= enemy._texture.Width
+            if ((this._position.X - enemy._position.X) <= 40
                 & (this._position.X - enemy._position.X) > 0 )
             {
                 // this.Velocity = Vector2.Zero;
@@ -291,7 +289,7 @@ namespace Platformer
                 enemy.Health -= 34;
                
             }
-            else if ((this._position.X - enemy._position.X) < 5 && (this._position.X - enemy._position.X) < 0 )
+            else if ((this._position.X - enemy._position.X) > -20 && (this._position.X - enemy._position.X) < 0 )
             {
                 this.isAttacking = true;
                 enemy.Health-= 34;
