@@ -122,7 +122,7 @@ namespace Platformer
                 {
                    
                     _animationManager.Play(_animations["enemyattackR"]);
-                   isAttacking = false;
+                  // isAttacking = false;
                     attack_counter++;
 
                 }
@@ -132,7 +132,7 @@ namespace Platformer
                   
                     _animationManager.Play(_animations["enemyattackL"]);
                     attack_counter++;
-                   isAttacking = false;
+                 //  isAttacking = false;
                 }
                
                
@@ -247,31 +247,21 @@ namespace Platformer
             {
                 this.Attack(player);
             }
+            if (attack_counter>=1)
+            {
+                this.IsAttacking = false;
+            }
         }
 
         public virtual void Update(GameTime gameTime, Player player)
         {
             
             
-            if (IsAttacking)
-            {
-                if (_animationManager.AttackUpdate(gameTime,6))
-                {
-                    // attack animation has completed
-                    this.IsAttacking = false;
-                   // attack_counter++;
-                   // this.Velocity.X += 3;
-                    _animationManager.Update(gameTime);
-                    
-                };
-
-            }
-            else 
-            {
+            
                 RandomMove(player);
                 Position += Velocity;
                 _animationManager.Update(gameTime);
-            }
+            
 
 
             SetAnimations();
@@ -287,20 +277,28 @@ namespace Platformer
         private void Attack
             (Player player)
         {
-            if ((this._position.X-player._position.X)<=player._animations.ElementAt(0).Value.FrameWidth / 6
-                & (this._position.X > player._position.X)&& player.IsAlive)
+            //if ((this._position.X-player._position.X)<=player._animations.ElementAt(0).Value.FrameWidth / 6
+            //    & (this._position.X > player._position.X)&& player.IsAlive)
+            //{
+            //   // this.Velocity = Vector2.Zero;
+            //    this.isAttacking=true;
+            //    player.Health = player.Health-34;
+            //    player.CheckHealth();
+            //}
+            //else if ((this._position.X - player._position.X)>= 50 && (this._position.X - player._position.X) < 0 && player.IsAlive)
+            //{
+            //    this.isAttacking = true;
+            //    player.Health = player.Health - 34;
+            //    player.CheckHealth();
+            //}
+            if ((this._position.X - player._position.X>-60) &&(this._position.X - player._position.X < 60))
             {
-               // this.Velocity = Vector2.Zero;
-                this.isAttacking=true;
-                player.Health = player.Health-34;
-                player.CheckHealth();
-            }
-            else if ((this._position.X - player._position.X)>= 50 && (this._position.X - player._position.X) < 0 && player.IsAlive)
-            {
+                // this.Velocity = Vector2.Zero;
                 this.isAttacking = true;
                 player.Health = player.Health - 34;
                 player.CheckHealth();
             }
+           
             else
             {
                 isAttacking = false;
