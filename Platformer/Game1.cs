@@ -110,7 +110,8 @@ namespace Platformer
         bool Createenterable = false;
 
         Texture2D incorrect;
-        Texture2D usernametaken;
+        Texture2D usernametaken, badlength;
+        bool BadLength = false;
         bool usertaken = false;
 
         Texture2D leaderboards;
@@ -606,7 +607,7 @@ namespace Platformer
                             {
 
                                 _state = GameState.MainMenu;
-                               
+
                             }
                             else
                             {
@@ -614,7 +615,7 @@ namespace Platformer
                             }
                         }
                         else
-                            Exit();
+                            BadLength = true;
 
                     }
                 }
@@ -636,6 +637,8 @@ namespace Platformer
             spriteBatch.Draw(enter, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 8), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[3]));
             if(usertaken)
                 spriteBatch.Draw(usernametaken, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 10), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
+            if(BadLength)
+                spriteBatch.Draw(badlength, new Rectangle(new Point(width  - buttonSize.X * 2, height / 16 + buttonSize.Y * 5), new Point(buttonSize.X * 2, buttonSize.Y * 4)), Color.White);
 
 
 
@@ -967,6 +970,7 @@ namespace Platformer
             healthTexture = Content.Load<Texture2D>("Health");
 
             incorrect = Content.Load<Texture2D>("incorrect");
+            badlength = Content.Load<Texture2D>("badlength");
             usernametaken = Content.Load<Texture2D>("usernametaken");
 
             font = Content.Load<SpriteFont>("demo");
