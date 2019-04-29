@@ -25,7 +25,8 @@ namespace Platformer
             Level1,
             Finish,
             Instructions, 
-            CreateAccount
+            CreateAccount,
+            Leaderboards
         }
         GameState _state = GameState.MainMenu;
         GraphicsDeviceManager graphics;
@@ -127,18 +128,72 @@ namespace Platformer
             // Sets the game to 1080p fullscreen by default
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
+            //graphics.IsFullScreen = true;
 
-            
+
+        }
+
+        #region Leaderboards
+        public void Leaderboards(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                _state = GameState.MainMenu;
+
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+            int z = 0;
+
+            GraphicsDevice.Clear(Color.DarkRed);
+            List<string> board = new List<string>();
+            if (previousState.IsKeyUp(Keys.Space) && currentState.IsKeyDown(Keys.Space))
+            {
+                Console.WriteLine("\n\n\n *********");
+                foreach (var i in db.viewLeaderboards(1))
+                {
+                    int y = 0;
+                    foreach (var j in i)
+                    {
+                        
+                        Console.WriteLine(j + "\t");
+                        y++;
+                    }
+                    z++;
+                }
+                //Console.WriteLine(z);
+                
+                GraphicsDevice.Clear(Color.Blue);
+            }
+
+
+           
+            spriteBatch.Begin(); //
+
+
+
+            spriteBatch.End();
+
+
+
+
+            base.Update(gameTime);
 
         }
 
 
-       
 
+        #endregion
+
+        #region Instructions
         public void Instructions(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
+
+
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
+
 
 
             GraphicsDevice.Clear(Color.DarkRed);
@@ -150,12 +205,11 @@ namespace Platformer
             spriteBatch.End();
 
 
-            previousState = currentState;
-            currentState = Keyboard.GetState();
+          
 
             base.Update(gameTime);
         }
-
+        #endregion
         // Creates a new account on the server
         #region Create Account
         public void CreateAccount(GameTime gameTime)
@@ -1014,7 +1068,7 @@ namespace Platformer
                 if (select == 2)
                     _state = GameState.CreateAccount;
                 if (select == 3)
-                    ;
+                    _state = GameState.Leaderboards;
                 if (select == 4)
                     _state = GameState.Instructions;
                 if (select == 5)
@@ -1305,6 +1359,9 @@ namespace Platformer
                     break;
                 case GameState.CreateAccount:
                     CreateAccount(gameTime);
+                    break;
+                case GameState.Leaderboards:
+                    Leaderboards(gameTime);
                     break;
                 case GameState.Level1:
                     DrawLevel1(gameTime);

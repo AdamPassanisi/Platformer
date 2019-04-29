@@ -203,7 +203,7 @@ namespace Platformer
                          Console.WriteLine(list[i][j].ToString());
                      }
                  }*/
-                Console.WriteLine(list[0][0]);
+                //Console.WriteLine(list[0][0]);
                 //Console.WriteLine(list[0][0].ToString());
                 return list;
             }
