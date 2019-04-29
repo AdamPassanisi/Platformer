@@ -120,7 +120,7 @@ namespace Platformer
                 //_position.Y -= 170f;
                 // Velocity.Y = 3f*10;
                 if (jumpCount == 0)
-                    jumpCount = 75;
+                    jumpCount = 100;
                 jumping = true;
                 grounded = false;
                 hasJumped = true;
@@ -133,7 +133,7 @@ namespace Platformer
                
                     jumpCount--;
                 // jump speed
-                _position.Y -= 3.5f;
+                _position.Y -= graphics.PreferredBackBufferHeight/500f;
 
                 if (jumpCount == 0)
                 {
