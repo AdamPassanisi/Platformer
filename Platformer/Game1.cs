@@ -92,6 +92,7 @@ namespace Platformer
         private Enemy enemy;
 
         Menu m;
+        bool singlePlayerSelected = false;
 
         // Initialize controller/keyboard
         GamePadState controller = GamePad.GetState(PlayerIndex.One);
@@ -103,7 +104,7 @@ namespace Platformer
 
         int select = 0;
 
-        Texture2D continueWithoutSaving, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
+        Texture2D continueWithoutSaving,Continue, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
         Texture2D logintitle, usernametitle, passwordtitle, enter;
@@ -123,6 +124,12 @@ namespace Platformer
         List<String> users = new List<String>();
         List<String> scores = new List<String>();
 
+
+        // Logged in
+        bool LOGGED_IN = false;
+        String Logged_Username;
+        String Logged_Password;
+        bool firstBeaten = true;
 
         SpriteFont font;
 
@@ -798,7 +805,7 @@ namespace Platformer
                             else
                             {
 
-                                password.Add(c.ToString());
+                                password.Add(c.ToString()[c.ToString().Length - 1].ToString());
                             }
                         }
 
@@ -877,6 +884,10 @@ namespace Platformer
                         // Code to Log in
                         if (db.login(USERNAME, Account.GenerateHash(PASSWORD,USERNAME)))
                         {
+                           // elapsed_time = 60;
+                            LOGGED_IN = true;
+                            Logged_Username = USERNAME;
+                            
                             _state = GameState.Level1;
                             
                         }
@@ -976,6 +987,7 @@ namespace Platformer
             instructions = Content.Load<Texture2D>("instructions");
             multiplayer = Content.Load<Texture2D>("log");
             newGame = Content.Load<Texture2D>("newgame");
+            Continue = Content.Load<Texture2D>("continue");
             returnToMainMenu = Content.Load<Texture2D>("returntomainmenu");
             saveContinue = Content.Load<Texture2D>("savecontinue");
             singePlayer = Content.Load<Texture2D>("singleplayer");
@@ -1148,10 +1160,16 @@ namespace Platformer
                     break;
             }
 
+              int height = graphics.PreferredBackBufferHeight;
+            int width = graphics.PreferredBackBufferWidth;
+            int initial = height /5;
 
+          
 
             if (previousState.IsKeyUp(Keys.Enter) && currentState.IsKeyDown(Keys.Enter))
             {
+              
+               
                 if (select == 1)
                     _state = GameState.Login;
                 if (select == 2)
@@ -1164,15 +1182,14 @@ namespace Platformer
                     Exit();
             }
 
-                int height = graphics.PreferredBackBufferHeight;
-            int width = graphics.PreferredBackBufferWidth;
-            int initial = height /5;
+              
 
             
             // Draws the game title
             spriteBatch.Draw(titlescreen, new Rectangle(width / 4, height/12, width/2, height/2), Color.White);
             // Draws the menu options
             spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
+          
             spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White * selected[1]);
             spriteBatch.Draw(createaccountbutton, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[2]);
             spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 4 + height / 17), buttonSize), Color.White * selected[3]);
@@ -1280,7 +1297,7 @@ namespace Platformer
             }
             finish_line.Draw(spriteBatch);
             enemy.Draw(spriteBatch);
-            spriteBatch.DrawString(font, "time: " + elapsed_time + "", 
+            spriteBatch.DrawString(font, "time: " + Math.Round((elapsed_time/1000),1) + "", 
                 new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
             spriteBatch.End();
 
@@ -1292,18 +1309,21 @@ namespace Platformer
         void UpdateMainMenu(GameTime gameTime)
         {
             // menu control
-            
+            previousState = currentState;
+            currentState = Keyboard.GetState();
             
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && select == 0)
-                _state = GameState.Level1;
+                {
+                    
+                    _state = GameState.Level1;
+                }
 
             
             
             controller = GamePad.GetState(PlayerIndex.One);
             keyboard = Keyboard.GetState();
 
-            previousState = currentState;
-            currentState = Keyboard.GetState();
+            
             
             base.Update(gameTime);
             
@@ -1317,6 +1337,13 @@ namespace Platformer
             // enemies & objects
             if (_sprites[0].hasEntered(finish_line))
             {
+                if(LOGGED_IN && firstBeaten)
+                    {
+                        db.completeLevelForFirstTime(1, Logged_Username, (int)(1000f - elapsed_time/1000f));
+                    firstBeaten = false;
+                    _state = GameState.MainMenu;
+                    }
+                _state = GameState.MainMenu;
                 spriteBatch.Begin();
                 spriteBatch.DrawString(font, "GAME OVER",
                new Vector2((float)(graphics.PreferredBackBufferWidth * 0.5), (float)(graphics.PreferredBackBufferHeight * 0.25)), Color.PaleVioletRed);
