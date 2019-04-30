@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System;
-
-
+using Microsoft.Xna.Framework.Audio;
 
 namespace Platformer
 {
@@ -125,8 +124,8 @@ namespace Platformer
         Rectangle time= new Rectangle(700,100,200,100);
        
         float  elapsed_time;
-         //private SpriteFont font;
-
+        //private SpriteFont font;
+        private SoundEffect audio_effect;
 
 
         public Game1()
@@ -969,8 +968,7 @@ namespace Platformer
             incorrect = Content.Load<Texture2D>("incorrect");
             usernametaken = Content.Load<Texture2D>("usernametaken");
 
-            font = Content.Load<SpriteFont>("demo");
-
+           audio_effect = Content.Load<SoundEffect>("Audio/Heartbeat");
             // background
             // so once we scroll through one background we go onto the next
             scrolling1 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(0, 0, screenWidth, screenHeight));
@@ -1006,7 +1004,9 @@ namespace Platformer
                  {"enemywalkR",new Animation(Content.Load<Texture2D>("enemywalkR"),5)},
                 { "enemywalkL", new Animation(Content.Load<Texture2D>("enemywalkL"),5)},
                 {"enemyattackR",new Animation(Content.Load<Texture2D>("enemyattackR"),5)},
-                { "enemyattackL", new Animation(Content.Load<Texture2D>("enemyattackL"),5) }
+                { "enemyattackL", new Animation(Content.Load<Texture2D>("enemyattackL"),5) },
+                { "enemyidleR", new Animation(Content.Load<Texture2D>("enemyidleR"),1) },
+                { "enemyidleL", new Animation(Content.Load<Texture2D>("enemyidleL"),1) }
             };
 
            
@@ -1211,6 +1211,12 @@ namespace Platformer
 
         }
 
+        public void playSound()
+        {
+            audio_effect.Play();
+            
+        }
+
         protected void DrawLogin(GameTime gameTime)
             {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -1286,7 +1292,7 @@ namespace Platformer
             // level 1 action
             // enemies & objects
 
-
+            
             int touchCount = 0;
             
             elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
@@ -1324,6 +1330,7 @@ namespace Platformer
                     if (Keyboard.GetState().IsKeyDown(Keys.E))
                     {
                         _sprites[0].Attack(enemy);
+                        playSound();
                     }
 
 

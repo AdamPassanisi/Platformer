@@ -138,6 +138,7 @@ namespace Platformer
                
             }
             
+           
            else  if (Velocity.X > 0)
                 _animationManager.Play(_animations["enemywalkR"]);
             else if (Velocity.X < 0)
@@ -146,7 +147,20 @@ namespace Platformer
                 _animationManager.Play(_animations["enemywalkL"]);
 
             }
-            //else _animationManager.Stop();
+            //else if (Velocity.X == 0 && facingRight)
+
+            //{
+            //    _animationManager.Play(_animations["enemyidleR"]);
+
+            //}
+            //else if (Velocity.X == 0 && !facingRight)
+
+            //{
+            //    _animationManager.Play(_animations["enemyidleL"]);
+
+            //}
+
+
         }
 
 
@@ -162,26 +176,7 @@ namespace Platformer
 
 
 
-        public virtual void Update(GameTime gameTime, List<Player> sprites)
-        {
-            //Move();
-
-            SetAnimations();
-
-            _animationManager.Update(gameTime);
-
-            Position += Velocity;
-
-            Xtrans = (int)Velocity.X;
-          //  _prevPos = Position;
-
-
-            
-
-            Velocity = Vector2.Zero;
-
-
-        }
+        
 
         public bool IsTouching(Tile tile, Player sprite
             )
@@ -225,8 +220,10 @@ namespace Platformer
              * he can escape
              */
             if (r.Next(0, 50) > cap && !isAttacking)
+
+
             {
-                if (player._position.X  > this._position.X+3*this._animations.ElementAt(0).Value.FrameWidth
+                if (player._position.X  > this._position.X+this._animations.ElementAt(0).Value.FrameWidth
                     ) { 
 
                 this.Velocity.X =1f;
@@ -242,6 +239,11 @@ namespace Platformer
 
 
             }
+            else
+            {
+                this.Velocity = Vector2.Zero;
+            }
+
 
             if (!IsAttacking&&attack_counter<1)
             {
@@ -291,13 +293,14 @@ namespace Platformer
             //    player.Health = player.Health - 34;
             //    player.CheckHealth();
             //}
-            if ((this._position.X - player._position.X>-60) &&(this._position.X - player._position.X < 60))
+            if ((this._position.X - player._position.X>-60) &&(this._position.X - player._position.X < 60) && !(this.Position.Y>player.Position.Y))
             {
                 // this.Velocity = Vector2.Zero;
                 this.isAttacking = true;
                 player.Health = player.Health - 34;
                 player.CheckHealth();
             }
+           
            
             else
             {

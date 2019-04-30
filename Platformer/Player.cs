@@ -104,7 +104,7 @@ namespace Platformer
 
             
             //  && _position.X > 50
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (Keyboard.GetState().IsKeyDown(Keys.Left)&&Position.X>this._animations.ElementAt(0).Value.FrameWidth)
                 Velocity.X = -Speed;
             if (Keyboard.GetState().IsKeyDown(Keys.Right) )
 
