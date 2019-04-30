@@ -59,6 +59,10 @@ namespace Platformer
 
         // List of tiles to display on platform
         List<Tile> tiles = new List<Tile>();
+
+        // exit door
+        Door finish_line;
+
         int opacDirection = 1;
         Rectangle titleScreen = new
         
@@ -1001,8 +1005,7 @@ namespace Platformer
             {
                 Tile.LoadContent(Content, 0);
             }
-            
-
+            Door.LoadContent(Content,0);
 
 
             // initiating menu
@@ -1190,10 +1193,13 @@ namespace Platformer
             int screenWidth = graphics.PreferredBackBufferWidth;
             int screenHeight = graphics.PreferredBackBufferHeight;
             // float xPosition = Shared.random.Next(200, screenWidth/2+200);
-            for (int i = 0; i < 10; i++)
+            int i = 0;
+            for (; i < 10; i++)
             {
                 tiles.Add(new Tile(new Vector2(screenWidth *0.2f*i, (float)(screenHeight * 0.75))));
             }
+            finish_line = new Door(new Vector2(screenWidth * 0.2f * (i+1), (float)(screenHeight * 0.814)));
+
 
         }
         protected override void Update(GameTime gameTime)
@@ -1272,6 +1278,7 @@ namespace Platformer
             {
                 tl.Draw(spriteBatch);
             }
+            finish_line.Draw(spriteBatch);
             enemy.Draw(spriteBatch);
             spriteBatch.DrawString(font, "time: " + elapsed_time + "", 
                 new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
@@ -1330,7 +1337,7 @@ namespace Platformer
                     scrolling1.Update((int)_sprites[0].Xtrans);
                     scrolling2.Update((int)_sprites[0].Xtrans);
                 }
-
+                finish_line.Update(_sprites[0].Xtrans*3);
                 foreach (var tile in tiles)
                 {
                     
@@ -1341,12 +1348,13 @@ namespace Platformer
                     //scrolling2.Update((int)_sprites[0].Xtrans);
                     
                     healthBar.health = _sprites[0].Health;
-
+                   
                     tile.Update(_sprites[0].Xtrans);
                     if (_sprites[0].isHalfway)
                     {
                         tile.Update(_sprites[0].Xtrans);
                         tile.Update(_sprites[0].Xtrans);
+                       
                     }
                     if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
                     {

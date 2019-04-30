@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Background.cs" />
     <Compile Include="CreateAccount.cs" />
+    <Compile Include="Door.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="Tile.cs" />
