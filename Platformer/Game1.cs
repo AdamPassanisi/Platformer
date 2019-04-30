@@ -921,7 +921,9 @@ namespace Platformer
                             LOGGED_IN = true;
                             Logged_Username = USERNAME;
                             
-                            _state = GameState.Level1;
+                            _state = GameState.MainMenu;
+                            //System.Threading.Thread.Sleep(250);
+                           // _state = GameState.Level1;
                             
                         }
                         else
@@ -940,7 +942,8 @@ namespace Platformer
             }
 
 
-
+            if(LOGGED_IN)
+                _state = GameState.MainMenu;
 
 
             spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
@@ -1350,7 +1353,7 @@ namespace Platformer
                     
                     _state = GameState.Level1;
                 }
-
+                
             
             
             controller = GamePad.GetState(PlayerIndex.One);
