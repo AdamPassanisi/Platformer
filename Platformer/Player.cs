@@ -319,9 +319,9 @@ namespace Platformer
         #endregion
         public bool hasEntered(Door door)
         {
-            if (this._position.X > door.position.X && this._position.X < door.position.X + Door.Texture.Width && (this._position.Y < door.position.Y)
-                ) { 
-                
+            if (this._position.X > door.position.X && this._position.X < door.position.X + Door.Texture.Width && (this._position.Y > door.position.Y)
+                ) {
+                this.Health = 300;
             return true;
             }
             return false;

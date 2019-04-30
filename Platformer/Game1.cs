@@ -1317,7 +1317,10 @@ namespace Platformer
             // enemies & objects
             if (_sprites[0].hasEntered(finish_line))
             {
-
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "GAME OVER",
+               new Vector2((float)(graphics.PreferredBackBufferWidth * 0.5), (float)(graphics.PreferredBackBufferHeight * 0.25)), Color.PaleVioletRed);
+                spriteBatch.End();
             }
             
             int touchCount = 0;
