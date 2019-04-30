@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace Platformer
 {
-    class Tile
+    class Door
     {
+
+
         public bool beingTouched = false;
         public static Texture2D Texture { get; set; }
         public Vector2 position;
@@ -20,32 +22,29 @@ namespace Platformer
         }
         public static void LoadContent(ContentManager content, int type)
         {
-           
 
-            Texture = content.Load<Texture2D>("Tile");
+
+            Texture = content.Load<Texture2D>("door");
 
         }
 
-       
-        public Tile(Vector2 position)
+        
+        public Door(Vector2 position)
         {
             this.position = position;
         }
 
         public void Update(float Xtrans)
         {
-            position.X -= Xtrans*3;
+            position.X -= Xtrans * 3;
         }
 
-      
+
 
     }
 
     // blocks modification of location of blocks
     // credit 1 
-    static class Shared
-    {
-        public static readonly Random random = new Random();
+   
 
-    }
 }
