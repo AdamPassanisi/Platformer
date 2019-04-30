@@ -336,8 +336,8 @@ namespace Platformer
                             }
                             else
                             {
-
-                                Createusername.Add(c.ToString());
+                                c.ToString()[c.ToString().Length - 1].ToString();
+                                Createusername.Add(c.ToString()[c.ToString().Length - 1].ToString());
                             }
                         }
 
@@ -358,7 +358,7 @@ namespace Platformer
 
                             CreatebeingTyped = "password";
                         }
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.LeftShift || c == Keys.RightShift)
                         {
 
                             ;
@@ -386,7 +386,7 @@ namespace Platformer
                         }
                         else
                         {
-                            Createusername.Add(c.ToString());
+                            Createusername.Add(c.ToString()[c.ToString().Length - 1].ToString());
                         }
 
                     }
@@ -428,7 +428,7 @@ namespace Platformer
                             else
                             {
 
-                                Createpassword.Add(c.ToString());
+                                Createpassword.Add(c.ToString()[c.ToString().Length - 1].ToString());
                             }
                         }
 
@@ -449,7 +449,7 @@ namespace Platformer
 
                             CreatebeingTyped = "user";
                         }
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Tab || c == Keys.Down)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Tab || c == Keys.Down || c==Keys.LeftShift || c==Keys.RightShift)
                         {
 
                             ;
@@ -489,7 +489,7 @@ namespace Platformer
 
                         else
                         {
-                            Createpassword.Add(c.ToString());
+                            Createpassword.Add(c.ToString()[c.ToString().Length - 1].ToString());
                         }
 
                     }
@@ -717,7 +717,7 @@ namespace Platformer
                             else
                             {
 
-                                username.Add(c.ToString());
+                                username.Add(c.ToString()[c.ToString().Length - 1].ToString());
                             }
                         }
 
@@ -762,7 +762,7 @@ namespace Platformer
                         }
                         else
                         {
-                            username.Add(c.ToString());
+                            username.Add(c.ToString()[c.ToString().Length - 1].ToString());
                         }
 
                     }
@@ -838,7 +838,7 @@ namespace Platformer
                         }
                         else
                         {
-                            password.Add(c.ToString());
+                            password.Add(c.ToString()[c.ToString().Length - 1].ToString());
                         }
                     }
 
