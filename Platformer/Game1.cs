@@ -26,7 +26,8 @@ namespace Platformer
             Finish,
             Instructions, 
             CreateAccount,
-            Leaderboards
+            Leaderboards,
+            LevelCompleted
         }
         GameState _state = GameState.MainMenu;
         GraphicsDeviceManager graphics;
@@ -104,7 +105,7 @@ namespace Platformer
 
         int select = 0;
 
-        Texture2D continueWithoutSaving,Continue, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
+        Texture2D levelcompleted, continueWithoutSaving,Continue, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
         Texture2D logintitle, usernametitle, passwordtitle, enter;
@@ -153,6 +154,38 @@ namespace Platformer
 
 
         }
+
+        #region Level Completed
+        public void LevelCompleted(GameTime gameTime)
+        {
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+            
+              if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                _state = GameState.MainMenu;
+
+            GraphicsDevice.Clear(Color.Silver);
+
+
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(levelcompleted, new Rectangle(graphics.PreferredBackBufferWidth/4, graphics.PreferredBackBufferHeight/16, graphics.PreferredBackBufferWidth/2, graphics.PreferredBackBufferHeight/2), Color.White);
+
+          /*  spriteBatch.Draw(titlescreen, new Rectangle(width / 4, height/12, width/2, height/2), Color.White);
+            // Draws the menu options
+            spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
+          
+            spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White * selected[1]);
+            spriteBatch.Draw(createaccountbutton, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[2]);
+            spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 4 + height / 17), buttonSize), Color.White * selected[3]);
+            spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 5+height/16), buttonSize), Color.White * selected[4]);
+            spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *6+ height/15), buttonSize), Color.White * selected[5]);
+            */
+
+
+            spriteBatch.End();
+        }
+        #endregion
 
         #region Leaderboards
         public void Leaderboards(GameTime gameTime)
@@ -959,7 +992,7 @@ namespace Platformer
             buttonSize = new Point(graphics.PreferredBackBufferWidth * 5 / 32, graphics.PreferredBackBufferHeight * 5/72);
 
             font = Content.Load<SpriteFont>("font");
-
+            levelcompleted = Content.Load<Texture2D>("levelcompleted");
             // Login Page
             usernametitle = Content.Load<Texture2D>("usernametitle");
             passwordtitle = Content.Load<Texture2D>("passwordtitle");
@@ -1335,15 +1368,19 @@ namespace Platformer
 
             // level 1 action
             // enemies & objects
+
+            if(_sprites[0].Health < 100)
+                Exit();
+
             if (_sprites[0].hasEntered(finish_line))
             {
                 if(LOGGED_IN && firstBeaten)
                     {
                         db.completeLevelForFirstTime(1, Logged_Username, (int)(1000f - elapsed_time/1000f));
                     firstBeaten = false;
-                    _state = GameState.MainMenu;
+                    //_state = GameState.MainMenu;
                     }
-                _state = GameState.MainMenu;
+                _state = GameState.LevelCompleted;
                 spriteBatch.Begin();
                 spriteBatch.DrawString(font, "GAME OVER",
                new Vector2((float)(graphics.PreferredBackBufferWidth * 0.5), (float)(graphics.PreferredBackBufferHeight * 0.25)), Color.PaleVioletRed);
@@ -1522,6 +1559,9 @@ namespace Platformer
                     break;
                 case GameState.Finish:
                     // DrawFinish(gameTime);
+                    break;
+                case GameState.LevelCompleted:
+                    LevelCompleted(gameTime);
                     break;
                     
 

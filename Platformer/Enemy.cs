@@ -266,6 +266,7 @@ namespace Platformer
                 Position += Velocity;
                 _animationManager.Update(gameTime);
 
+
             if (collision(player, this))
                 ;
 
@@ -310,7 +311,7 @@ namespace Platformer
             //    player.Health = player.Health - 34;
             //    player.CheckHealth();
             //}
-            if ((this._position.X - player._position.X>-60) &&(this._position.X - player._position.X < 60) && !(this.Position.Y>player.Position.Y))
+            if ((this._position.X - player._position.X>-100) &&(this._position.X - player._position.X < 1) && !(this.Position.Y>player.Position.Y))
             {
                 // this.Velocity = Vector2.Zero;
                 this.isAttacking = true;
