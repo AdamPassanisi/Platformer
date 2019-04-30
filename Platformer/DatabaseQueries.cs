@@ -270,12 +270,12 @@ namespace Platformer
             }
         }
 
-        public void updateHighScore(string user, int level, int score)
+        private void updateHighScore(string user, int level, int score)
         {
             
             string query = "SET @rank := (SELECT COUNT(*)+1 FROM leaderboard WHERE score>" + score + " AND level=" + level + "); " +
                              "SET @old := (SELECT ranking FROM leaderboard WHERE user='" + user + "'); " +
-                             "UPDATE leaderboard SET score=" + score + ", ranking=@rank WHERE user='" + user + "' AND level=" + level + "; " +
+                             "UPDATE leaderboard SET score=" + score + ", ranking=@rank WHERE user='" + user + "' AND level=" + level + " AND score < " + score + "; " +
                              "UPDATE leaderboard SET ranking=" +
                              "CASE WHEN score<" + score + " THEN ranking+1 " +
                              "ELSE ranking " +

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System;
-using Microsoft.Xna.Framework.Audio;
+
+
 
 namespace Platformer
 {
@@ -109,7 +110,8 @@ namespace Platformer
         bool Createenterable = false;
 
         Texture2D incorrect;
-        Texture2D usernametaken;
+        Texture2D usernametaken, badlength;
+        bool BadLength = false;
         bool usertaken = false;
 
         Texture2D leaderboards;
@@ -125,7 +127,8 @@ namespace Platformer
        
         float  elapsed_time;
         //private SpriteFont font;
-        private SoundEffect audio_effect;
+
+        Texture2D finishline;
 
 
         public Game1()
@@ -327,8 +330,10 @@ namespace Platformer
                                 if (Createusername.Count != 0)
                                     Createusername.RemoveAt(Createusername.Count - 1);
                             }
-
-
+                            else if (c == Keys.OemSemicolon)
+                            {
+                                ;
+                            }
                             else
                             {
 
@@ -410,7 +415,7 @@ namespace Platformer
                                     Createpassword.RemoveAt(Createpassword.Count - 1);
                             }
 
-                            else if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
+                            /*else if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
                             {
                                 Createcolors[0] = 0f;
                                 Createcolors[1] = 0f;
@@ -418,7 +423,7 @@ namespace Platformer
                                 Createcolors[3] = 0f;
 
                                 CreatebeingTyped = "confirm";
-                            }
+                            }*/
 
                             else
                             {
@@ -493,7 +498,7 @@ namespace Platformer
                 }
             }
 
-
+            /*
             if (CreatebeingTyped == "confirm")
             {
 
@@ -565,6 +570,7 @@ namespace Platformer
 
                 }
             }
+            */
 
 
             if (CreatebeingTyped == "enter")
@@ -605,15 +611,19 @@ namespace Platformer
                             {
 
                                 _state = GameState.MainMenu;
-                               
+
                             }
                             else
                             {
+                                BadLength = false;
                                 usertaken = true;
                             }
                         }
                         else
-                            Exit();
+                        {
+                            usertaken = false;
+                            BadLength = true;
+                        }
 
                     }
                 }
@@ -630,11 +640,13 @@ namespace Platformer
             spriteBatch.Draw(createaccount, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 3)), Color.White);
             spriteBatch.Draw(usernametitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[0]));
             spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[1]));
-            spriteBatch.Draw(confirmpassword, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[2]));
+            //spriteBatch.Draw(confirmpassword, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[2]));
 
-            spriteBatch.Draw(enter, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 8), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[3]));
+            spriteBatch.Draw(enter, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[3]));
             if(usertaken)
-                spriteBatch.Draw(usernametaken, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 10), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
+                spriteBatch.Draw(usernametaken, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 8), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White );
+            if(BadLength)
+                spriteBatch.Draw(badlength, new Rectangle(new Point(width  - buttonSize.X * 2, height / 16 + buttonSize.Y * 5), new Point(buttonSize.X * 2, buttonSize.Y * 4)), Color.White);
 
 
 
@@ -698,7 +710,10 @@ namespace Platformer
                                     username.RemoveAt(username.Count - 1);
                             }
 
-
+                            else if (c == Keys.OemSemicolon)
+                            {
+                                ;
+                            }
                             else
                             {
 
@@ -722,7 +737,7 @@ namespace Platformer
 
                             beingTyped = "password";
                         }
-                        else if ( c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift || c == Keys.OemSemicolon)
                         {
 
                             ;
@@ -801,7 +816,7 @@ namespace Platformer
                         }
 
 
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Down || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift)
+                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Down || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift || c == Keys.OemSemicolon)
                             ;
 
                         else if (c == Keys.Up)
@@ -908,6 +923,7 @@ namespace Platformer
             CreateTiles();
             base.Initialize();
             db.Initialize();
+            //db.completeLevelForFirstTime(1, "ADAM", 500);
             //board = db.viewLeaderboards(1);
             //db.createAccount("abcdefg", "12345678");
             //db.login("abc", "1234");
@@ -966,13 +982,18 @@ namespace Platformer
             healthTexture = Content.Load<Texture2D>("Health");
 
             incorrect = Content.Load<Texture2D>("incorrect");
+            badlength = Content.Load<Texture2D>("badlength");
             usernametaken = Content.Load<Texture2D>("usernametaken");
 
-           audio_effect = Content.Load<SoundEffect>("Audio/Heartbeat");
+            font = Content.Load<SpriteFont>("demo");
+
             // background
             // so once we scroll through one background we go onto the next
-            scrolling1 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(0, 0, screenWidth, screenHeight));
-            scrolling2 = new Scrolling(Content.Load<Texture2D>("background"), new Rectangle(screenWidth, 0, screenWidth, screenHeight));
+            scrolling1 = new Scrolling(Content.Load<Texture2D>("bigbackground"), new Rectangle(0, 0, screenWidth, screenHeight));
+            scrolling2 = new Scrolling(Content.Load<Texture2D>("bigbackground"), new Rectangle(screenWidth, 0, screenWidth, screenHeight));
+
+
+            finishline = Content.Load<Texture2D>("finishline");
 
 
             // loading tile textures here
@@ -1004,16 +1025,14 @@ namespace Platformer
                  {"enemywalkR",new Animation(Content.Load<Texture2D>("enemywalkR"),5)},
                 { "enemywalkL", new Animation(Content.Load<Texture2D>("enemywalkL"),5)},
                 {"enemyattackR",new Animation(Content.Load<Texture2D>("enemyattackR"),5)},
-                { "enemyattackL", new Animation(Content.Load<Texture2D>("enemyattackL"),5) },
-                { "enemyidleR", new Animation(Content.Load<Texture2D>("enemyidleR"),1) },
-                { "enemyidleL", new Animation(Content.Load<Texture2D>("enemyidleL"),1) }
+                { "enemyattackL", new Animation(Content.Load<Texture2D>("enemyattackL"),5) }
             };
 
            
 
             _sprites = new List<Player>();
-
-            Player main_player = new Player(animations,graphics) { Position = new Vector2((int)(.0732 * screenWidth)
+            // .0732 * screenWidth
+            Player main_player = new Player(animations,graphics) { Position = new Vector2((int)(0)
                 , (int)((0.858) * screenHeight)), };
 
 
@@ -1044,9 +1063,9 @@ namespace Platformer
 
         }
 
-       
-        
 
+
+        #region Main Menu
         // Displays the main menu
         public void menu()
         {
@@ -1160,9 +1179,10 @@ namespace Platformer
 
             
         }
+        #endregion
 
 
-        
+
 
         private void CreateTiles()
         {
@@ -1174,6 +1194,7 @@ namespace Platformer
             {
                 tiles.Add(new Tile(new Vector2(screenWidth *0.2f*i, (float)(screenHeight * 0.75))));
             }
+
         }
         protected override void Update(GameTime gameTime)
         {
@@ -1211,12 +1232,6 @@ namespace Platformer
 
         }
 
-        public void playSound()
-        {
-            audio_effect.Play();
-            
-        }
-
         protected void DrawLogin(GameTime gameTime)
             {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -1238,7 +1253,8 @@ namespace Platformer
         protected void DrawLevel1(GameTime gameTime)
         {
 
-            
+            int finish = 400;
+
             spriteBatch.Begin();
             
             scrolling1.Draw(spriteBatch);
@@ -1261,6 +1277,7 @@ namespace Platformer
                 new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
             spriteBatch.End();
 
+           
            
             base.Draw(gameTime);
         }
@@ -1292,7 +1309,7 @@ namespace Platformer
             // level 1 action
             // enemies & objects
 
-            
+
             int touchCount = 0;
             
             elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
@@ -1307,6 +1324,12 @@ namespace Platformer
 
                 touchCount = 0;
 
+               // Background scroll
+               for (int i = 0; i < 10; i++)
+                {
+                    scrolling1.Update((int)_sprites[0].Xtrans);
+                    scrolling2.Update((int)_sprites[0].Xtrans);
+                }
 
                 foreach (var tile in tiles)
                 {
@@ -1314,11 +1337,17 @@ namespace Platformer
 
                     _sprites[0].Update(gameTime, _sprites);
                     enemy.Update(gameTime,_sprites[0]);
-                    scrolling1.Update((int)_sprites[0].Xtrans);
-                    scrolling2.Update((int)_sprites[0].Xtrans);
+                    //scrolling1.Update((int)_sprites[0].Xtrans);
+                    //scrolling2.Update((int)_sprites[0].Xtrans);
+                    
                     healthBar.health = _sprites[0].Health;
 
                     tile.Update(_sprites[0].Xtrans);
+                    if (_sprites[0].isHalfway)
+                    {
+                        tile.Update(_sprites[0].Xtrans);
+                        tile.Update(_sprites[0].Xtrans);
+                    }
                     if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
                     {
                         scrolling1.rectangle.X = scrolling2.rectangle.X + scrolling2.rectangle.Width;
@@ -1330,7 +1359,6 @@ namespace Platformer
                     if (Keyboard.GetState().IsKeyDown(Keys.E))
                     {
                         _sprites[0].Attack(enemy);
-                        playSound();
                     }
 
 
@@ -1339,6 +1367,8 @@ namespace Platformer
                         touchCount++;
 
                         wasTouching = true;
+
+                        
                         
                         Console.Write("Check");
                         Vector2 vec = new Vector2(1, tile.position.Y - 160f); 
@@ -1390,7 +1420,7 @@ namespace Platformer
                     {
                         if (_sprites[0].Contact == false)
                             // fall speed
-                            _sprites[0]._position.Y += graphics.PreferredBackBufferHeight/750f;
+                            _sprites[0]._position.Y += graphics.PreferredBackBufferHeight/600f;
                     }
 
 
@@ -1407,6 +1437,7 @@ namespace Platformer
                         _sprites[0]._position.Y = graphics.PreferredBackBufferHeight * .87f;
                         _sprites[0].grounded = true;
                     }
+
                     
                 }
 
