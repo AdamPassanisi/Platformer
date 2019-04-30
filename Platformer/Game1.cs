@@ -1372,9 +1372,10 @@ namespace Platformer
             if(_sprites[0].Health < 100)
                 Exit();
 
+
             if (_sprites[0].hasEntered(finish_line))
             {
-                if(LOGGED_IN && firstBeaten)
+                if(LOGGED_IN && firstBeaten) 
                     {
                         db.completeLevelForFirstTime(1, Logged_Username, (int)(1000f - elapsed_time/1000f));
                     firstBeaten = false;

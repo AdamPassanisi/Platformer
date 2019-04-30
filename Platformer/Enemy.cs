@@ -225,11 +225,17 @@ namespace Platformer
 
 
             {
-                if (player._position.X  > this._position.X+this._animations.ElementAt(0).Value.FrameWidth
-                    ) { 
 
-                this.Velocity.X =1f;
-                    facingRight = true; 
+                 if (player._position.X  > this._position.X ) { 
+                /*if (player._position.X  > this._position.X+this._animations.ElementAt(0).Value.FrameWidth
+                    ) {*/ 
+                    if (player.isHalfway)
+                        this.Velocity.X = .1f;
+                    else
+                    {
+                        this.Velocity.X =1f;
+                        facingRight = true;
+                    }
                 }
             
             else if (this.Position.X >player._position.X )
@@ -265,8 +271,7 @@ namespace Platformer
                 RandomMove(player);
                 Position += Velocity;
                 _animationManager.Update(gameTime);
-
-
+            
             if (collision(player, this))
                 ;
 
