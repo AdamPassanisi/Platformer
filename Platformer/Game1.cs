@@ -1315,8 +1315,11 @@ namespace Platformer
 
             // level 1 action
             // enemies & objects
+            if (_sprites[0].hasEntered(finish_line))
+            {
 
-
+            }
+            
             int touchCount = 0;
             
             elapsed_time += gameTime.ElapsedGameTime.Milliseconds;

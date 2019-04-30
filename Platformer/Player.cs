@@ -35,6 +35,10 @@ namespace Platformer
         #region Properties
 
         private int health;
+
+        private int totalDistance;
+        
+        public float TotalDistance { get { return totalDistance; }set { value = totalDistance; } }
         public int Health { get { return health; } set { health = value; } }
         public int Lives  { get; set; }
 
@@ -225,6 +229,7 @@ namespace Platformer
             //Xtrans = (int)(Position.X-_prevPos.X);
             // Testing movement
             Xtrans = Velocity.X;
+            TotalDistance += Xtrans;
             _prevPos = Position;
 
 
@@ -312,6 +317,14 @@ namespace Platformer
 
         }
         #endregion
-
+        public bool hasEntered(Door door)
+        {
+            if (this._position.X > door.position.X && this._position.X < door.position.X + Door.Texture.Width && (this._position.Y < door.position.Y)
+                ) { 
+                
+            return true;
+            }
+            return false;
+        }
     }
 }
