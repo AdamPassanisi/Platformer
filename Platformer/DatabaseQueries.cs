@@ -232,6 +232,27 @@ namespace Platformer
             CloseConnection();
         }
 
+        public void newGame(string user)
+        {
+            string query = "UPDATE player SET last_level_completed=0 WHERE username='" + user + "';";
+            //Open connection
+            if (OpenConnection() == true)
+            {
+                //create mysql command
+                MySqlCommand cmd = new MySqlCommand();
+                //Assign the query using CommandText
+                cmd.CommandText = query;
+                //Assign the connection using Connection
+                cmd.Connection = connection;
+
+                //Execute query
+                cmd.ExecuteNonQuery();
+
+                //close connection
+                CloseConnection();
+            }
+        }
+
         public void completeLevelForFirstTime(int level, string user, int score)
         {
             string query = "SET @rank := (SELECT COUNT(*)+1 FROM leaderboard WHERE score > " + score + " AND level = " + level + "); INSERT INTO leaderboard VALUES(" + level + ", @rank, '" + user + "', " + score + "); UPDATE leaderboard SET ranking = CASE WHEN score < " + score + " THEN ranking+1 ELSE ranking END WHERE level = " + level + ";";
