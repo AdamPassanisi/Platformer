@@ -150,7 +150,10 @@ namespace Platformer
 
         // sound effects
         Song lobby_music;
-
+        SoundEffect jumpSound;
+        SoundEffect deathSound;
+        SoundEffect victorySound;
+        private Dictionary<string, SoundEffect> soundEffects;
 
 
 
@@ -1020,6 +1023,20 @@ namespace Platformer
 
             // load sound effect
             lobby_music = Content.Load<Song>("Audio/Lobby");
+
+            
+            jumpSound = Content.Load<SoundEffect>("Audio/Jump");
+            deathSound = Content.Load<SoundEffect>("Audio/Heartbeat");
+            victorySound = Content.Load<SoundEffect>("Audio/victory");
+            soundEffects = new Dictionary<string, SoundEffect>();
+
+            //  {"Jump",(Content.Load<SoundEffect>("Audio/Jump"))},
+            // { "Death", (Content.Load<SoundEffect>("Audio/Heartbeat"))},
+            //  { "Victory", (Content.Load<SoundEffect>("Audio/victory"))},
+
+            soundEffects.Add("Jump", jumpSound);
+            soundEffects.Add("Death", deathSound);
+            soundEffects.Add("Victory", victorySound);
             MediaPlayer.Volume = 0.99f;
             
             MediaPlayer.Play(lobby_music);
@@ -1133,7 +1150,7 @@ namespace Platformer
             _sprites.Add(main_player);
 
 
-            enemy = new Enemy(_enemy_animations)
+            enemy = new Enemy(_enemy_animations,graphics)
             {
                 Position = new Vector2(700,(int)((0.838) * screenHeight))
               
@@ -1475,7 +1492,7 @@ namespace Platformer
                 _state = GameState.GameOver;
 
 
-            if (_sprites[0].hasEntered(finish_line))
+            if (_sprites[0].hasEntered(finish_line,soundEffects))
             {
                 if(LOGGED_IN && firstBeaten) 
                     {
@@ -1516,7 +1533,7 @@ namespace Platformer
                 {
                     
 
-                    _sprites[0].Update(gameTime, _sprites);
+                    _sprites[0].Update(gameTime, _sprites,soundEffects);
                     enemy.Update(gameTime,_sprites[0]);
                     //scrolling1.Update((int)_sprites[0].Xtrans);
                     //scrolling2.Update((int)_sprites[0].Xtrans);

@@ -31,11 +31,23 @@
 /processorParam:Quality=Best
 /build:Audio/Heartbeat.wav
 
+#begin Audio/Jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Jump.wav
+
 #begin Audio/Lobby.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Audio/Lobby.mp3
+
+#begin Audio/victory.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/victory.wav
 
 #begin background.png
 /importer:TextureImporter
