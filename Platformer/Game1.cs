@@ -1450,6 +1450,7 @@ namespace Platformer
                 if(LOGGED_IN && firstBeaten) 
                     {
                     db.completeLevelForFirstTime(1, Logged_Username, (int)(100000f - elapsed_time/10f));
+                    db.saveGame(Logged_Username, 1);
                     firstBeaten = false;
                     //_state = GameState.MainMenu;
                     }
