@@ -97,6 +97,8 @@ namespace Platformer
         Texture2D instructs;
 
         private Enemy enemy;
+        private Enemy enemy2;
+
 
         Menu m;
         bool singlePlayerSelected = false;
@@ -1156,8 +1158,13 @@ namespace Platformer
               
           };
 
+               enemy2 = new Enemy(_enemy_animations, graphics)
+               {
+                   Position = new Vector2(2000, (int)((0.838) * screenHeight))
 
-       
+               };
+
+
 
             //
 
@@ -1439,6 +1446,7 @@ namespace Platformer
             }
             finish_line.Draw(spriteBatch);
             enemy.Draw(spriteBatch);
+            enemy2.Draw(spriteBatch);
             spriteBatch.DrawString(font, "time: " + Math.Round((elapsed_time/1000),1) + "", 
                 new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
             spriteBatch.End();
@@ -1535,6 +1543,7 @@ namespace Platformer
 
                     _sprites[0].Update(gameTime, _sprites,soundEffects);
                     enemy.Update(gameTime,_sprites[0]);
+                    enemy2.Update(gameTime, _sprites[0]);
                     //scrolling1.Update((int)_sprites[0].Xtrans);
                     //scrolling2.Update((int)_sprites[0].Xtrans);
                     
@@ -1668,10 +1677,11 @@ namespace Platformer
             int touchCount = 0;
             for(int i = 0; i < 10; i++)
             {
-                _sprites[0].Update(gameTime, _sprites);
+                _sprites[0].Update(gameTime, _sprites, soundEffects);
                 enemy.Update(gameTime, _sprites[0]);
+                enemy2.Update(gameTime, _sprites[0]);
             }
-            _sprites[0].Update(gameTime, _sprites);
+            _sprites[0].Update(gameTime, _sprites, soundEffects);
               // Background scroll
                for (int i = 0; i < 10; i++)
                 {
@@ -1692,11 +1702,39 @@ namespace Platformer
                         
                         
                         Console.Write("Check");
-                        Vector2 vec = new Vector2(1, tile.position.Y - 160f); 
-                  
-                        
+                        Vector2 vec = new Vector2(1, tile.position.Y - 160f);
+
+
+
+
+
+
+                    healthBar.health = _sprites[0].Health;
+
+                    tile.Update(_sprites[0].Xtrans);
+                    if (_sprites[0].isHalfway)
+                    {
+                        tile.Update(_sprites[0].Xtrans);
+                        tile.Update(_sprites[0].Xtrans);
 
                     }
+                    if (nightscrolling1.rectangle.X + nightscrolling1.rectangle.Width <= 0)
+                    {
+                        nightscrolling1.rectangle.X = nightscrolling2.rectangle.X + nightscrolling2.rectangle.Width;
+                    }
+                    if (nightscrolling2.rectangle.X + nightscrolling2.rectangle.Width <= 0)
+                    {
+                        nightscrolling2.rectangle.X = nightscrolling1.rectangle.X + nightscrolling1.rectangle.Width;
+                    }
+                 
+
+
+
+
+
+
+
+                }
                     
 
                 if (_sprites[0].jumping == false)
