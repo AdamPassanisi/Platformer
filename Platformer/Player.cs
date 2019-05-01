@@ -326,5 +326,12 @@ namespace Platformer
             }
             return false;
         }
+
+        public void Reset()
+        {
+            this.Health = 100;
+            this.TotalDistance = 0;
+            this.Position = new Vector2(0, (int)((0.858) * graphics.PreferredBackBufferHeight));
+        }
     }
 }
