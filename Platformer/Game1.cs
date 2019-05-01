@@ -23,6 +23,7 @@ namespace Platformer
             MainMenu,
             Login,
             Level1,
+            Level2,
             Finish,
             Instructions, 
             CreateAccount,
@@ -57,9 +58,13 @@ namespace Platformer
         Texture2D titlescreen_a;
         Scrolling scrolling1;
         Scrolling scrolling2;
+        // Level 2 
+        Scrolling nightscrolling1, nightscrolling2; 
 
         // List of tiles to display on platform
         List<Tile> tiles = new List<Tile>();
+
+        List<Tile> nightTiles = new List<Tile>();
 
         // exit door
         Door finish_line;
@@ -163,7 +168,8 @@ namespace Platformer
             
               if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
-
+              if (currentState.IsKeyDown(Keys.Enter))
+                _state = GameState.Level2;
             GraphicsDevice.Clear(Color.Silver);
 
 
@@ -979,6 +985,7 @@ namespace Platformer
 
 
             CreateTiles();
+            CreateNightTiles();
             base.Initialize();
             db.Initialize();
             //db.completeLevelForFirstTime(1, "ADAM", 500);
@@ -1051,7 +1058,9 @@ namespace Platformer
             scrolling1 = new Scrolling(Content.Load<Texture2D>("bigbackground"), new Rectangle(0, 0, screenWidth, screenHeight));
             scrolling2 = new Scrolling(Content.Load<Texture2D>("bigbackground"), new Rectangle(screenWidth, 0, screenWidth, screenHeight));
 
-
+            nightscrolling1 = new Scrolling(Content.Load<Texture2D>("nightbackground"), new Rectangle(0, 0, screenWidth, screenHeight));
+            nightscrolling2 = new Scrolling(Content.Load<Texture2D>("nightbackground"), new Rectangle(screenWidth, 0, screenWidth, screenHeight));
+            
             finishline = Content.Load<Texture2D>("finishline");
 
 
@@ -1060,6 +1069,12 @@ namespace Platformer
             {
                 Tile.LoadContent(Content, 0);
             }
+
+            foreach(var _TILE in nightTiles)
+                {
+                    Tile.LoadContent(Content, 0);
+                }
+
             Door.LoadContent(Content,0);
 
 
@@ -1216,7 +1231,13 @@ namespace Platformer
                 if (select == 1)
                     _state = GameState.Login;
                 if (select == 2)
+                {
+                    CreatebeingTyped = "user";
+                    Createusername.Clear();
+                    Createpassword.Clear();
+                    Createenterable = false;
                     _state = GameState.CreateAccount;
+                }
                 if (select == 3)
                     _state = GameState.Leaderboards;
                 if (select == 4)
@@ -1245,6 +1266,19 @@ namespace Platformer
         #endregion
 
 
+        private void CreateNightTiles()
+            {
+            int screenWidth = graphics.PreferredBackBufferWidth;
+            int screenHeight = graphics.PreferredBackBufferHeight;
+            // float xPosition = Shared.random.Next(200, screenWidth/2+200);
+            int i = 0;
+            for (; i < 20; i++)
+            {
+                nightTiles.Add(new Tile(new Vector2(screenWidth *0.1f*i, (float)(screenHeight * 0.75))));
+            }
+            //finish_line = new Door(new Vector2(screenWidth * 0.2f * (i+1), (float)(screenHeight * 0.814)));
+
+            }
 
 
         private void CreateTiles()
@@ -1387,7 +1421,7 @@ namespace Platformer
             {
                 if(LOGGED_IN && firstBeaten) 
                     {
-                        db.completeLevelForFirstTime(1, Logged_Username, (int)(1000f - elapsed_time/1000f));
+                    db.completeLevelForFirstTime(1, Logged_Username, (int)(100000f - elapsed_time/10f));
                     firstBeaten = false;
                     //_state = GameState.MainMenu;
                     }
@@ -1545,6 +1579,56 @@ namespace Platformer
             base.Update(gameTime);
         }
 
+        public void Level2(GameTime gameTime)
+        {
+              if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                _state = GameState.MainMenu;
+
+              GraphicsDevice.Clear(Color.Yellow);
+
+
+
+            int touchCount = 0;
+            
+           // elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
+         //   Console.WriteLine(elapsed_time);
+
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                _state = GameState.MainMenu;
+
+
+
+              spriteBatch.Begin();
+            
+            nightscrolling1.Draw(spriteBatch);
+            nightscrolling2.Draw(spriteBatch);
+
+            spriteBatch.Draw(healthTexture, healthRectangle, Color.DarkSlateBlue);
+            
+          //  spriteBatch.DrawString(font, elapsed_time.ToString,time,Color.White);
+
+            foreach (var sprite in _sprites)
+                sprite.Draw(spriteBatch);
+
+           
+            foreach (var tl in nightTiles)
+            {
+                tl.Draw(spriteBatch);
+            }
+            finish_line.Draw(spriteBatch);
+            enemy.Draw(spriteBatch);
+            spriteBatch.DrawString(font, "time: " + Math.Round((120000f/1000),1) + "", 
+                new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
+            spriteBatch.End();
+
+           
+           
+            base.Draw(gameTime);
+
+          
+        }
+
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
@@ -1564,6 +1648,9 @@ namespace Platformer
                     break;
                 case GameState.Level1:
                     DrawLevel1(gameTime);
+                    break;
+                case GameState.Level2:
+                    Level2(gameTime);
                     break;
                 case GameState.Instructions:
                     Instructions(gameTime);
