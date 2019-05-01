@@ -1534,7 +1534,7 @@ namespace Platformer
                     
 
                     _sprites[0].Update(gameTime, _sprites,soundEffects);
-                    enemy.Update(gameTime,_sprites[0]);
+                    enemy.Update(gameTime,_sprites[0],soundEffects);
                     //scrolling1.Update((int)_sprites[0].Xtrans);
                     //scrolling2.Update((int)_sprites[0].Xtrans);
                     

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 using Microsoft.Xna.Framework.Input;
@@ -211,7 +212,7 @@ namespace Platformer
         #endregion
 
 
-        private void RandomMove(Player player)
+        private void RandomMove(Player player, Dictionary<string, SoundEffect> soundEffects)
         {
             Random r = new Random();
             //&& this.Position.X > screenWidth / 2 && this.Position.X > screenWidth / 3
@@ -255,7 +256,7 @@ namespace Platformer
 
             if (!IsAttacking&&attack_counter<1)
             {
-                this.Attack(player);
+                this.Attack(player, soundEffects);
             }
             if (attack_counter>=1)
             {
@@ -269,12 +270,12 @@ namespace Platformer
             this._position = new Vector2(700, (int)((0.838) * graphics.PreferredBackBufferHeight));
             }
 
-        public virtual void Update(GameTime gameTime, Player player)
+        public virtual void Update(GameTime gameTime, Player player, Dictionary<string, SoundEffect> soundEffects)
         {
             
             
             
-                RandomMove(player);
+                RandomMove(player, soundEffects);
                 Position += Velocity;
                 _animationManager.Update(gameTime);
             
@@ -306,7 +307,7 @@ namespace Platformer
 
 
         private void Attack
-            (Player player)
+            (Player player, Dictionary<string, SoundEffect> soundEffects)
         {
             //if ((this._position.X-player._position.X)<=player._animations.ElementAt(0).Value.FrameWidth / 6
             //    & (this._position.X > player._position.X)&& player.IsAlive)
@@ -327,6 +328,7 @@ namespace Platformer
                 // this.Velocity = Vector2.Zero;
                 this.isAttacking = true;
                 player.Health = player.Health - 34;
+                soundEffects["Death"].Play();
                 player.CheckHealth();
             }
            
