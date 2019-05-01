@@ -1662,10 +1662,67 @@ namespace Platformer
 
               GraphicsDevice.Clear(Color.Yellow);
 
-
+            if(_sprites[0].Health < 100)
+                _state = GameState.GameOver;
 
             int touchCount = 0;
-            
+            for(int i = 0; i < 10; i++)
+            {
+                _sprites[0].Update(gameTime, _sprites);
+                enemy.Update(gameTime, _sprites[0]);
+            }
+            _sprites[0].Update(gameTime, _sprites);
+              // Background scroll
+               for (int i = 0; i < 10; i++)
+                {
+                    nightscrolling1.Update((int)_sprites[0].Xtrans);
+                    nightscrolling2.Update((int)_sprites[0].Xtrans);
+                }
+
+
+               foreach (var tile in nightTiles)
+                {
+
+                if (_sprites[0].IsTouching(tile, _sprites[0]))
+                    {
+                        touchCount++;
+
+                        wasTouching = true;
+
+                        
+                        
+                        Console.Write("Check");
+                        Vector2 vec = new Vector2(1, tile.position.Y - 160f); 
+                  
+                        
+
+                    }
+                    
+
+                if (_sprites[0].jumping == false)
+                    {
+                        if (_sprites[0].Contact == false)
+                            // fall speed
+                            _sprites[0]._position.Y += graphics.PreferredBackBufferHeight/1200f;
+                    }
+
+
+                    if (touchCount > 0)
+                        if (_sprites[0]._position.Y > graphics.PreferredBackBufferHeight * .7f)
+                        {
+                            _sprites[0]._position.Y = graphics.PreferredBackBufferHeight * .7f;
+                            _sprites[0].grounded = true;
+                        }
+
+                    // Player must stop falling when he reaches the ground
+                    if (_sprites[0].Position.Y > graphics.PreferredBackBufferHeight * .87f)
+                    {
+                        _sprites[0]._position.Y = graphics.PreferredBackBufferHeight * .87f;
+                        _sprites[0].grounded = true;
+                    }
+
+
+                }
            // elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
          //   Console.WriteLine(elapsed_time);
 
