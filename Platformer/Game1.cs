@@ -1681,7 +1681,7 @@ namespace Platformer
                 enemy.Update(gameTime, _sprites[0], soundEffects);
                 enemy2.Update(gameTime, _sprites[0], soundEffects);
             }
-            _sprites[0].Update(gameTime, _sprites, soundEffects);
+            //_sprites[0].Update(gameTime, _sprites, soundEffects);
               // Background scroll
                for (int i = 0; i < 10; i++)
                 {
@@ -1694,16 +1694,16 @@ namespace Platformer
                 {
 
                 if (_sprites[0].IsTouching(tile, _sprites[0]))
-                    {
-                        touchCount++;
+                {
+                    touchCount++;
 
-                        wasTouching = true;
+                    wasTouching = true;
 
-                        
-                        
-                        Console.Write("Check");
-                        Vector2 vec = new Vector2(1, tile.position.Y - 160f);
 
+
+                    Console.Write("Check");
+                    Vector2 vec = new Vector2(1, tile.position.Y - 160f);
+                }
 
 
 
@@ -1734,7 +1734,7 @@ namespace Platformer
 
 
 
-                }
+                
                     
 
                 if (_sprites[0].jumping == false)
