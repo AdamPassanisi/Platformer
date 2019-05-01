@@ -205,7 +205,10 @@ namespace Platformer
         public void Leaderboards(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+               {
+                firstboard = true;
                 _state = GameState.MainMenu;
+                }
 
             //List<string> board = new List<string>();
 
@@ -1301,6 +1304,8 @@ namespace Platformer
             {
 
             _sprites[0].Reset();
+            enemy.Reset();
+            elapsed_time = 0f;
                 previousState = currentState;
             currentState = Keyboard.GetState();
 
@@ -1442,7 +1447,9 @@ namespace Platformer
             
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && select == 0)
                 {
-                    _sprites[0].Reset();
+                _sprites[0].Reset();
+            enemy.Reset();
+            elapsed_time = 0f;
                     _state = GameState.Level1;
              }
                 
