@@ -1350,6 +1350,8 @@ namespace Platformer
             enemy.Reset();
             enemy2.Reset();
             enemy3.Reset();
+            enemy._position.X = 2000;
+            enemy2._position.X = 1000;
             elapsed_time = 0f;
                 previousState = currentState;
             currentState = Keyboard.GetState();
@@ -1496,6 +1498,9 @@ namespace Platformer
                 {
                 _sprites[0].Reset();
             enemy.Reset();
+                enemy2.Reset();
+                enemy._position.X = 2000;
+                enemy2._position.X = 1000;
             elapsed_time = 0f;
                 deathCounter = 0;
 
