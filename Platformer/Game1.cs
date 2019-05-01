@@ -28,7 +28,8 @@ namespace Platformer
             Instructions, 
             CreateAccount,
             Leaderboards,
-            LevelCompleted
+            LevelCompleted,
+            GameOver
         }
         GameState _state = GameState.MainMenu;
         GraphicsDeviceManager graphics;
@@ -54,7 +55,7 @@ namespace Platformer
         String CreatebeingTyped = "user";
         bool Createfirst = false;
 
-        Texture2D titlescreen;
+        Texture2D titlescreen, gameover;
         Texture2D titlescreen_a;
         Scrolling scrolling1;
         Scrolling scrolling2;
@@ -168,6 +169,8 @@ namespace Platformer
         #region Level Completed
         public void LevelCompleted(GameTime gameTime)
         {
+            _sprites[0].Reset();
+
             previousState = currentState;
             currentState = Keyboard.GetState();
             
@@ -1014,13 +1017,13 @@ namespace Platformer
 
             // load sound effect
             lobby_music = Content.Load<Song>("Audio/Lobby");
-            MediaPlayer.Volume = 0.01f;
+            MediaPlayer.Volume = 0.99f;
             
             MediaPlayer.Play(lobby_music);
             
 
             buttonSize = new Point(graphics.PreferredBackBufferWidth * 5 / 32, graphics.PreferredBackBufferHeight * 5/72);
-
+            gameover = Content.Load<Texture2D>("gameover");
             font = Content.Load<SpriteFont>("font");
             levelcompleted = Content.Load<Texture2D>("levelcompleted");
             // Login Page
@@ -1157,6 +1160,7 @@ namespace Platformer
         {
             // Sets the background color    
             GraphicsDevice.Clear(Color.Silver);
+            
 
 
             float[] selected = new float[6];
@@ -1293,6 +1297,25 @@ namespace Platformer
 
             }
 
+        public void Gameover(GameTime gameTime)
+            {
+
+            _sprites[0].Reset();
+                previousState = currentState;
+            currentState = Keyboard.GetState();
+
+            if((currentState.IsKeyDown(Keys.Escape) && (previousState.IsKeyUp(Keys.Escape))))
+                _state = GameState.MainMenu;
+
+                GraphicsDevice.Clear(Color.White);
+                spriteBatch.Begin();
+                
+                spriteBatch.Draw(gameover, new Rectangle(0,0,graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+
+                spriteBatch.End();
+
+                base.Draw(gameTime);
+            }
 
         private void CreateTiles()
         {
@@ -1419,7 +1442,7 @@ namespace Platformer
             
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && select == 0)
                 {
-                    
+                    _sprites[0].Reset();
                     _state = GameState.Level1;
              }
                 
@@ -1442,7 +1465,7 @@ namespace Platformer
             // enemies & objects
 
             if(_sprites[0].Health < 100)
-                Exit();
+                _state = GameState.GameOver;
 
 
             if (_sprites[0].hasEntered(finish_line))
@@ -1688,6 +1711,9 @@ namespace Platformer
                     break;
                 case GameState.LevelCompleted:
                     LevelCompleted(gameTime);
+                    break;
+                case GameState.GameOver:
+                    Gameover(gameTime);
                     break;
                     
 

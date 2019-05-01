@@ -85,18 +85,6 @@
 /processorParam:TextureFormat=Color
 /build:confirmpassword.png
 
-#begin continue.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:continue.png
-
 #begin continuewithoutsaving.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -363,18 +351,6 @@
 /processorParam:TextureFormat=Color
 /build:left.png
 
-#begin levelcompleted.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:levelcompleted.png
-
 #begin log.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -614,4 +590,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:nightbackground.png
+
+#begin gameover.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gameover.png
 
