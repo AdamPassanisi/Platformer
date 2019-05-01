@@ -70,6 +70,8 @@ namespace Platformer
         // exit door
         Door finish_line;
 
+        Door finish_line2;
+
         int opacDirection = 1;
         Rectangle titleScreen = new
         
@@ -139,7 +141,7 @@ namespace Platformer
         String Logged_Username;
         String Logged_Password;
         bool firstBeaten = true;
-
+        int deathCounter = 0;
         SpriteFont font;
 
         //calculates and stores elapsed time since the game has started
@@ -175,7 +177,7 @@ namespace Platformer
         public void LevelCompleted(GameTime gameTime)
         {
             _sprites[0].Reset();
-
+            deathCounter = 0;
             previousState = currentState;
             currentState = Keyboard.GetState();
             
@@ -188,8 +190,8 @@ namespace Platformer
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(levelcompleted, new Rectangle(graphics.PreferredBackBufferWidth/4, graphics.PreferredBackBufferHeight/16, graphics.PreferredBackBufferWidth/2, graphics.PreferredBackBufferHeight/2), Color.White);
-
+            spriteBatch.Draw(levelcompleted, new Rectangle(0,0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            spriteBatch.DrawString(font, (10000f - elapsed_time / 10f).ToString(), new Vector2(graphics.PreferredBackBufferWidth / 1.85f, graphics.PreferredBackBufferHeight / 2.7f), Color.White);
           /*  spriteBatch.Draw(titlescreen, new Rectangle(width / 4, height/12, width/2, height/2), Color.White);
             // Draws the menu options
             spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
@@ -287,7 +289,7 @@ namespace Platformer
             spriteBatch.Draw(leaderboards, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
             // Rank
             for (int i = 0; i < ranks.Count; i++)
-                spriteBatch.DrawString(font, (i+1).ToString(), new Vector2(graphics.PreferredBackBufferWidth / 10, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i/20f)), Color.White);
+                spriteBatch.DrawString(font, ranks[i].ToString(), new Vector2(graphics.PreferredBackBufferWidth / 10, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i/20f)), Color.White);
             // Username
             for (int i = 0; i < users.Count; i++)
                 spriteBatch.DrawString(font, users[i], new Vector2(graphics.PreferredBackBufferWidth / 2.5f, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i / 20f)), Color.White);
@@ -1320,13 +1322,13 @@ namespace Platformer
             {
                 nightTiles.Add(new Tile(new Vector2(screenWidth *0.1f*i, (float)(screenHeight * 0.75))));
             }
-            //finish_line = new Door(new Vector2(screenWidth * 0.2f * (i+1), (float)(screenHeight * 0.814)));
+            finish_line2 = new Door(new Vector2(screenWidth * 0.1f * (i+1), (float)(screenHeight * 0.814)));
 
             }
 
         public void Gameover(GameTime gameTime)
             {
-
+            deathCounter = 0;
             _sprites[0].Reset();
             enemy.Reset();
             elapsed_time = 0f;
@@ -1425,6 +1427,7 @@ namespace Platformer
         protected void DrawLevel1(GameTime gameTime)
         {
 
+            GraphicsDevice.Clear(Color.Transparent);
             int finish = 400;
 
             spriteBatch.Begin();
@@ -1475,7 +1478,9 @@ namespace Platformer
                 _sprites[0].Reset();
             enemy.Reset();
             elapsed_time = 0f;
+                deathCounter = 0;
                     _state = GameState.Level1;
+
              }
                 
             
@@ -1496,8 +1501,12 @@ namespace Platformer
             // level 1 action
             // enemies & objects
 
-            if(_sprites[0].Health < 100)
-                _state = GameState.GameOver;
+            if (_sprites[0].Health < 100)
+            {
+                deathCounter++;
+                if (deathCounter >= 30)
+                    _state = GameState.GameOver;
+            }
 
 
             if (_sprites[0].hasEntered(finish_line,soundEffects))
@@ -1540,29 +1549,31 @@ namespace Platformer
                 foreach (var tile in tiles)
                 {
                     
-
-                    _sprites[0].Update(gameTime, _sprites,soundEffects);
-                    enemy.Update(gameTime,_sprites[0],soundEffects);
-                    enemy2.Update(gameTime, _sprites[0],soundEffects);
+                    if(_sprites[0].Health == 100)
+                        _sprites[0].Update(gameTime, _sprites,soundEffects);
+                    enemy.Update(gameTime,_sprites[0], soundEffects);
+                    enemy2.Update(gameTime, _sprites[0], soundEffects);
                     //scrolling1.Update((int)_sprites[0].Xtrans);
                     //scrolling2.Update((int)_sprites[0].Xtrans);
                     
                     healthBar.health = _sprites[0].Health;
-                   
-                    tile.Update(_sprites[0].Xtrans);
-                    if (_sprites[0].isHalfway)
+                    if (_sprites[0].Health == 100)
                     {
                         tile.Update(_sprites[0].Xtrans);
-                        tile.Update(_sprites[0].Xtrans);
-                       
-                    }
-                    if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
-                    {
-                        scrolling1.rectangle.X = scrolling2.rectangle.X + scrolling2.rectangle.Width;
-                    }
-                    if (scrolling2.rectangle.X + scrolling2.rectangle.Width <= 0)
-                    {
-                        scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
+                        if (_sprites[0].isHalfway)
+                        {
+                            tile.Update(_sprites[0].Xtrans);
+                            tile.Update(_sprites[0].Xtrans);
+
+                        }
+                        if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
+                        {
+                            scrolling1.rectangle.X = scrolling2.rectangle.X + scrolling2.rectangle.Width;
+                        }
+                        if (scrolling2.rectangle.X + scrolling2.rectangle.Width <= 0)
+                        {
+                            scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
+                        }
                     }
                     if (Keyboard.GetState().IsKeyDown(Keys.E))
                     {
@@ -1669,47 +1680,70 @@ namespace Platformer
               if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
-              GraphicsDevice.Clear(Color.Yellow);
+              GraphicsDevice.Clear(Color.Transparent);
 
-            if(_sprites[0].Health < 100)
+
+            if (_sprites[0].hasEntered(finish_line2, soundEffects))
+            {
+                if (LOGGED_IN && firstBeaten)
+                {
+                    db.completeLevelForFirstTime(2, Logged_Username, (int)(100000f - elapsed_time / 10f));
+                    db.saveGame(Logged_Username, 2);
+                    firstBeaten = false;
+                    //_state = GameState.MainMenu;
+                }
+                _state = GameState.LevelCompleted;
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "GAME OVER",
+               new Vector2((float)(graphics.PreferredBackBufferWidth * 0.5), (float)(graphics.PreferredBackBufferHeight * 0.25)), Color.PaleVioletRed);
+                spriteBatch.End();
+            }
+
+
+            if (_sprites[0].Health < 100)
                 _state = GameState.GameOver;
 
             int touchCount = 0;
             for(int i = 0; i < 10; i++)
             {
                 _sprites[0].Update(gameTime, _sprites, soundEffects);
-                enemy.Update(gameTime, _sprites[0],soundEffects);
-                enemy2.Update(gameTime, _sprites[0],soundEffects);
+                enemy.Update(gameTime, _sprites[0], soundEffects);
+                enemy2.Update(gameTime, _sprites[0], soundEffects);
             }
-            _sprites[0].Update(gameTime, _sprites, soundEffects);
+            //_sprites[0].Update(gameTime, _sprites, soundEffects);
               // Background scroll
                for (int i = 0; i < 10; i++)
                 {
                     nightscrolling1.Update((int)_sprites[0].Xtrans);
                     nightscrolling2.Update((int)_sprites[0].Xtrans);
                 }
-
+            finish_line2.Update(_sprites[0].Xtrans * 3);
 
                foreach (var tile in nightTiles)
                 {
 
                 if (_sprites[0].IsTouching(tile, _sprites[0]))
-                    {
-                        touchCount++;
+                {
+                    touchCount++;
 
-                        wasTouching = true;
-
-                        
-                        
-                        Console.Write("Check");
-                        Vector2 vec = new Vector2(1, tile.position.Y - 160f);
+                    wasTouching = true;
+                   // finish_line2.Update(_sprites[0].Xtrans * 3);
 
 
+                    Console.Write("Check");
+                    Vector2 vec = new Vector2(1, tile.position.Y - 160f);
+                }
+
+                if (_sprites[0].isHalfway)
+                {
+                    tile.Update(_sprites[0].Xtrans);
+                    //tile.Update(_sprites[0].Xtrans);
+
+                }
 
 
 
-
-                    healthBar.health = _sprites[0].Health;
+                healthBar.health = _sprites[0].Health;
 
                     tile.Update(_sprites[0].Xtrans);
                     if (_sprites[0].isHalfway)
@@ -1734,7 +1768,7 @@ namespace Platformer
 
 
 
-                }
+                
                     
 
                 if (_sprites[0].jumping == false)
@@ -1787,7 +1821,7 @@ namespace Platformer
             {
                 tl.Draw(spriteBatch);
             }
-            finish_line.Draw(spriteBatch);
+            finish_line2.Draw(spriteBatch);
             enemy.Draw(spriteBatch);
             spriteBatch.DrawString(font, "time: " + Math.Round((120000f/1000),1) + "", 
                 new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
