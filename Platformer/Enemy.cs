@@ -263,6 +263,11 @@ namespace Platformer
             }
         }
 
+        public void Reset()
+            {
+                attack_counter = 0;
+            }
+
         public virtual void Update(GameTime gameTime, Player player)
         {
             
