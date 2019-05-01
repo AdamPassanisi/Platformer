@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -105,7 +106,7 @@ namespace Platformer
             else throw new Exception("error animation mngr");
         }
 
-        public virtual void Move()
+        public virtual void Move(Dictionary<string, SoundEffect> soundEffects)
         {
 
             
@@ -130,6 +131,7 @@ namespace Platformer
                 jumping = true;
                 grounded = false;
                 hasJumped = true;
+                soundEffects["Jump"].Play();
                 //hasJumped = true;
 
             }
@@ -213,11 +215,11 @@ namespace Platformer
 
 
 
-        public virtual void Update(GameTime gameTime, List<Player> sprites)
+        public virtual void Update(GameTime gameTime, List<Player> sprites, Dictionary<string, SoundEffect> soundEffects)
         {
 
 
-            Move();
+            Move(soundEffects);
 
             SetAnimations();
 
@@ -317,11 +319,12 @@ namespace Platformer
 
         }
         #endregion
-        public bool hasEntered(Door door)
+        public bool hasEntered(Door door, Dictionary<string, SoundEffect> soundEffects)
         {
             if (this._position.X > door.position.X && this._position.X < door.position.X + Door.Texture.Width && (this._position.Y > door.position.Y)
                 ) {
                 this.Health = 300;
+                soundEffects["Victory"].Play();
             return true;
             }
             return false;

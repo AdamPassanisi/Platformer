@@ -144,9 +144,10 @@ namespace Platformer
 
         // sound effects
         Song lobby_music;
-
-
-
+        SoundEffect jumpSound;
+        SoundEffect deathSound;
+        SoundEffect victorySound;
+        private Dictionary<string, SoundEffect> soundEffects;
 
         public Game1()
         {
@@ -1007,8 +1008,29 @@ namespace Platformer
 
             // load sound effect
             lobby_music = Content.Load<Song>("Audio/Lobby");
+             jumpSound = Content.Load<SoundEffect>("Audio/Jump");
+             deathSound = Content.Load<SoundEffect>("Audio/Heartbeat");
+            victorySound = Content.Load<SoundEffect>("Audio/victory");
+            soundEffects = new Dictionary<string, SoundEffect>();
+
+            //  {"Jump",(Content.Load<SoundEffect>("Audio/Jump"))},
+            // { "Death", (Content.Load<SoundEffect>("Audio/Heartbeat"))},
+            //  { "Victory", (Content.Load<SoundEffect>("Audio/victory"))},
+
+            soundEffects.Add("Jump",jumpSound);
+            soundEffects.Add("Death", deathSound);
+            soundEffects.Add("Victory", victorySound);
+
+
+
+
+            // deathSound = Content.Load<SoundEffect>();
+            // victorySound = Content.Load<SoundEffect>();
+
+
+            // MediaPlayer plays song
             MediaPlayer.Volume = 0.01f;
-            
+            MediaPlayer.IsRepeating=true;
             MediaPlayer.Play(lobby_music);
             
 
@@ -1411,7 +1433,7 @@ namespace Platformer
                 Exit();
 
 
-            if (_sprites[0].hasEntered(finish_line))
+            if (_sprites[0].hasEntered(finish_line, soundEffects))
             {
                 if(LOGGED_IN && firstBeaten) 
                     {
@@ -1451,7 +1473,8 @@ namespace Platformer
                 {
                     
 
-                    _sprites[0].Update(gameTime, _sprites);
+                    _sprites[0].Update(gameTime, _sprites, 
+                        soundEffects);
                     enemy.Update(gameTime,_sprites[0]);
                     //scrolling1.Update((int)_sprites[0].Xtrans);
                     //scrolling2.Update((int)_sprites[0].Xtrans);
