@@ -1279,7 +1279,11 @@ namespace Platformer
         {
             if (_state!=GameState.MainMenu)
             {
-                MediaPlayer.Stop();
+                MediaPlayer.Pause();
+            }
+            if (_state == GameState.MainMenu && MediaPlayer.State==MediaState.Paused)
+            {
+                MediaPlayer.Resume();
             }
             
             base.Update(gameTime);
