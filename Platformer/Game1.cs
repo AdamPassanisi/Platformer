@@ -141,7 +141,7 @@ namespace Platformer
         String Logged_Username;
         String Logged_Password;
         bool firstBeaten = true;
-
+        int deathCounter = 0;
         SpriteFont font;
 
         //calculates and stores elapsed time since the game has started
@@ -177,7 +177,7 @@ namespace Platformer
         public void LevelCompleted(GameTime gameTime)
         {
             _sprites[0].Reset();
-
+            deathCounter = 0;
             previousState = currentState;
             currentState = Keyboard.GetState();
             
@@ -1328,7 +1328,7 @@ namespace Platformer
 
         public void Gameover(GameTime gameTime)
             {
-
+            deathCounter = 0;
             _sprites[0].Reset();
             enemy.Reset();
             elapsed_time = 0f;
@@ -1478,7 +1478,9 @@ namespace Platformer
                 _sprites[0].Reset();
             enemy.Reset();
             elapsed_time = 0f;
+                deathCounter = 0;
                     _state = GameState.Level1;
+
              }
                 
             
@@ -1499,8 +1501,12 @@ namespace Platformer
             // level 1 action
             // enemies & objects
 
-            if(_sprites[0].Health < 100)
-                _state = GameState.GameOver;
+            if (_sprites[0].Health < 100)
+            {
+                deathCounter++;
+                if (deathCounter >= 30)
+                    _state = GameState.GameOver;
+            }
 
 
             if (_sprites[0].hasEntered(finish_line,soundEffects))
@@ -1543,29 +1549,31 @@ namespace Platformer
                 foreach (var tile in tiles)
                 {
                     
-
-                    _sprites[0].Update(gameTime, _sprites,soundEffects);
+                    if(_sprites[0].Health == 100)
+                        _sprites[0].Update(gameTime, _sprites,soundEffects);
                     enemy.Update(gameTime,_sprites[0], soundEffects);
                     enemy2.Update(gameTime, _sprites[0], soundEffects);
                     //scrolling1.Update((int)_sprites[0].Xtrans);
                     //scrolling2.Update((int)_sprites[0].Xtrans);
                     
                     healthBar.health = _sprites[0].Health;
-                   
-                    tile.Update(_sprites[0].Xtrans);
-                    if (_sprites[0].isHalfway)
+                    if (_sprites[0].Health == 100)
                     {
                         tile.Update(_sprites[0].Xtrans);
-                        tile.Update(_sprites[0].Xtrans);
-                       
-                    }
-                    if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
-                    {
-                        scrolling1.rectangle.X = scrolling2.rectangle.X + scrolling2.rectangle.Width;
-                    }
-                    if (scrolling2.rectangle.X + scrolling2.rectangle.Width <= 0)
-                    {
-                        scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
+                        if (_sprites[0].isHalfway)
+                        {
+                            tile.Update(_sprites[0].Xtrans);
+                            tile.Update(_sprites[0].Xtrans);
+
+                        }
+                        if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
+                        {
+                            scrolling1.rectangle.X = scrolling2.rectangle.X + scrolling2.rectangle.Width;
+                        }
+                        if (scrolling2.rectangle.X + scrolling2.rectangle.Width <= 0)
+                        {
+                            scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
+                        }
                     }
                     if (Keyboard.GetState().IsKeyDown(Keys.E))
                     {
