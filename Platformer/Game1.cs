@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System;
-
-
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Platformer
 {
@@ -141,6 +141,11 @@ namespace Platformer
         //private SpriteFont font;
 
         Texture2D finishline;
+
+        // sound effects
+        Song lobby_music;
+
+
 
 
         public Game1()
@@ -992,6 +997,14 @@ namespace Platformer
         #region LoadContent
         protected override void LoadContent()
         {
+
+            // load sound effect
+            lobby_music = Content.Load<Song>("Audio/Lobby");
+            MediaPlayer.Volume = 0.01f;
+            
+            MediaPlayer.Play(lobby_music);
+            
+
             buttonSize = new Point(graphics.PreferredBackBufferWidth * 5 / 32, graphics.PreferredBackBufferHeight * 5/72);
 
             font = Content.Load<SpriteFont>("font");
@@ -1257,8 +1270,11 @@ namespace Platformer
         }
         protected override void Update(GameTime gameTime)
         {
-
-
+            if (_state!=GameState.MainMenu)
+            {
+                MediaPlayer.Stop();
+            }
+            
             base.Update(gameTime);
 
             mouse = Mouse.GetState();
@@ -1305,7 +1321,7 @@ namespace Platformer
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(); //
-
+ 
             menu();
             spriteBatch.End(); //
         }
@@ -1344,15 +1360,23 @@ namespace Platformer
 
         void UpdateMainMenu(GameTime gameTime)
         {
+
+            // play lobby music
+
+            
+
             // menu control
+
             previousState = currentState;
             currentState = Keyboard.GetState();
+
+
             
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && select == 0)
                 {
                     
                     _state = GameState.Level1;
-                }
+             }
                 
             
             
@@ -1572,6 +1596,8 @@ namespace Platformer
 
             }
         }
+
+        
 
     }
 }
