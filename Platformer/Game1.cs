@@ -676,9 +676,12 @@ namespace Platformer
 
             
 
+            string drawPassword = "";
+            for (int i = 0; i < String.Join(String.Empty, Createpassword.ToArray()).Length; i++)
+                drawPassword += "*";
 
             spriteBatch.DrawString(font, String.Join(String.Empty, Createusername.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
-            spriteBatch.DrawString(font, String.Join(String.Empty, Createpassword.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
+            spriteBatch.DrawString(font, drawPassword, new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
 
             // spriteBatch.Draw(logintitle, new Rectangle())
             spriteBatch.Draw(createaccount, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 3)), Color.White);
@@ -946,8 +949,12 @@ namespace Platformer
                 _state = GameState.MainMenu;
 
 
+            string drawPassword = "";
+            for (int i = 0; i < String.Join(String.Empty, password.ToArray()).Length; i++)
+                drawPassword += "*";
+            
             spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
-            spriteBatch.DrawString(font, String.Join(String.Empty, password.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
+            spriteBatch.DrawString(font,drawPassword, new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
 
             // spriteBatch.Draw(logintitle, new Rectangle())
             spriteBatch.Draw(logintitle, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 3)), Color.White);
