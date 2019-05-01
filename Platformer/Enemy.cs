@@ -266,6 +266,7 @@ namespace Platformer
         public void Reset()
             {
                 attack_counter = 0;
+            this._position = new Vector2(700, (int)((0.838) * graphics.PreferredBackBufferHeight));
             }
 
         public virtual void Update(GameTime gameTime, Player player)

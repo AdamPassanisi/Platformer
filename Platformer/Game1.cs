@@ -1150,7 +1150,7 @@ namespace Platformer
             _sprites.Add(main_player);
 
 
-            enemy = new Enemy(_enemy_animations)
+            enemy = new Enemy(_enemy_animations,graphics)
             {
                 Position = new Vector2(700,(int)((0.838) * screenHeight))
               
