@@ -181,8 +181,7 @@ namespace Platformer
 
         
 
-        public bool IsTouching(Tile tile, Player sprite
-            )
+        public bool IsTouching(Tile tile, Player sprite)
         {
 
             return _position.X + 25f + this.Velocity.X >= tile.
@@ -311,8 +310,7 @@ namespace Platformer
         }
 
 
-        private void Attack
-            (Player player, Dictionary<string, SoundEffect> soundEffects)
+        private void Attack (Player player, Dictionary<string, SoundEffect> soundEffects)
         {
             //if ((this._position.X-player._position.X)<=player._animations.ElementAt(0).Value.FrameWidth / 6
             //    & (this._position.X > player._position.X)&& player.IsAlive)

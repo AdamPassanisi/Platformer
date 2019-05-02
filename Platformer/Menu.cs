@@ -31,10 +31,5 @@ namespace Platformer
             spritebatch = new SpriteBatch(g);
         }
 
-        public void draw()
-        {
-            // spritebatch.Draw(singleplayer, new Rectangle(0, 0, 100, 100), Color.AliceBlue);
-        }
-
     }
 }

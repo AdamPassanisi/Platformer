@@ -213,9 +213,12 @@ namespace Platformer
             }
         }
 
-        public void continueGame(string user)
+        public List<string>[] continueGame(string user)
         {
-            string query = "SELECT last_level_completed FROM player WHERE username='" + user + "';";
+            string query = "SELECT last_level_completed+1 FROM player WHERE username='" + user + "';";
+            List<string>[] level = new List<string>[1];
+            level[0] = new List<string>();
+
             if (OpenConnection() == true)
             {
                 MySqlCommand myCommand = new MySqlCommand(query, connection);
@@ -224,12 +227,17 @@ namespace Platformer
                 // Always call Read before accessing data.
                 while (myReader.Read())
                 {
-                    Console.WriteLine(myReader[0]);
+                    level[0].Add(myReader[0] + "");
                 }
                 // always call Close when done reading.
                 myReader.Close();
+                CloseConnection();
+
+                return level;
             }
-            CloseConnection();
+            else {
+                return level;
+            }
         }
 
         public void newGame(string user)
