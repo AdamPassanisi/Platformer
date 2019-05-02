@@ -263,8 +263,7 @@ namespace Platformer
             Velocity = Vector2.Zero;
         }
 
-        public bool IsTouching(Tile tile,Player sprite
-            )
+        public bool IsTouching(Tile tile,Player sprite)
         {
 
             return _position.X +25f +this.Velocity.X >= tile.
@@ -300,8 +299,7 @@ namespace Platformer
             }
         }
 
-        public void Attack
-            (Enemy enemy)
+        public void Attack(Enemy enemy)
         {
             if ((this._position.X - enemy._position.X) <= 170
                 & (this._position.X - enemy._position.X) > -70 )
