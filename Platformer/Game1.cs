@@ -115,7 +115,7 @@ namespace Platformer
         KeyboardState typeCurr, typePrev;
 
         int select = 0;
-
+        
         Texture2D levelcompleted, continueWithoutSaving,Continue, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
@@ -135,7 +135,7 @@ namespace Platformer
         List<String> ranks = new List<String>();
         List<String> users = new List<String>();
         List<String> scores = new List<String>();
-
+        int leaderboardStart = 0;
 
         // Logged in
         bool LOGGED_IN = false;
@@ -254,6 +254,7 @@ namespace Platformer
                 ranks.Clear();
                 scores.Clear();
                 
+
                 foreach (var i in db.viewLeaderboards(1))
                 {
                     
@@ -293,15 +294,29 @@ namespace Platformer
             spriteBatch.Begin(); //
 
             spriteBatch.Draw(leaderboards, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            int len = ranks.Count;
+            
+            if (currentState.IsKeyDown(Keys.Down) && previousState.IsKeyUp(Keys.Down))
+            {
+                if (leaderboardStart < len - 1)
+                    leaderboardStart++;
+            }
+
+            if (currentState.IsKeyDown(Keys.Up) && previousState.IsKeyUp(Keys.Up))
+            {
+                if (leaderboardStart > 0)
+                    leaderboardStart--;
+            }
+
             // Rank
-            for (int i = 0; i < ranks.Count; i++)
-                spriteBatch.DrawString(font, ranks[i].ToString(), new Vector2(graphics.PreferredBackBufferWidth / 10, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i/20f)), Color.White);
+            for (int i = leaderboardStart; i < len; i++)
+                spriteBatch.DrawString(font, ranks[i].ToString(), new Vector2(graphics.PreferredBackBufferWidth / 10, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * (i - leaderboardStart) /20f)), Color.White);
             // Username
-            for (int i = 0; i < users.Count; i++)
-                spriteBatch.DrawString(font, users[i], new Vector2(graphics.PreferredBackBufferWidth / 2.5f, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i / 20f)), Color.White);
+            for (int i = leaderboardStart; i < len; i++)
+                spriteBatch.DrawString(font, users[i], new Vector2(graphics.PreferredBackBufferWidth / 2.5f, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * (i - leaderboardStart) / 20f)), Color.White);
             // Score
-            for (int i = 0; i < scores.Count; i++)
-                spriteBatch.DrawString(font, scores[i], new Vector2(graphics.PreferredBackBufferWidth / 1.2f, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * i / 20f)), Color.White);
+            for (int i = leaderboardStart; i < len; i++)
+                spriteBatch.DrawString(font, scores[i], new Vector2(graphics.PreferredBackBufferWidth / 1.2f, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * (i - leaderboardStart) / 20f)), Color.White);
 
 
 
