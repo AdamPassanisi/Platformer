@@ -131,11 +131,12 @@ namespace Platformer
         bool BadLength = false;
         bool usertaken = false;
 
-        Texture2D leaderboards;
+        Texture2D leaderboards, leaderboards2;
         List<String> ranks = new List<String>();
         List<String> users = new List<String>();
         List<String> scores = new List<String>();
         int leaderboardStart = 0;
+        int leaderboardLevel = 1;
 
         // Logged in
         bool LOGGED_IN = false;
@@ -254,8 +255,9 @@ namespace Platformer
                 ranks.Clear();
                 scores.Clear();
                 
+                
 
-                foreach (var i in db.viewLeaderboards(1))
+                foreach (var i in db.viewLeaderboards(leaderboardLevel))
                 {
                     
                     int y = 0;
@@ -292,8 +294,11 @@ namespace Platformer
 
 
             spriteBatch.Begin(); //
+            if(leaderboardLevel == 1)
+                spriteBatch.Draw(leaderboards, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            else
+                spriteBatch.Draw(leaderboards2, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
 
-            spriteBatch.Draw(leaderboards, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
             int len = ranks.Count;
             
             if (currentState.IsKeyDown(Keys.Down) && previousState.IsKeyUp(Keys.Down))
@@ -308,6 +313,16 @@ namespace Platformer
                     leaderboardStart--;
             }
 
+            if(currentState.IsKeyDown(Keys.Right))
+                {
+                    leaderboardLevel = 2;
+                firstboard = true;
+                }
+            if(currentState.IsKeyDown(Keys.Left))
+                {
+                    leaderboardLevel = 1;
+                    firstboard = true;
+                }
             // Rank
             for (int i = leaderboardStart; i < len; i++)
                 spriteBatch.DrawString(font, ranks[i].ToString(), new Vector2(graphics.PreferredBackBufferWidth / 10, (graphics.PreferredBackBufferHeight / (2.5f)) + (graphics.PreferredBackBufferHeight * (i - leaderboardStart) /20f)), Color.White);
@@ -1078,6 +1093,7 @@ namespace Platformer
             enter = Content.Load<Texture2D>("enter");
 
             leaderboards = Content.Load<Texture2D>("leaderboards");
+            leaderboards2 = Content.Load<Texture2D>("leaderboards2");
 
             createaccount = Content.Load<Texture2D>("createaccount");
             confirmpassword = Content.Load<Texture2D>("confirmpassword");
