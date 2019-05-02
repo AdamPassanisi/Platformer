@@ -197,7 +197,7 @@ namespace Platformer
             spriteBatch.Begin();
 
             spriteBatch.Draw(levelcompleted, new Rectangle(0,0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
-            spriteBatch.DrawString(font, (10000f - elapsed_time / 10f).ToString(), new Vector2(graphics.PreferredBackBufferWidth / 1.85f, graphics.PreferredBackBufferHeight / 2.7f), Color.White);
+            spriteBatch.DrawString(font, ((int)(100000f - elapsed_time/10f)).ToString(), new Vector2(graphics.PreferredBackBufferWidth / 1.85f, graphics.PreferredBackBufferHeight / 2.7f), Color.White);
           /*  spriteBatch.Draw(titlescreen, new Rectangle(width / 4, height/12, width/2, height/2), Color.White);
             // Draws the menu options
             spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
