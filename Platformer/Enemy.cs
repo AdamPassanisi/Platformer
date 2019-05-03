@@ -230,7 +230,7 @@ namespace Platformer
                 /*if (player._position.X  > this._position.X+this._animations.ElementAt(0).Value.FrameWidth
                     ) {*/ 
                     if (player.isHalfway)
-                        this.Velocity.X =0f;
+                        this.Velocity.X =1f;
                     else
                     {
                         this.Velocity.X =1f;
