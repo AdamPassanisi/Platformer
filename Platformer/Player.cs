@@ -15,14 +15,16 @@ namespace Platformer
         #region Fields
 
 
-        GraphicsDeviceManager graphics;
+        GraphicsDeviceManager graphics; // dimensions & scaling
 
-        public AnimationManager _animationManager;
+        public AnimationManager _animationManager; // manage animation
 
-        public Dictionary<string, Animation> _animations;
+        public Dictionary<string, Animation> _animations; //store dict if animations accessed by key
 
-        public Vector2 _position;
+        public Vector2 _position ;
+
         private Boolean isAttacking;
+
         public Boolean IsAttacking { get { return isAttacking; } set { isAttacking = value; } }
 
         public bool Contact = false;
@@ -96,7 +98,7 @@ namespace Platformer
                 ;
             }
 
-
+        // draw player on screen
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (_texture != null)
@@ -182,14 +184,7 @@ namespace Platformer
             }
            else if (Velocity.X > 0)
                 _animationManager.Play(_animations["WalkRight"]);
-            /* else if (Velocity.X < 0)
-               _animationManager.Play(_animations["WalkLeft"]);
-             else if (Velocity.Y > 0)
-               _animationManager.Play(_animations["WalkDown"]);
-             else if (Velocity.Y < 0)
-               _animationManager.Play(_animations["WalkUp"]);*/
-
-
+  
             else if (Velocity.X < 0)
 
             {
@@ -317,6 +312,8 @@ namespace Platformer
 
         }
         #endregion
+        // checks if player is near door
+        // cannot be above the door for level promotion
         public bool hasEntered(Door door, Dictionary<string, SoundEffect> soundEffects)
         {
             if (this._position.X > door.position.X && this._position.X < door.position.X + Door.Texture.Width && (this._position.Y > door.position.Y)
@@ -328,6 +325,7 @@ namespace Platformer
             return false;
         }
 
+        // setting default values for new level/spawn
         public void Reset()
         {
             this.Health = 100;

@@ -17,8 +17,9 @@ namespace Platformer
     public class Game1 : Game
     {
 
-
-        enum GameState
+        // different states
+        // switching transfer control n displays the set state
+        private enum GameState
         {
             MainMenu,
             Login,
@@ -97,7 +98,10 @@ namespace Platformer
         private List<Player> _sprites;
 
         private List<Enemy> _sprites2;
+
+        // Database Connection
         ConnectDB db = new ConnectDB();
+
         Texture2D instructs;
 
         private Enemy enemy;
@@ -105,7 +109,7 @@ namespace Platformer
         private Enemy enemy3;
 
 
-        Menu m;
+        
         bool singlePlayerSelected = false;
 
         // Initialize controller/keyboard
@@ -113,6 +117,8 @@ namespace Platformer
         KeyboardState keyboard = Keyboard.GetState();
         KeyboardState currentState;
         KeyboardState previousState;
+
+       
 
         KeyboardState typeCurr, typePrev;
 
@@ -157,6 +163,7 @@ namespace Platformer
         Texture2D finishline;
 
         // sound effects
+        // Audio credits in README file
         Song lobby_music;
         SoundEffect jumpSound;
         SoundEffect deathSound;
@@ -1177,7 +1184,7 @@ namespace Platformer
 
 
             // initiating menu
-            m = new Menu(GraphicsDevice);
+            
 
             // adding animation set
             // will not be using idle

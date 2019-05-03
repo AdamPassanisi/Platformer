@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/* Modified code from https://github.com/Oyyou/MonoGame_Tutorials/ 
+ Credit Author: Oyyou */
+
 namespace Platformer
 {
     public class AnimationManager
@@ -59,6 +62,8 @@ namespace Platformer
             _timer = duration;
         }
 
+
+        // not used
         public void PlayReverse(Animation animation, int duration)
         {
             if (_animation == animation)
@@ -81,6 +86,8 @@ namespace Platformer
       _animation.CurrFrame = 0;
     }
 
+
+    // the update methods increments frame
     public void Update(GameTime gameTime)
     {
       _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -97,45 +104,6 @@ namespace Platformer
     }
 
 
-        public void LeftUpdate(GameTime gameTime)
-        {
-            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (_timer > _animation.FrameSpeed)
-            {
-                _timer = 0f;
-
-                _animation.CurrFrame--;
-
-                if (_animation.CurrFrame >= _animation.FrameCount)
-                    _animation.CurrFrame = 4;
-            }
-        }
-
-
-        public bool AttackUpdate(GameTime gameTime,int duration)
-        {
-            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-           
-
-
-            if (_timer > _animation.FrameSpeed&&_timer<=duration)
-            {
-                _timer = 0f;
-                _animation.CurrFrame++;
-                if (_animation.CurrFrame >= _animation.FrameCount)
-                    _animation.CurrFrame = 0;
-
-            }
-            if (_timer > duration)
-            {
-                _animation.CurrFrame = 0;
-                _timer = 0;
-                return true;
-            }
-            return false;
-
-         
-        }
+       
     }
 }

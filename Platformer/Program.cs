@@ -1,7 +1,23 @@
-﻿using System;
+﻿/*
+ * Authors
+ * 
+ * 
+ * Austin Cultra
+ * Adam Passanissi
+ * Deepak Damera
+ * 
+ * Project for CS496
+ * 
+ */
+
+using System;
 
 namespace Platformer
 {
+
+
+
+
 #if WINDOWS || LINUX
     /// <summary>
     /// The main class.
@@ -20,8 +36,7 @@ namespace Platformer
 
 
                game.Run();
-            //Account  a = new Account("youtube","c2lone");
-           
+            
         }
     }
 #endif
