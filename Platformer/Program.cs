@@ -1,7 +1,23 @@
-﻿using System;
+﻿/*
+ * Authors
+ * 
+ * 
+ * Austin Cultra
+ * Adam Passanissi
+ * Deepak Damera
+ * 
+ * Project for CS496
+ * 
+ */
+
+using System;
 
 namespace Platformer
 {
+
+
+
+
 #if WINDOWS || LINUX
     /// <summary>
     /// The main class.
@@ -14,8 +30,13 @@ namespace Platformer
         [STAThread]
         static void Main()
         {
+
+
             using (var game = new Game1())
-                game.Run();
+
+
+               game.Run();
+            
         }
     }
 #endif
