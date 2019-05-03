@@ -93,10 +93,7 @@ namespace Platformer
 
         #region Methods
 
-        public void Gravity()
-            {
-                ;
-            }
+       
 
         // draw player on screen
         public virtual void Draw(SpriteBatch spriteBatch)
@@ -112,7 +109,6 @@ namespace Platformer
         {
 
             
-            //  && _position.X > 50
             if (Keyboard.GetState().IsKeyDown(Keys.Left)&&Position.X>this._animations.ElementAt(0).Value.FrameWidth)
                 Velocity.X = -Speed;
             if (Keyboard.GetState().IsKeyDown(Keys.Right) )
@@ -125,16 +121,14 @@ namespace Platformer
             // Jump
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && grounded)
             {
-                //Velocity.X = 15f;
-                //_position.Y -= 170f;
-                // Velocity.Y = 3f*10;
+                
                 if (jumpCount == 0)
                     jumpCount = 150;
                 jumping = true;
                 grounded = false;
                 hasJumped = true;
                 soundEffects["Jump"].Play();
-                //hasJumped = true;
+                
 
             }
 
@@ -155,19 +149,7 @@ namespace Platformer
 
           
           
-            /*if (_position.Y < (.7) * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
-                _position.Y ++;*/
-            if (hasJumped == false)
-            {
-               // Velocity.Y = 0f;
-                //Velocity.X = 0f;
-
-
-            }
-
-            //else if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            // Velocity.Y = Speed
-           // this.Velocity = Vector2.Zero;
+        
 
 
         }
@@ -220,11 +202,10 @@ namespace Platformer
 
             _animationManager.Update(gameTime);
 
-            // Removed for testing
+            
             Position += Velocity;
 
-            //Xtrans = (int)(Position.X-_prevPos.X);
-            // Testing movement
+            
             Xtrans = Velocity.X;
             TotalDistance += Xtrans;
             _prevPos = Position;
@@ -238,10 +219,7 @@ namespace Platformer
                 _position.X = (float)(graphics.PreferredBackBufferWidth * 0.5);
                 isHalfway = true;
 
-              //  _position.X = (float)(graphics.PreferredBackBufferWidth * .01);
-
-
-                // Velocity = Vector2.Zero;
+              
 
             }
             else if (_position.X < 0)

@@ -38,11 +38,8 @@ namespace Platformer
         GameState _previousState = GameState.Level1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
-        // Title Screen 
-
-
-            bool wasTouching = false;
+      
+       
 
 
         List<string> username = new List<string>();
@@ -77,15 +74,14 @@ namespace Platformer
         Door finish_line2;
 
         int opacDirection = 1;
-        Rectangle titleScreen = new
-        
+       
            
 
         // fit user's screen bounds
-        Rectangle(0, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+        Rectangle titleScreen = new Rectangle(0, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
         // Title Screen //
 
-            MouseState mouse = Mouse.GetState();
+        MouseState mouse = Mouse.GetState();
 
         bool firstboard = true;
         List<string>[] board;
@@ -97,21 +93,20 @@ namespace Platformer
 
         // sprite list
         private List<Player> _sprites;
+        
+        private Enemy enemy;
+        private Enemy enemy2;
+        private Enemy enemy3;
 
-        private List<Enemy> _sprites2;
+
 
         // Database Connection
         ConnectDB db = new ConnectDB();
 
         Texture2D instructs;
 
-        private Enemy enemy;
-        private Enemy enemy2;
-        private Enemy enemy3;
-
 
         
-        bool singlePlayerSelected = false;
 
         // Initialize controller/keyboard
         GamePadState controller = GamePad.GetState(PlayerIndex.One);
@@ -121,7 +116,7 @@ namespace Platformer
 
        
 
-        KeyboardState typeCurr, typePrev;
+        
 
         int select = 0;
         
@@ -195,8 +190,9 @@ namespace Platformer
             
               if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
-            if (currentState.IsKeyDown(Keys.Enter))
+            if (currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyUp(Keys.Enter))
             {
+                
                 enemy._position.X = 2000;
                 enemy2._position.X = 1000;
                 enemy3._position.X = 1500;
@@ -211,18 +207,7 @@ namespace Platformer
 
             spriteBatch.Draw(levelcompleted, new Rectangle(0,0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
             spriteBatch.DrawString(font, ((int)(100000f - elapsed_time/10f)).ToString(), new Vector2(graphics.PreferredBackBufferWidth / 1.85f, graphics.PreferredBackBufferHeight / 2.7f), Color.White);
-          /*  spriteBatch.Draw(titlescreen, new Rectangle(width / 4, height/12, width/2, height/2), Color.White);
-            // Draws the menu options
-            spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
-          
-            spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White * selected[1]);
-            spriteBatch.Draw(createaccountbutton, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[2]);
-            spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 4 + height / 17), buttonSize), Color.White * selected[3]);
-            spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 5+height/16), buttonSize), Color.White * selected[4]);
-            spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *6+ height/15), buttonSize), Color.White * selected[5]);
-            */
-
-
+      
             spriteBatch.End();
         }
         #endregion
@@ -236,39 +221,27 @@ namespace Platformer
                 _state = GameState.MainMenu;
                 }
 
-            //List<string> board = new List<string>();
-
-            //if (firstboard)
-            //{
-              //  var board = db.viewLeaderboards(1);
-                //firstboard = false;
-            //}
-
             previousState = currentState;
             currentState = Keyboard.GetState();
             int z = 0;
             String[] titles = { "Username", "Rank", "Score" };
-            
-
+  
 
             GraphicsDevice.Clear(Color.DarkRed);
-            //List<string> board = new List<string>();
-            //if (previousState.IsKeyUp(Keys.Space) && currentState.IsKeyDown(Keys.Space))
+          
+            // Will only pull from database when the leaderboards page is opened
             if (firstboard)
             {
-                //var board = db.viewLeaderboards(1);
+                
                 firstboard = false;
 
-                Console.WriteLine("\n\n\n *********");
-
-                /*for (int i = 0; i < board.Length; i++)
-                   Console.WriteLine(i);*/
+               // Empties lists so they are no duplicates
                 users.Clear();
                 ranks.Clear();
                 scores.Clear();
                 
                 
-
+                // Gets each entry from database
                 foreach (var i in db.viewLeaderboards(leaderboardLevel))
                 {
                     
@@ -290,22 +263,20 @@ namespace Platformer
                             default:
                                 break;
                         }
-                        //Console.WriteLine(i[y] + "\tThis is an entry");
-                        //list[y].Add(i[y]);
+                        
                         y++;
                     }
                     Console.WriteLine();
                     z++;
                 }
-                //Console.WriteLine(z);
-               // GraphicsDevice.Clear(Color.Blue);
-
+             
 
             }
 
 
 
-            spriteBatch.Begin(); //
+            spriteBatch.Begin(); 
+            // DIsplays which level of the leaderboard is loaded
             if(leaderboardLevel == 1)
                 spriteBatch.Draw(leaderboards, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
             else
@@ -313,23 +284,25 @@ namespace Platformer
 
             int len = ranks.Count;
             
+            // Scrolls through leaderboards with arrow keys
             if (currentState.IsKeyDown(Keys.Down) && previousState.IsKeyUp(Keys.Down))
             {
                 if (leaderboardStart < len - 1)
                     leaderboardStart++;
             }
-
+            // Scrolls through leaderboards with arrow keys
             if (currentState.IsKeyDown(Keys.Up) && previousState.IsKeyUp(Keys.Up))
             {
                 if (leaderboardStart > 0)
                     leaderboardStart--;
             }
-
+            // Scrolls through leaderboards with arrow keys
             if(currentState.IsKeyDown(Keys.Right))
                 {
                     leaderboardLevel = 2;
                 firstboard = true;
                 }
+            // Scrolls through leaderboards with arrow keys
             if(currentState.IsKeyDown(Keys.Left))
                 {
                     leaderboardLevel = 1;
@@ -366,8 +339,10 @@ namespace Platformer
             previousState = currentState;
             currentState = Keyboard.GetState();
 
+            // Escape allows takes user to main menu
             if (currentState.IsKeyDown(Keys.Escape) && previousState.IsKeyUp(Keys.Escape))
                 _state =  GameState.MainMenu;
+            // enter takes user to previous screen
             if (currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyUp(Keys.Enter))
                 _state = _previousState;
             spriteBatch.Begin();
@@ -385,23 +360,13 @@ namespace Platformer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
-
             previousState = currentState;
             currentState = Keyboard.GetState();
 
-
-
-
             GraphicsDevice.Clear(Color.DarkRed);
-            spriteBatch.Begin(); //
-
-
+            spriteBatch.Begin(); 
             spriteBatch.Draw(instructs, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
-
             spriteBatch.End();
-
-
-          
 
             base.Update(gameTime);
         }
@@ -413,15 +378,12 @@ namespace Platformer
             String USERNAME;
             String PASSWORD;
 
-
-
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _state = GameState.MainMenu;
 
             // Updates keyboard states for typing recognition
             previousState = currentState;
             currentState = Keyboard.GetState();
-
 
             if (Createfirst)
             {
@@ -437,19 +399,14 @@ namespace Platformer
 
 
             GraphicsDevice.Clear(Color.DarkRed);
-            spriteBatch.Begin(); //
-
-
-
-
-
+            spriteBatch.Begin(); 
          
             Keys c;
 
             // User is entering username
             if (CreatebeingTyped == "user")
             {
-               
+               // Makes sure a key is being pressed
                 if (currentState.GetPressedKeys().Length > 0)
                 {
                     c = currentState.GetPressedKeys()[0];
@@ -459,7 +416,7 @@ namespace Platformer
                         if (previousState.GetPressedKeys()[0] != c)
 
                         {
-
+                            // If backspace is being pressed, last entry in list is removed
                             if (c == Keys.Back)
                             {
                                 if (Createusername.Count != 0)
@@ -469,6 +426,7 @@ namespace Platformer
                             {
                                 ;
                             }
+                            // No special character was pressed, character is added to list
                             else
                             {
                                 c.ToString()[c.ToString().Length - 1].ToString();
@@ -479,11 +437,13 @@ namespace Platformer
                     }
                     else
                     {
+                        // If backspace is being pressed, last entry in list is removed
                         if (c == Keys.Back)
                         {
                             if (Createusername.Count != 0)
                                 Createusername.RemoveAt(Createusername.Count - 1);
                         }
+                        // Tab is pressed, tpying selection goes to password field
                         else if (c == Keys.Tab)
                         {
                             Createcolors[0] = 0f;
@@ -493,11 +453,13 @@ namespace Platformer
 
                             CreatebeingTyped = "password";
                         }
+                        // Special buttons ignored
                         else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.LeftShift || c == Keys.RightShift)
                         {
 
                             ;
                         }
+                        // enter is pressed, enter button is selected
                         else if (c == Keys.Enter)
                         {
                             CreatebeingTyped = "enter";
@@ -508,7 +470,7 @@ namespace Platformer
                             //  enterable = true;
                         }
 
-
+                        // down is pressed, typing selection goes to password entry
                         else if (c == Keys.Down)
                         {
                             beingTyped = "enter";
@@ -519,6 +481,7 @@ namespace Platformer
 
                             CreatebeingTyped = "password";
                         }
+                        // no special character was pressed, character is added to list
                         else
                         {
                             Createusername.Add(c.ToString()[c.ToString().Length - 1].ToString());
@@ -530,10 +493,10 @@ namespace Platformer
                 }
             }
 
-
+            // password entry is selected
             if (CreatebeingTyped == "password")
             {
-
+                // makes sure a key is pressed
                 if (currentState.GetPressedKeys().Length > 0)
                 {
                     c = currentState.GetPressedKeys()[0];
@@ -543,23 +506,14 @@ namespace Platformer
                         if (previousState.GetPressedKeys()[0] != c)
 
                         {
-
+                            // backspace is pressed, last character is removed from list
                             if (c == Keys.Back)
                             {
                                 if (Createpassword.Count != 0)
                                     Createpassword.RemoveAt(Createpassword.Count - 1);
                             }
 
-                            /*else if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
-                            {
-                                Createcolors[0] = 0f;
-                                Createcolors[1] = 0f;
-                                Createcolors[2] = .5f;
-                                Createcolors[3] = 0f;
-
-                                CreatebeingTyped = "confirm";
-                            }*/
-
+                            // character is added to list
                             else
                             {
 
@@ -570,11 +524,13 @@ namespace Platformer
                     }
                     else
                     {
+                        // backspace is pressed, last character is removed from list
                         if (c == Keys.Back)
                         {
                             if (Createpassword.Count != 0)
                                 Createpassword.RemoveAt(Createpassword.Count - 1);
                         }
+                        // up is pressed, selection is changed to username being typed
                         else if (c == Keys.Up)
                         {
                             Createcolors[0] = 0.5f;
@@ -584,11 +540,13 @@ namespace Platformer
 
                             CreatebeingTyped = "user";
                         }
+                        // ignores special characters
                         else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Tab || c == Keys.Down || c==Keys.LeftShift || c==Keys.RightShift)
                         {
 
                             ;
                         }
+                        // enter is pressed, enter button is selected
                         else if (c == Keys.Enter)
                         {
                             CreatebeingTyped = "enter";
@@ -596,32 +554,11 @@ namespace Platformer
                             Createcolors[1] = 0f;
                             Createcolors[2] = 0f;
                             Createcolors[3] = 0.5f;
-                            //  enterable = true;
-                        }
-
-                        //else if (c == Keys.Down)
                             
-                        // Take to the confirm password, not working 
-                        /*else if ((c == Keys.Down && previousState.GetPressedKeys().Length == 0)||(c == Keys.Down && previousState.GetPressedKeys()[0] != 0) )
-                        {
-                            Createcolors[0] = 0f;
-                            Createcolors[1] = 0f;
-                            Createcolors[2] = .5f;
-                            Createcolors[3] = 0f;
-
-                            CreatebeingTyped = "confirm";
-                        }*/
-                        /*
-                         else if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
-                        {
-                            Createcolors[0] = 0f;
-                            Createcolors[1] = 0f;
-                            Createcolors[2] = .5f;
-                            Createcolors[3] = 0f;
-
-                            CreatebeingTyped = "confirm";
-                        }*/
-
+                        }
+      
+                   
+                        // character is added to list
                         else
                         {
                             Createpassword.Add(c.ToString()[c.ToString().Length - 1].ToString());
@@ -633,81 +570,8 @@ namespace Platformer
                 }
             }
 
-            /*
-            if (CreatebeingTyped == "confirm")
-            {
 
-                if (currentState.GetPressedKeys().Length > 0)
-                {
-                    c = currentState.GetPressedKeys()[0];
-
-                    if (previousState.GetPressedKeys().Length > 0)
-                    {
-                        if (previousState.GetPressedKeys()[0] != c)
-
-                        {
-
-                            if (c == Keys.Back)
-                            {
-                                if (Createpassword.Count != 0)
-                                    Createpassword.RemoveAt(Createpassword.Count - 1);
-                            }
-
-
-                            else
-                            {
-
-                                Createpassword.Add(c.ToString());
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        if (c == Keys.Back)
-                        {
-                            if (Createpassword.Count != 0)
-                                Createpassword.RemoveAt(Createpassword.Count - 1);
-                        }
-                        else if (c == Keys.Up)
-                        {
-                            Createcolors[0] = 0.5f;
-                            Createcolors[1] = 0f;
-                            Createcolors[2] = 0f;
-                            Createcolors[3] = 0f;
-
-                            CreatebeingTyped = "user";
-                        }
-                        else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Down)
-                        {
-
-                            ;
-                        }
-                        else if (c == Keys.Enter)
-                        {
-                            beingTyped = "enter";
-                            Createcolors[0] = 0f;
-                            Createcolors[1] = 0f;
-                            Createcolors[2] = 0f;
-                            Createcolors[3] = 0.5f;
-                            //  enterable = true;
-                        }
-
-
-                       
-                        else
-                        {
-                            Createpassword.Add(c.ToString());
-                        }
-
-                    }
-
-
-                }
-            }
-            */
-
-
+            // enter button is selected
             if (CreatebeingTyped == "enter")
             {
                 c = Keys.None;
@@ -715,6 +579,7 @@ namespace Platformer
                 {
                     c = currentState.GetPressedKeys()[0];
                 }
+                // up is pressed, username field is selected for entry
                 if (c == Keys.Up)
                 {
                     CreatebeingTyped = "user";
@@ -737,9 +602,7 @@ namespace Platformer
                         // Checks that a valid username and password are given
                         if ((USERNAME.Length >= 3 && USERNAME.Length <= 40) && (PASSWORD.Length >= 8 && PASSWORD.Length <= 20))
                         {
-
-                            // Account.GenerateHash(PASSWORD, USERNAME)
-
+                            
                             // Code to create account
                             // Front end hashes the password with the username as a salt and stores it in database
                             if (db.createAccount(USERNAME, Account.GenerateHash(PASSWORD, USERNAME)))
@@ -774,11 +637,9 @@ namespace Platformer
             spriteBatch.DrawString(font, String.Join(String.Empty, Createusername.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
             spriteBatch.DrawString(font, drawPassword, new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
 
-            // spriteBatch.Draw(logintitle, new Rectangle())
             spriteBatch.Draw(createaccount, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 3)), Color.White);
             spriteBatch.Draw(usernametitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[0]));
             spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[1]));
-            //spriteBatch.Draw(confirmpassword, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[2]));
 
             spriteBatch.Draw(enter, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 6), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + Createcolors[3]));
             if(usertaken)
@@ -831,7 +692,7 @@ namespace Platformer
             // User is entering username
             if (beingTyped == "user")
             {
-
+               // Makes sure a key is being pressed
                 if (currentState.GetPressedKeys().Length > 0)
                 {
                     c = currentState.GetPressedKeys()[0];
@@ -841,7 +702,7 @@ namespace Platformer
                         if (previousState.GetPressedKeys()[0] != c)
 
                         {
-
+                            // If backspace is being pressed, last entry in list is removed
                             if (c == Keys.Back)
                             {
                                 if (username.Count != 0)
@@ -852,21 +713,23 @@ namespace Platformer
                             {
                                 ;
                             }
+                            // No special character was pressed, character is added to list
                             else
                             {
-
-                                username.Add(c.ToString()[c.ToString().Length - 1].ToString());
+                               username.Add(c.ToString()[c.ToString().Length - 1].ToString());
                             }
                         }
 
                     }
                     else
                     {
+                        // If backspace is being pressed, last entry in list is removed
                         if (c == Keys.Back)
                         {
                             if (username.Count != 0)
                                 username.RemoveAt(username.Count - 1);
                         }
+                        // Tab is pressed, tpying selection goes to password field
                         else if (c == Keys.Tab)
                         {
                             colors[0] = 0f;
@@ -875,21 +738,23 @@ namespace Platformer
 
                             beingTyped = "password";
                         }
+                        // Special buttons ignored
                         else if (c == Keys.Right || c == Keys.Left || c == Keys.Up || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift || c == Keys.OemSemicolon)
                         {
 
                             ;
                         }
+                        // enter is pressed, enter button is selected
                         else if (c == Keys.Enter)
                         {
                             beingTyped = "enter";
                             colors[0] = 0f;
                             colors[1] = 0f;
                             colors[2] = 0.5f;
-                          //  enterable = true;
+                          
                         }
 
-
+                        // down is pressed, typing selection goes to password entry
                         else if (c == Keys.Down)
                         {
                             colors[0] = 0f;
@@ -898,6 +763,7 @@ namespace Platformer
 
                             beingTyped = "password";
                         }
+                        // no special character was pressed, character is added to list
                         else
                         {
                             username.Add(c.ToString()[c.ToString().Length - 1].ToString());
@@ -912,6 +778,7 @@ namespace Platformer
 
             // User is entering password
             if (beingTyped == "password") {
+                // makes sure a key is pressed
                 if (currentState.GetPressedKeys().Length > 0)
                 {
                     c = currentState.GetPressedKeys()[0];
@@ -921,17 +788,16 @@ namespace Platformer
                         if (previousState.GetPressedKeys()[0] != c)
 
                         {
-
+                            // backspace is pressed, last character is removed from list
                             if (c == Keys.Back)
                             {
                                 if (password.Count != 0)
                                     password.RemoveAt(password.Count - 1);
                             }
 
-                           
+                           // character is added to list
                             else
                             {
-
                                 password.Add(c.ToString()[c.ToString().Length - 1].ToString());
                             }
                         }
@@ -939,24 +805,22 @@ namespace Platformer
                     }
                     else
                     {
+                        // backspace is pressed, last character is removed from list
                         if (c == Keys.Back)
                         {
                             if (password.Count != 0)
                                 password.RemoveAt(password.Count - 1);
                         }
-
+                        // ignores special characters
                         else if (c == Keys.Tab)
                         {
-                           //if (db.login(String.Join(String.Empty, username.ToArray()), String.Join(String.Empty, password.ToArray())))
-                            {
-                                //_state = GameState.Level1;
-                            }
+                           ;
                         }
 
-
+                        // ignores special characters
                         else if (c == Keys.Right || c == Keys.Left || c == Keys.Down || c == Keys.Escape || c == Keys.RightShift || c == Keys.LeftShift || c == Keys.OemSemicolon)
                             ;
-
+                        // up is pressed, selection is changed to username being typed
                         else if (c == Keys.Up)
                         {
 
@@ -965,8 +829,9 @@ namespace Platformer
                             colors[2] = 0f;
 
                             beingTyped = "user";
-                           // enterable = true;
+                           
                         }
+                        // enter is pressed, enter button is selected
                         else if (c == Keys.Enter )
                         {
                             beingTyped = "enter";
@@ -974,6 +839,7 @@ namespace Platformer
                             colors[1] = 0f;
                             colors[2] = 0.5f;
                         }
+                        // character is added to list
                         else
                         {
                             password.Add(c.ToString()[c.ToString().Length - 1].ToString());
@@ -983,7 +849,7 @@ namespace Platformer
 
                 }
             }
-
+            // enter button is selected
             if (beingTyped == "enter")
             {
                 c = Keys.None;
@@ -991,6 +857,7 @@ namespace Platformer
                 {
                     c = currentState.GetPressedKeys()[0];
                 }
+                // up is pressed, username field is selected for entry
                 if (c == Keys.Up)
                 {
                     beingTyped = "user";
@@ -1011,13 +878,12 @@ namespace Platformer
                         // Code to Log in
                         if (db.login(USERNAME, Account.GenerateHash(PASSWORD,USERNAME)))
                         {
-                           // elapsed_time = 60;
+                         
                             LOGGED_IN = true;
                             Logged_Username = USERNAME;
                             
                             _state = GameState.MainMenu;
-                            //System.Threading.Thread.Sleep(250);
-                           // _state = GameState.Level1;
+                          
                             
                         }
                         else
@@ -1047,7 +913,6 @@ namespace Platformer
             spriteBatch.DrawString(font, String.Join(String.Empty, username.ToArray()), new Vector2(width / 2, height / 16 + buttonSize.Y * 3), Color.White);
             spriteBatch.DrawString(font,drawPassword, new Vector2(width / 2, height / 16 + buttonSize.Y * 5), Color.White);
 
-            // spriteBatch.Draw(logintitle, new Rectangle())
             spriteBatch.Draw(logintitle, new Rectangle(new Point(width / 2 - buttonSize.X, height / 16), new Point(buttonSize.X * 2, buttonSize.Y * 3)), Color.White);
             spriteBatch.Draw(usernametitle, new Rectangle(new Point(width / 2 - buttonSize.X * 2, height / 16 + buttonSize.Y * 2), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[0]));
            spriteBatch.Draw(passwordtitle, new Rectangle(new Point(width/ 2 - buttonSize.X*2, height/16+buttonSize.Y*4), new Point(buttonSize.X * 2, buttonSize.Y * 2)), Color.White * (.5f + colors[1]));
@@ -1063,31 +928,13 @@ namespace Platformer
             base.Update(gameTime);
         }
         #endregion
-
+        // Called when program is first started
         protected override void Initialize()
         {
-            
-
-
             CreateTiles();
             CreateNightTiles();
             base.Initialize();
-            db.Initialize();
-
-            // use this to get the level for continuing the game
-            //db.continueGame("AUSTIN")[0][0];
-
-            /* automated testing
-            Random random = new Random();
-            int num;
-            for (int i = 0; i < 100; i++) {
-                num = random.Next(100000);
-                db.createAccount("test"+i, "PASSWORD");
-                db.login("test"+i, "PASSWORD");
-                db.completeLevelForFirstTime(1,"test"+i, num);
-                db.saveGame("test"+i, 2);
-                db.updateHighScore("test"+i, 1, num);
-            }*/
+            db.Initialize(); 
         }
 
         #region LoadContent
@@ -1102,10 +949,7 @@ namespace Platformer
             deathSound = Content.Load<SoundEffect>("Audio/Heartbeat");
             victorySound = Content.Load<SoundEffect>("Audio/victory");
             soundEffects = new Dictionary<string, SoundEffect>();
-
-            //  {"Jump",(Content.Load<SoundEffect>("Audio/Jump"))},
-            // { "Death", (Content.Load<SoundEffect>("Audio/Heartbeat"))},
-            //  { "Victory", (Content.Load<SoundEffect>("Audio/victory"))},
+            
 
             soundEffects.Add("Jump", jumpSound);
             soundEffects.Add("Death", deathSound);
@@ -1188,7 +1032,6 @@ namespace Platformer
             Door.LoadContent(Content,0);
 
 
-            // initiating menu
             
 
             // adding animation set
@@ -1214,16 +1057,16 @@ namespace Platformer
            
 
             _sprites = new List<Player>();
-            // .0732 * screenWidth
+           
             Player main_player = new Player(animations,graphics) { Position = new Vector2((int)(0)
                 , (int)((0.858) * screenHeight)), };
 
 
-            // places enemy, but needs to be changed a little
+            
             
             _sprites.Add(main_player);
 
-
+            // initializes enemies positions
             enemy = new Enemy(_enemy_animations,graphics)
             {
                 Position = new Vector2(700,(int)((0.838) * screenHeight))
@@ -1242,7 +1085,7 @@ namespace Platformer
 
             };
 
-            //
+          
 
             currentState = Keyboard.GetState();
             previousState = currentState;
@@ -1250,6 +1093,7 @@ namespace Platformer
         }
         #endregion
 
+        // used to remove content from RAM, we do not need to do this for our game
         protected override void UnloadContent()
         {
 
@@ -1265,14 +1109,15 @@ namespace Platformer
             GraphicsDevice.Clear(Color.Silver);
             
 
-
+            // List to set opacity of each menu object
             float[] selected = new float[6];
 
+            // up is pressed, menu selection  moves up
             if (previousState.IsKeyUp(Keys.Up) && currentState.IsKeyDown(Keys.Up))
             {
                 select--;
             }
-
+            // down is pressed, menu selection moves down 
             if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
             {
                 select++;
@@ -1280,12 +1125,13 @@ namespace Platformer
 
 
 
-
+            // keeps menu selection within bounds, circular connection
             if (select > 5)
                 select = 0;
             if (select < 0)
                 select = 5;
 
+            // sets opacities based on menu selection
             switch (select)
             {
                 case 0:
@@ -1338,12 +1184,12 @@ namespace Platformer
                     break;
             }
 
-              int height = graphics.PreferredBackBufferHeight;
+            int height = graphics.PreferredBackBufferHeight;
             int width = graphics.PreferredBackBufferWidth;
             int initial = height /5;
 
           
-
+            // enter is pressed, does action depending on which menu item is selected
             if (previousState.IsKeyUp(Keys.Enter) && currentState.IsKeyDown(Keys.Enter))
             {
               
@@ -1374,6 +1220,7 @@ namespace Platformer
             // Draws the menu options
             spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
           
+            // not logged in, shows all menu options
             if(!LOGGED_IN)
             {
                 spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White * selected[1]);
@@ -1383,8 +1230,10 @@ namespace Platformer
                 spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *6+ height/15), buttonSize), Color.White * selected[5]);
 
             }
+            // logged in, does NOT show "Log in" or "create account" button
             else
             {
+                // adjust menu selection for missing entries
                 if(select==1)
                     select = 3;
                 if(select == 2)
@@ -1402,13 +1251,13 @@ namespace Platformer
 
 
         
-
+        // Creates tiles for level 2
         private void CreateNightTiles()
-            {
+        {
             nightTiles.Clear();
             int screenWidth = graphics.PreferredBackBufferWidth;
             int screenHeight = graphics.PreferredBackBufferHeight;
-            // float xPosition = Shared.random.Next(200, screenWidth/2+200);
+            
             int i = 1;
             for (; i < 21; i++)
             {
@@ -1416,16 +1265,18 @@ namespace Platformer
             }
             finish_line2 = new Door(new Vector2(screenWidth * 0.1f * (i+1), (float)(screenHeight * 0.814)));
 
-            }
-
+        }
+        
+        // called when user dies
         public void Gameover(GameTime gameTime)
-            {
+        {
+            //resets tiles and finish line  
             CreateNightTiles();
             CreateTiles();
            finish_line = new Door(new Vector2(graphics.PreferredBackBufferWidth * 0.2f * (10 + 1), (float)(graphics.PreferredBackBufferHeight * 0.814)));
             finish_line2 = new Door(new Vector2(graphics.PreferredBackBufferWidth * 0.1f * (20 + 1), (float)(graphics.PreferredBackBufferHeight * 0.814)));
 
-            // enemy._position.X = 700;
+            // resets all enemies and player values
             deathCounter = 0;
             _sprites[0].Reset();
             enemy.Reset();
@@ -1434,9 +1285,11 @@ namespace Platformer
             enemy._position.X = 2000;
             enemy2._position.X = 1000;
             elapsed_time = 0f;
-                previousState = currentState;
+            
+            previousState = currentState;
             currentState = Keyboard.GetState();
 
+            // pressing escape takes user back to main menu
             if((currentState.IsKeyDown(Keys.Escape) && (previousState.IsKeyUp(Keys.Escape))))
                 _state = GameState.MainMenu;
 
@@ -1448,14 +1301,15 @@ namespace Platformer
                 spriteBatch.End();
 
                 base.Draw(gameTime);
-            }
+        }
 
+        // creates tiles for level 1
         private void CreateTiles()
         {
             tiles.Clear();
             int screenWidth = graphics.PreferredBackBufferWidth;
             int screenHeight = graphics.PreferredBackBufferHeight;
-            // float xPosition = Shared.random.Next(200, screenWidth/2+200);
+
             int i = 0;
             for (; i < 10; i++)
             {
@@ -1496,28 +1350,9 @@ namespace Platformer
 
         }
 
-        public float drawTitle(float i)
-        {
 
-            spriteBatch.Draw(titlescreen, titleScreen, Color.White);
-            spriteBatch.Draw(titlescreen_a, titleScreen, Color.White * i);
-            if (i > 1f || i < 0f)
-                opacDirection *= -1;
-
-            return i + .01f * opacDirection;
-
-        }
-
-        protected void DrawLogin(GameTime gameTime)
-            {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(); //
-
-            menu();
-            spriteBatch.End(); 
-                
-            }           
-
+             
+        // draws the main menu
         protected void DrawMainMenu(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -1526,11 +1361,14 @@ namespace Platformer
             menu();
             spriteBatch.End(); //
         }
+
+        // draws level 1
         protected void DrawLevel1(GameTime gameTime)
         {
 
             _previousState = GameState.Level1;
             GraphicsDevice.Clear(Color.Transparent);
+
             int finish = 400;
 
             spriteBatch.Begin();
@@ -1540,12 +1378,11 @@ namespace Platformer
 
             spriteBatch.Draw(healthTexture, healthRectangle, Color.DarkSlateBlue);
             
-          //  spriteBatch.DrawString(font, elapsed_time.ToString,time,Color.White);
+        
 
             foreach (var sprite in _sprites)
                 sprite.Draw(spriteBatch);
-          //  foreach (var sprite in _sprites2)
-            //    sprite.Draw(spriteBatch);
+          
             foreach (var tl in tiles)
             {
                 tl.Draw(spriteBatch);
@@ -1565,21 +1402,17 @@ namespace Platformer
         void UpdateMainMenu(GameTime gameTime)
         {
 
-            // play lobby music
-
             
-
-            // menu control
 
             previousState = currentState;
             currentState = Keyboard.GetState();
 
 
-            
-            if (Keyboard.GetState().IsKeyDown(Keys.Enter) && select == 0)
-                {
+            // Single player is selected, all values are set to initial values for gameplay
+            if (currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyUp(Keys.Enter)&& select == 0)
+            {
                 _sprites[0].Reset();
-            enemy.Reset();
+                enemy.Reset();
                 enemy2.Reset();
                 enemy._position.X = 2000;
                 enemy2._position.X = 1000;
@@ -1591,8 +1424,10 @@ namespace Platformer
                 finish_line = new Door(new Vector2(graphics.PreferredBackBufferWidth * 0.2f * (10 + 1), (float)(graphics.PreferredBackBufferHeight * 0.814)));
                 finish_line2 = new Door(new Vector2(graphics.PreferredBackBufferWidth * 0.1f * (20 + 1), (float)(graphics.PreferredBackBufferHeight * 0.814)));
 
+                // user is not logged in, taken straigt to gameplay
                 if (!LOGGED_IN)
                     _state = GameState.Level1;
+                // user is logged in, taken to continue/new game page
                 else
                     {
                         _state = GameState.Continue;
@@ -1612,6 +1447,7 @@ namespace Platformer
 
         }
 
+        // asks user to continue or start new game if logged in
         public void ContinueGame(GameTime gameTime)
         {
             previousState = currentState;
@@ -1620,36 +1456,38 @@ namespace Platformer
             if(currentState.IsKeyDown(Keys.Escape) && previousState.IsKeyUp(Keys.Escape))
                 _state = GameState.MainMenu;
 
-
+            // used for menu item opacities
             float[] selected = new float[2];
 
+            // up is pressed, menu selection moves up
             if (previousState.IsKeyUp(Keys.Up) && currentState.IsKeyDown(Keys.Up))
             {
                 select--;
             }
-
+            // down is pressed, menu item moves down
             if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
             {
                 select++;
             }
+            // keeps seletion within bounds
             if (select < 0)
                 select = 1;
             if (select >1 )
                 select = 0;
 
+            // sets opacity
             if(select == 0)
             {
                 selected[0] = 1f;
                 selected[1] = .5f;
             }
-
             if(select == 1)
             {
                 selected[0] = .5f;
                 selected[1] = 1f;
             }
 
-
+            // enter is pressed
             if (currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyUp(Keys.Enter))
             {
                 // Continue 
@@ -1691,6 +1529,7 @@ namespace Platformer
             base.Update(gameTime);
         }               
 
+        // updates level 1 values
         void UpdateLevel1(GameTime gameTime)
         {
             previousState = currentState;
@@ -1707,27 +1546,25 @@ namespace Platformer
                     _state = GameState.GameOver;
             }
 
-
+            // player finishes level
             if (_sprites[0].hasEntered(finish_line,soundEffects))
             {
+                // score is recored if logged in
                 if(LOGGED_IN && firstBeaten) 
                     {
                     db.completeLevelForFirstTime(1, Logged_Username, (int)(100000f - elapsed_time/10f));
                     db.saveGame(Logged_Username, 1);
                     firstBeaten = false;
-                    //_state = GameState.MainMenu;
                     }
+                // taken to level completed screen
                 _state = GameState.LevelCompleted;
-                spriteBatch.Begin();
-                spriteBatch.DrawString(font, "GAME OVER",
-               new Vector2((float)(graphics.PreferredBackBufferWidth * 0.5), (float)(graphics.PreferredBackBufferHeight * 0.25)), Color.PaleVioletRed);
-                spriteBatch.End();
+                
             }
             
             int touchCount = 0;
             
             elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
-         //   Console.WriteLine(elapsed_time);
+       
 
 
             if ((currentState.IsKeyDown(Keys.Escape) && (previousState.IsKeyUp(Keys.Escape))))
@@ -1748,18 +1585,19 @@ namespace Platformer
                 foreach (var tile in tiles)
                 {
                     
+                    // updates player and enemy positions
                     if(_sprites[0].Health == 100)
-                        _sprites[0].Update(gameTime, _sprites,soundEffects);
+                    _sprites[0].Update(gameTime, _sprites,soundEffects);
                     enemy.Update(gameTime,_sprites[0], soundEffects);
                     enemy2.Update(gameTime, _sprites[0], soundEffects);
-                    //scrolling1.Update((int)_sprites[0].Xtrans);
-                    //scrolling2.Update((int)_sprites[0].Xtrans);
+                    
                     
                     healthBar.health = _sprites[0].Health;
                     if (_sprites[0].Health < 100)
                         _sprites[0].Xtrans = 0;
                     {
                         tile.Update(_sprites[0].Xtrans);
+                        // user is halfway, tiles and enemies move faster to make it more smooth
                         if (_sprites[0].isHalfway && _sprites[0].Health == 100)
                         {
                             tile.Update(_sprites[0].Xtrans);
@@ -1772,6 +1610,8 @@ namespace Platformer
                             
                            
                         }
+
+                        // Scrolls the background with player movement
                         if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
                         {
                             scrolling1.rectangle.X = scrolling2.rectangle.X + scrolling2.rectangle.Width;
@@ -1781,62 +1621,21 @@ namespace Platformer
                             scrolling2.rectangle.X = scrolling1.rectangle.X + scrolling1.rectangle.Width;
                         }
                     }
+
+                    // Used for attacking (NOT USED IN OUR GAME)
                     if (Keyboard.GetState().IsKeyDown(Keys.E))
                     {
                         _sprites[0].Attack(enemy);
                     }
 
-
+                    // user is on a tile
                     if (_sprites[0].IsTouching(tile, _sprites[0]))
                     {
                         touchCount++;
 
-                        wasTouching = true;
-
-                        
-                        
-                        Console.Write("Check");
-                        Vector2 vec = new Vector2(1, tile.position.Y - 160f); 
-                      //  _sprites[0].Velocity
-                        //    = vec;
-
-
-                       // Removed
-                       // _sprites[0]._position.Y = tile.position.Y - 56f;
-
-                       // _sprites[0]._position.Y = tile.position.Y - 56f;
-
-                        
-
                     }
-                    else if (wasTouching == true)
-                        {
-                           //wasTouching = false;
-                            //_sprites[0]._position.Y = tile.position.Y + 1f;
+                    
 
-                        }
-
-                    /*
-                    if (_sprites[0].tileTouching(tiles[0], _sprites[0]))
-                        wasTouching = true;
-                    if (!(_sprites[0].tileTouching(tiles[0], _sprites[0])))
-                        if(wasTouching)
-                        {
-                        wasTouching = false;
-                        _sprites[0]._position.Y = graphics.PreferredBackBufferHeight - 200f;
-                        }*/
-
-                    /* sprite._position.Y = tile.position.Y + sprite._texture.Height;
-                     if (!sprite.IsTouching(tile))
-                     {
-
-
-                         tile.Update(sprite.Xtrans);
-                     }
-                     else
-                     {
-
-                     }*/
 
 
                     //  Checks if player is hitting anything
@@ -1848,7 +1647,7 @@ namespace Platformer
                             _sprites[0]._position.Y += graphics.PreferredBackBufferHeight/600f;
                     }
 
-
+                    // player is on a tile, doesnt fall past tile
                     if (touchCount > 0)
                         if (_sprites[0]._position.Y > graphics.PreferredBackBufferHeight * .7f)
                         {
@@ -1865,8 +1664,6 @@ namespace Platformer
 
                     
                 }
-
-               
 
                 
                 healthRectangle = new Rectangle(150,50,healthBar.health,60);
@@ -1883,12 +1680,13 @@ namespace Platformer
 
         public void Level2(GameTime gameTime)
         {
+            // Updates Keyboards
             previousState = currentState;
             currentState = Keyboard.GetState();
 
             elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
             
-
+            // Sets state that the pause menu will return to
             _previousState = GameState.Level2;
 
               if (currentState.IsKeyDown(Keys.Escape) && previousState.IsKeyUp(Keys.Escape))
@@ -1896,28 +1694,36 @@ namespace Platformer
 
               GraphicsDevice.Clear(Color.Transparent);
 
-
+            // Player enters the finish line
             if (_sprites[0].hasEntered(finish_line2, soundEffects))
             {
+                CreateNightTiles();
+                enemy._position.X = 2000;
+                enemy2._position.X = 1000;
+                enemy3._position.X = 1500;
+               
+                _state = GameState.Level2;
+               
+              
+                // Logs score to leaderboard if player is logged in
                 if (LOGGED_IN && firstBeaten)
                 {
                     db.completeLevelForFirstTime(2, Logged_Username, (int)(100000f - elapsed_time / 10f));
                     db.saveGame(Logged_Username, 2);
                     firstBeaten = false;
-                    //_state = GameState.MainMenu;
+                    
                 }
                 _state = GameState.LevelCompleted;
                 spriteBatch.Begin();
-                spriteBatch.DrawString(font, "GAME OVER",
-               new Vector2((float)(graphics.PreferredBackBufferWidth * 0.5), (float)(graphics.PreferredBackBufferHeight * 0.25)), Color.PaleVioletRed);
                 spriteBatch.End();
             }
 
-
+            // Player takes damage, dies
             if (_sprites[0].Health < 100)
                 _state = GameState.GameOver;
 
             int touchCount = 0;
+            // Updates the player and enemies movement
             for(int i = 0; i < 10; i++)
             {
                 _sprites[0].Update(gameTime, _sprites, soundEffects);
@@ -1925,8 +1731,7 @@ namespace Platformer
                 enemy2.Update(gameTime, _sprites[0], soundEffects);
                enemy3.Update(gameTime, _sprites[0], soundEffects);
             }
-            //_sprites[0].Update(gameTime, _sprites, soundEffects);
-              // Background scroll
+                // Scrolls the background
                for (int i = 0; i < 10; i++)
                 {
                     nightscrolling1.Update((int)_sprites[0].Xtrans);
@@ -1937,23 +1742,18 @@ namespace Platformer
                foreach (var tile in nightTiles)
                 {
 
+                // Player jumps onto platform
                 if (_sprites[0].IsTouching(tile, _sprites[0]))
                 {
                     touchCount++;
-
-                    wasTouching = true;
-                   // finish_line2.Update(_sprites[0].Xtrans * 3);
-
-
-                    Console.Write("Check");
-                    Vector2 vec = new Vector2(1, tile.position.Y - 160f);
                 }
 
+                // Player is halfway in the screen
+                // enemies and tiles move a bit faster to make it more smooth
                 if (_sprites[0].isHalfway && _sprites[0].Health == 100)
                 {
                     tile.Update(_sprites[0].Xtrans);
-                    //tile.Update(_sprites[0].Xtrans);
-                     // Adjusts enemies better
+                    
                     enemy._position.X -= .75f/2;
                     enemy2._position.X-=.75f/2;
                     enemy3._position.X-= .75f/2;
@@ -1963,7 +1763,7 @@ namespace Platformer
 
 
 
-                healthBar.health = _sprites[0].Health;
+                    healthBar.health = _sprites[0].Health;
 
                     tile.Update(_sprites[0].Xtrans);
                     if (_sprites[0].isHalfway)
@@ -1980,17 +1780,8 @@ namespace Platformer
                     {
                         nightscrolling2.rectangle.X = nightscrolling1.rectangle.X + nightscrolling1.rectangle.Width;
                     }
-                 
 
-
-
-
-
-
-
-                
-                    
-
+                // gravity doesnt affect player while he is jumping
                 if (_sprites[0].jumping == false)
                     {
                         if (_sprites[0].Contact == false)
@@ -1998,7 +1789,7 @@ namespace Platformer
                             _sprites[0]._position.Y += graphics.PreferredBackBufferHeight/1200f;
                     }
 
-
+                    // player is on a tile
                     if (touchCount > 0)
                         if (_sprites[0]._position.Y > graphics.PreferredBackBufferHeight * .7f)
                         {
@@ -2015,11 +1806,6 @@ namespace Platformer
 
 
                 }
-           // elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
-         //   Console.WriteLine(elapsed_time);
-
-
-            
 
 
               spriteBatch.Begin();
@@ -2028,12 +1814,9 @@ namespace Platformer
             nightscrolling2.Draw(spriteBatch);
 
             spriteBatch.Draw(healthTexture, healthRectangle, Color.DarkSlateBlue);
-            
-          //  spriteBatch.DrawString(font, elapsed_time.ToString,time,Color.White);
 
             foreach (var sprite in _sprites)
                 sprite.Draw(spriteBatch);
-
            
             foreach (var tl in nightTiles)
             {
@@ -2043,21 +1826,19 @@ namespace Platformer
             enemy.Draw(spriteBatch);
             enemy2.Draw(spriteBatch);
             enemy3.Draw(spriteBatch);
-           
-           //spriteBatch.DrawString(font, ((int)(100000f - elapsed_time/10f)).ToString(), new Vector2(graphics.PreferredBackBufferWidth / 1.85f, graphics.PreferredBackBufferHeight / 2.7f), Color.White);
-            
-             spriteBatch.DrawString(font, "time: " + Math.Round((elapsed_time/1000),1) + "", 
+           spriteBatch.DrawString(font, "time: " + Math.Round((elapsed_time/1000),1) + "", 
                 new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
            
             spriteBatch.End();
 
-           
+          
            
             base.Draw(gameTime);
 
           
         }
 
+        // Main function that draws/run the current state
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);

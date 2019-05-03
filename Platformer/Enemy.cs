@@ -150,18 +150,7 @@ namespace Platformer
                 _animationManager.Play(_animations["enemywalkL"]);
 
             }
-            //else if (Velocity.X == 0 && facingRight)
-
-            //{
-            //    _animationManager.Play(_animations["enemyidleR"]);
-
-            //}
-            //else if (Velocity.X == 0 && !facingRight)
-
-            //{
-            //    _animationManager.Play(_animations["enemyidleL"]);
-
-            //}
+           
 
 
         }
@@ -283,9 +272,7 @@ namespace Platformer
                 Position += Velocity;
                 _animationManager.Update(gameTime);
             
-            if (collision(player, this))
-                ;
-
+            
 
             SetAnimations();
 
@@ -294,41 +281,19 @@ namespace Platformer
 
 
             Velocity = Vector2.Zero;
-           // this.IsAttacking = false;
+           
 
         }
 
-        // Tell if enemy is touching the player
-        public bool collision(Player user, Enemy enemy)
-        {
-            // Checks horizontal
-           /* if ((enemy._position.X >= user._position.X) && (enemy._position.X <= user._position.X + user._texture.Width))
-                return true;
-
-            else*/
-                return false;
-        }
+      
 
 
         private void Attack (Player player, Dictionary<string, SoundEffect> soundEffects)
         {
-            //if ((this._position.X-player._position.X)<=player._animations.ElementAt(0).Value.FrameWidth / 6
-            //    & (this._position.X > player._position.X)&& player.IsAlive)
-            //{
-            //   // this.Velocity = Vector2.Zero;
-            //    this.isAttacking=true;
-            //    player.Health = player.Health-34;
-            //    player.CheckHealth();
-            //}
-            //else if ((this._position.X - player._position.X)>= 50 && (this._position.X - player._position.X) < 0 && player.IsAlive)
-            //{
-            //    this.isAttacking = true;
-            //    player.Health = player.Health - 34;
-            //    player.CheckHealth();
-            //}
+           
             if ((this._position.X - player._position.X>-100) &&(this._position.X - player._position.X < 1) && !(this.Position.Y>player.Position.Y))
             {
-                // this.Velocity = Vector2.Zero;
+                
                 this.isAttacking = true;
                 player.Health = player.Health - 34;
                 soundEffects["Death"].Play();
