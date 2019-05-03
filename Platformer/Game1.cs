@@ -1050,19 +1050,21 @@ namespace Platformer
             CreateNightTiles();
             base.Initialize();
             db.Initialize();
-            //db.completeLevelForFirstTime(1, "ADAM", 500);
-            //board = db.viewLeaderboards(1);
-            //db.createAccount("abcdefg", "12345678");
-            //db.login("abc", "1234");
-            //db.saveGame("abcdefg", 3);
-            /*db.completeLevelForFirstTime(1, "abc", 300);
-            db.completeLevelForFirstTime(1, "abd", 200);
-            db.completeLevelForFirstTime(1, "abe", 500);
-            db.completeLevelForFirstTime(1, "abf", 1000);
-            db.completeLevelForFirstTime(1, "abg", 600);
-            db.completeLevelForFirstTime(1, "abh", 700);
-            db.updateHighScore("abg", 1 , 677);*/
-            db.viewLeaderboards(1);
+
+            // use this to get the level for continuing the game
+            //db.continueGame("AUSTIN")[0][0];
+
+            /* automated testing
+            Random random = new Random();
+            int num;
+            for (int i = 0; i < 100; i++) {
+                num = random.Next(100000);
+                db.createAccount("test"+i, "PASSWORD");
+                db.login("test"+i, "PASSWORD");
+                db.completeLevelForFirstTime(1,"test"+i, num);
+                db.saveGame("test"+i, 2);
+                db.updateHighScore("test"+i, 1, num);
+            }*/
         }
 
         #region LoadContent
