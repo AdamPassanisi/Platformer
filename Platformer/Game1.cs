@@ -199,7 +199,9 @@ namespace Platformer
                 enemy._position.X = 2000;
                 enemy2._position.X = 1000;
                 enemy3._position.X = 1500;
+                elapsed_time = 0f;
                 _state = GameState.Level2;
+               
             }
             GraphicsDevice.Clear(Color.Silver);
 
@@ -1369,12 +1371,27 @@ namespace Platformer
             // Draws the menu options
             spriteBatch.Draw(singePlayer, new Rectangle(new Point(width / 2 - buttonSize.X/2, initial + buttonSize.Y + height/20), buttonSize), Color.White * selected[0]);
           
-            spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White * selected[1]);
-            spriteBatch.Draw(createaccountbutton, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[2]);
-            spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 4 + height / 17), buttonSize), Color.White * selected[3]);
-            spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 5+height/16), buttonSize), Color.White * selected[4]);
-            spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *6+ height/15), buttonSize), Color.White * selected[5]);
+            if(!LOGGED_IN)
+            {
+                spriteBatch.Draw(multiplayer, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White * selected[1]);
+                spriteBatch.Draw(createaccountbutton, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[2]);
+                spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 4 + height / 17), buttonSize), Color.White * selected[3]);
+                spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 5+height/16), buttonSize), Color.White * selected[4]);
+                spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *6+ height/15), buttonSize), Color.White * selected[5]);
 
+            }
+            else
+            {
+                if(select==1)
+                    select = 3;
+                if(select == 2)
+                    select = 0;
+
+               
+                spriteBatch.Draw(viewLeaderboards, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2 + height / 19), buttonSize), Color.White * selected[3]);
+                spriteBatch.Draw(instructions, new Rectangle(new Point(width/ 2 - buttonSize.X / 2, initial + buttonSize.Y * 3+height/18), buttonSize), Color.White * selected[4]);
+                spriteBatch.Draw(exit, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y *4+ height/17), buttonSize), Color.White * selected[5]);
+            }
 
             
         }
@@ -1781,6 +1798,9 @@ namespace Platformer
             previousState = currentState;
             currentState = Keyboard.GetState();
 
+            elapsed_time += gameTime.ElapsedGameTime.Milliseconds;
+            
+
             _previousState = GameState.Level2;
 
               if (currentState.IsKeyDown(Keys.Escape) && previousState.IsKeyUp(Keys.Escape))
@@ -1935,8 +1955,12 @@ namespace Platformer
             enemy.Draw(spriteBatch);
             enemy2.Draw(spriteBatch);
             enemy3.Draw(spriteBatch);
-            spriteBatch.DrawString(font, "time: " + Math.Round((120000f/1000),1) + "", 
+           
+           //spriteBatch.DrawString(font, ((int)(100000f - elapsed_time/10f)).ToString(), new Vector2(graphics.PreferredBackBufferWidth / 1.85f, graphics.PreferredBackBufferHeight / 2.7f), Color.White);
+            
+             spriteBatch.DrawString(font, "time: " + Math.Round((elapsed_time/1000),1) + "", 
                 new Vector2((float)(graphics.PreferredBackBufferWidth*0.8), (float)(graphics.PreferredBackBufferHeight * 0.05)), Color.Beige);
+           
             spriteBatch.End();
 
            
