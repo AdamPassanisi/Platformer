@@ -31,7 +31,8 @@ namespace Platformer
             Leaderboards,
             LevelCompleted,
             GameOver,
-            Pause
+            Pause,
+            Continue
         }
         GameState _state = GameState.MainMenu;
         GameState _previousState = GameState.Level1;
@@ -1400,6 +1401,8 @@ namespace Platformer
         #endregion
 
 
+        
+
         private void CreateNightTiles()
             {
             nightTiles.Clear();
@@ -1588,8 +1591,12 @@ namespace Platformer
                 finish_line = new Door(new Vector2(graphics.PreferredBackBufferWidth * 0.2f * (10 + 1), (float)(graphics.PreferredBackBufferHeight * 0.814)));
                 finish_line2 = new Door(new Vector2(graphics.PreferredBackBufferWidth * 0.1f * (20 + 1), (float)(graphics.PreferredBackBufferHeight * 0.814)));
 
-
-                _state = GameState.Level1;
+                if (!LOGGED_IN)
+                    _state = GameState.Level1;
+                else
+                    {
+                        _state = GameState.Continue;
+                    }
 
              }
                 
@@ -1604,6 +1611,85 @@ namespace Platformer
             
 
         }
+
+        public void ContinueGame(GameTime gameTime)
+        {
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
+            if(currentState.IsKeyDown(Keys.Escape) && previousState.IsKeyUp(Keys.Escape))
+                _state = GameState.MainMenu;
+
+
+            float[] selected = new float[2];
+
+            if (previousState.IsKeyUp(Keys.Up) && currentState.IsKeyDown(Keys.Up))
+            {
+                select--;
+            }
+
+            if (previousState.IsKeyUp(Keys.Down) && currentState.IsKeyDown(Keys.Down))
+            {
+                select++;
+            }
+            if (select < 0)
+                select = 1;
+            if (select >1 )
+                select = 0;
+
+            if(select == 0)
+            {
+                selected[0] = 1f;
+                selected[1] = .5f;
+            }
+
+            if(select == 1)
+            {
+                selected[0] = .5f;
+                selected[1] = 1f;
+            }
+
+
+            if (currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyUp(Keys.Enter))
+            {
+                // Continue 
+                if (select == 0)
+                {
+                    string level = db.continueGame(Logged_Username)[0][0];
+                   switch(level) {
+                        
+                       case "1":
+                           _state = GameState.Level1;
+                           break;
+                       case "2":
+                            enemy3._position.X = 1500;
+                           _state = GameState.Level2;
+                           break;
+                       default:
+                            _state = GameState.Level1;
+                            break;
+                   }
+                }
+
+                // New game 
+                else
+                    _state = GameState.Level1;
+            }
+
+            int width = graphics.PreferredBackBufferWidth;
+            int height = graphics.PreferredBackBufferHeight;
+            int initial = height / 5;
+            GraphicsDevice.Clear(Color.DarkGray);
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(Continue, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 2+height/19), buttonSize), Color.White*selected[0]);
+            spriteBatch.Draw(newGame, new Rectangle(new Point(width / 2 - buttonSize.X / 2, initial + buttonSize.Y * 3 + height / 18), buttonSize), Color.White * selected[1]);
+                
+
+            spriteBatch.End();
+
+            base.Update(gameTime);
+        }               
 
         void UpdateLevel1(GameTime gameTime)
         {
@@ -2009,6 +2095,9 @@ namespace Platformer
                     break;
                 case GameState.Pause:
                     Pause(gameTime);
+                    break;
+                case GameState.Continue:
+                    ContinueGame(gameTime);
                     break;
                     
 
