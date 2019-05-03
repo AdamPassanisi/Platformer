@@ -1510,8 +1510,10 @@ namespace Platformer
                 }
 
                 // New game 
-                else
+                else{
+                    db.newGame(Logged_Username);
                     _state = GameState.Level1;
+                }
             }
 
             int width = graphics.PreferredBackBufferWidth;
