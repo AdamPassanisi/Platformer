@@ -148,7 +148,7 @@ namespace Platformer
                 {
                     if((string)myReader[0] == username)
                     {
-                        Console.WriteLine("Hello " + username);
+                        System.Diagnostics.Debug.WriteLine("Hello " + username);
                         CloseConnection();
                         return true;
                     }
@@ -299,7 +299,7 @@ namespace Platformer
             }
         }
 
-        private void updateHighScore(string user, int level, int score)
+        public void updateHighScore(string user, int level, int score)
         {
             
             string query = "SET @rank := (SELECT COUNT(*)+1 FROM leaderboard WHERE score>" + score + " AND level=" + level + "); " +
