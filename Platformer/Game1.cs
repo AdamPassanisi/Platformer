@@ -29,9 +29,11 @@ namespace Platformer
             CreateAccount,
             Leaderboards,
             LevelCompleted,
-            GameOver
+            GameOver,
+            Pause
         }
         GameState _state = GameState.MainMenu;
+        GameState _previousState = GameState.Level1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
@@ -116,7 +118,7 @@ namespace Platformer
 
         int select = 0;
         
-        Texture2D levelcompleted, continueWithoutSaving,Continue, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
+        Texture2D paused, levelcompleted, continueWithoutSaving,Continue, createaccountbutton, viewLeaderboards, exit, instructions, multiplayer, newGame, returnToMainMenu, saveContinue, singePlayer, startGame, tryAgain;
         Point buttonSize;
 
         Texture2D logintitle, usernametitle, passwordtitle, enter;
@@ -347,6 +349,25 @@ namespace Platformer
 
 
         #endregion
+
+        #region Pause
+        public void Pause(GameTime gameTime)
+        {
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
+            if (currentState.IsKeyDown(Keys.Escape) && previousState.IsKeyUp(Keys.Escape))
+                _state =  GameState.MainMenu;
+            if (currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyUp(Keys.Enter))
+                _state = _previousState;
+            spriteBatch.Begin();
+            spriteBatch.Draw(paused, new Rectangle(0,0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            spriteBatch.End();
+
+             base.Update(gameTime);
+        }
+        #endregion
+
 
         #region Instructions
         public void Instructions(GameTime gameTime)
@@ -1081,7 +1102,7 @@ namespace Platformer
             
             MediaPlayer.Play(lobby_music);
             
-
+            paused = Content.Load<Texture2D>("pause");
             buttonSize = new Point(graphics.PreferredBackBufferWidth * 5 / 32, graphics.PreferredBackBufferHeight * 5/72);
             gameover = Content.Load<Texture2D>("gameover");
             font = Content.Load<SpriteFont>("font");
@@ -1362,7 +1383,7 @@ namespace Platformer
             int i = 1;
             for (; i < 21; i++)
             {
-                nightTiles.Add(new Tile(new Vector2(screenWidth *0.5f*i, (float)(screenHeight * 0.75))));
+                nightTiles.Add(new Tile(new Vector2(screenWidth *0.1f*i, (float)(screenHeight * 0.75))));
             }
             finish_line2 = new Door(new Vector2(screenWidth * 0.1f * (i+1), (float)(screenHeight * 0.814)));
 
@@ -1479,6 +1500,7 @@ namespace Platformer
         protected void DrawLevel1(GameTime gameTime)
         {
 
+            _previousState = GameState.Level1;
             GraphicsDevice.Clear(Color.Transparent);
             int finish = 400;
 
@@ -1559,6 +1581,9 @@ namespace Platformer
 
         void UpdateLevel1(GameTime gameTime)
         {
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
 
             // level 1 action
             // enemies & objects
@@ -1593,8 +1618,8 @@ namespace Platformer
          //   Console.WriteLine(elapsed_time);
 
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                _state = GameState.MainMenu;
+            if ((currentState.IsKeyDown(Keys.Escape) && (previousState.IsKeyUp(Keys.Escape))))
+                _state = GameState.Pause;
 
            
            {
@@ -1623,11 +1648,17 @@ namespace Platformer
                         _sprites[0].Xtrans = 0;
                     {
                         tile.Update(_sprites[0].Xtrans);
-                        if (_sprites[0].isHalfway)
+                        if (_sprites[0].isHalfway && _sprites[0].Health == 100)
                         {
                             tile.Update(_sprites[0].Xtrans);
                             tile.Update(_sprites[0].Xtrans);
+                            
+                            // Adjusts enemies better
+                            enemy._position.X -= .75f;
+                            enemy2._position.X-=.75f;
 
+                            
+                           
                         }
                         if (scrolling1.rectangle.X + scrolling1.rectangle.Width <= 0)
                         {
@@ -1740,8 +1771,13 @@ namespace Platformer
 
         public void Level2(GameTime gameTime)
         {
-              if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                _state = GameState.MainMenu;
+            previousState = currentState;
+            currentState = Keyboard.GetState();
+
+            _previousState = GameState.Level2;
+
+              if (currentState.IsKeyDown(Keys.Escape) && previousState.IsKeyUp(Keys.Escape))
+                _state = GameState.Pause;
 
               GraphicsDevice.Clear(Color.Transparent);
 
@@ -1798,11 +1834,16 @@ namespace Platformer
                     Vector2 vec = new Vector2(1, tile.position.Y - 160f);
                 }
 
-                if (_sprites[0].isHalfway)
+                if (_sprites[0].isHalfway && _sprites[0].Health == 100)
                 {
                     tile.Update(_sprites[0].Xtrans);
                     //tile.Update(_sprites[0].Xtrans);
+                     // Adjusts enemies better
+                    enemy._position.X -= .75f/2;
+                    enemy2._position.X-=.75f/2;
+                    enemy3._position.X-= .75f/2;
 
+                            
                 }
 
 
@@ -1863,9 +1904,7 @@ namespace Platformer
          //   Console.WriteLine(elapsed_time);
 
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                _state = GameState.MainMenu;
-
+            
 
 
               spriteBatch.Begin();
@@ -1934,6 +1973,9 @@ namespace Platformer
                     break;
                 case GameState.GameOver:
                     Gameover(gameTime);
+                    break;
+                case GameState.Pause:
+                    Pause(gameTime);
                     break;
                     
 
